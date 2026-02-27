@@ -1,0 +1,39 @@
+export enum NoticeCategory {
+	FAQ = 'FAQ',
+	TERMS = 'TERMS',
+	INQUIRY = 'INQUIRY',
+	ANNOUNCEMENT = 'ANNOUNCEMENT',
+	POLICY = 'POLICY',
+	PROMOTION = 'PROMOTION',
+	SHIPPING = 'SHIPPING',
+	PAYMENT = 'PAYMENT',
+	ACCOUNT = 'ACCOUNT',
+	PRODUCT = 'PRODUCT',
+	EVENT = 'EVENT',
+	MAINTENANCE = 'MAINTENANCE',
+}
+
+export enum NoticeStatus {
+	DRAFT = 'DRAFT',
+	SCHEDULED = 'SCHEDULED',
+	EXPIRED = 'EXPIRED',
+	ARCHIVED = 'ARCHIVED',
+
+	ACTIVE = 'ACTIVE',
+	DELETED = 'DELETED',
+}
+
+export enum NoticePriority {
+	LOW = 'LOW',
+	NORMAL = 'NORMAL',
+	HIGH = 'HIGH',
+	URGENT = 'URGENT',
+}
+
+export enum NoticeTarget {
+	ALL = 'ALL',
+	MEMBERS = 'MEMBERS',
+	SELLERS = 'SELLERS',
+	SPECIFIC_TIER = 'SPECIFIC_TIER',
+	NEW_MEMBERS = 'NEW_MEMBERS',
+}

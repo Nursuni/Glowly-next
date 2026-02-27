@@ -1,0 +1,184 @@
+export enum ProductType {
+	SKINCARE = 'SKINCARE',
+	MAKEUP = 'MAKEUP',
+	HAIRCARE = 'HAIRCARE',
+	BODYCARE = 'BODYCARE',
+	FRAGRANCE = 'FRAGRANCE',
+	TOOLS = 'TOOLS',
+	WELLNESS = 'WELLNESS',
+	GIFT_CARD = 'GIFT_CARD',
+	NAILCARE = 'NAILCARE',
+	BABYCARE = 'BABYCARE',
+}
+
+export enum SkinType {
+	NORMAL = 'NORMAL',
+	DRY = 'DRY',
+	OILY = 'OILY',
+	COMBINATION = 'COMBINATION',
+	SENSITIVE = 'SENSITIVE',
+}
+
+export enum ProductTarget {
+	WOMEN = 'WOMEN',
+	MEN = 'MEN',
+	KIDS = 'KIDS',
+	UNISEX = 'UNISEX',
+}
+
+export enum ProductStatus {
+	// HOLD = 'HOLD',
+	ACTIVE = 'ACTIVE',
+	DISCONTINUED = 'DISCONTINUED', // Product no longer sold
+	COMING_SOON = 'COMING_SOON', // Pre-launch products
+	DELETED = 'DELETED',
+	SOLD = 'SOLD',
+}
+
+export enum AgeRange {
+	TEENS = 'TEENS',
+	TWENTIES = 'TWENTIES',
+	THIRTIES = 'THIRTIES',
+	FORTIES = 'FORTIES',
+	FIFTY_PLUS = 'FIFTY_PLUS',
+}
+
+export enum DiscountType {
+	PERCENTAGE = 'PERCENTAGE',
+	FIXED = 'FIXED',
+}
+
+export enum VolumeUnit {
+	ML = 'ML', // Milliliters
+	L = 'L', // Liters
+	G = 'G', // Grams
+	KG = 'KG', // Kilograms
+	OZ = 'OZ', // Ounces
+	FL_OZ = 'FL_OZ', // Fluid Ounces
+	PCS = 'PCS', // Pieces
+}
+
+export enum RatingValue {
+	ONE = 1,
+	TWO = 2,
+	THREE = 3,
+	FOUR = 4,
+	FIVE = 5,
+}
+
+export enum IngredientType {
+	NATURAL = 'NATURAL',
+	ORGANIC = 'ORGANIC',
+	VEGAN = 'VEGAN',
+	CRUELTY_FREE = 'CRUELTY_FREE',
+	PARABEN_FREE = 'PARABEN_FREE',
+	SULFATE_FREE = 'SULFATE_FREE',
+	FRAGRANCE_FREE = 'FRAGRANCE_FREE',
+	HYPOALLERGENIC = 'HYPOALLERGENIC',
+	DERMATOLOGIST_TESTED = 'DERMATOLOGIST_TESTED',
+	CHEMICAL = 'CHEMICAL',
+}
+
+// Skincare Subcategories
+export enum SkincareSubtype {
+	CLEANSER = 'CLEANSER',
+	TONER = 'TONER',
+	ESSENCE = 'ESSENCE',
+	SERUM = 'SERUM',
+	MOISTURISER = 'MOISTURISER',
+	EYE_CREAM = 'EYE_CREAM',
+	FACE_MASK = 'FACE_MASK',
+	EXFOLIATOR = 'EXFOLIATOR',
+	FACIAL_OIL = 'FACIAL_OIL',
+	SUNSCREEN = 'SUNSCREEN',
+	LIP_CARE = 'LIP_CARE',
+	NECK_CARE = 'NECK_CARE',
+	FACE_MIST = 'FACE_MIST',
+	SPOT_TREATMENT = 'SPOT_TREATMENT',
+}
+
+// Makeup Subcategories
+export enum MakeupSubtype {
+	FOUNDATION = 'FOUNDATION',
+	CONCEALER = 'CONCEALER',
+	POWDER = 'POWDER',
+	BLUSH = 'BLUSH',
+	BRONZER = 'BRONZER',
+	HIGHLIGHTER = 'HIGHLIGHTER',
+	EYESHADOW = 'EYESHADOW',
+	EYELINER = 'EYELINER',
+	MASCARA = 'MASCARA',
+	EYEBROW = 'EYEBROW',
+	LIPSTICK = 'LIPSTICK',
+	LIP_GLOSS = 'LIP_GLOSS',
+	LIP_LINER = 'LIP_LINER',
+	MAKEUP_REMOVER = 'MAKEUP_REMOVER',
+	PRIMER = 'PRIMER',
+	SETTING_SPRAY = 'SETTING_SPRAY',
+}
+
+// Haircare Subcategories
+export enum HaircareSubtype {
+	SHAMPOO = 'SHAMPOO',
+	CONDITIONER = 'CONDITIONER',
+	HAIR_MASK = 'HAIR_MASK',
+	HAIR_OIL = 'HAIR_OIL',
+	STYLING_PRODUCT = 'STYLING_PRODUCT',
+	HAIR_TREATMENT = 'HAIR_TREATMENT',
+	SCALP_CARE = 'SCALP_CARE',
+	HAIR_COLOR = 'HAIR_COLOR',
+}
+
+// Bodycare Subcategories
+export enum BodycareSubtype {
+	BODY_WASH = 'BODY_WASH',
+	BODY_LOTION = 'BODY_LOTION',
+	BODY_SCRUB = 'BODY_SCRUB',
+	BODY_OIL = 'BODY_OIL',
+	HAND_CREAM = 'HAND_CREAM',
+	FOOT_CARE = 'FOOT_CARE',
+	DEODORANT = 'DEODORANT',
+	BODY_MIST = 'BODY_MIST',
+}
+
+// Fragrance Subcategories
+export enum FragranceSubtype {
+	PERFUME = 'PERFUME',
+	COLOGNE = 'COLOGNE',
+	BODY_SPRAY = 'BODY_SPRAY',
+	FRAGRANCE_OIL = 'FRAGRANCE_OIL',
+	SOLID_PERFUME = 'SOLID_PERFUME',
+}
+
+// Tools Subcategories
+export enum ToolsSubtype {
+	FACIAL_TOOL = 'FACIAL_TOOL',
+	GUA_SHA = 'GUA_SHA',
+	FACE_ROLLER = 'FACE_ROLLER',
+	MAKEUP_BRUSH = 'MAKEUP_BRUSH',
+	MAKEUP_SPONGE = 'MAKEUP_SPONGE',
+	TWEEZERS = 'TWEEZERS',
+	EYELASH_CURLER = 'EYELASH_CURLER',
+	CLEANSING_CLOTH = 'CLEANSING_CLOTH',
+	HEADBAND = 'HEADBAND',
+}
+
+// Nailcare Subcategories
+export enum NailcareSubtype {
+	NAIL_POLISH = 'NAIL_POLISH',
+	NAIL_TREATMENT = 'NAIL_TREATMENT',
+	NAIL_REMOVER = 'NAIL_REMOVER',
+	CUTICLE_CARE = 'CUTICLE_CARE',
+	NAIL_TOOLS = 'NAIL_TOOLS',
+}
+
+// Wellness Subcategories
+export enum WellnessSubtype {
+	SUPPLEMENT = 'SUPPLEMENT',
+	VITAMINS = 'VITAMINS',
+	AROMATHERAPY = 'AROMATHERAPY',
+	CANDLE = 'CANDLE',
+	DIFFUSER = 'DIFFUSER',
+	ESSENTIAL_OIL = 'ESSENTIAL_OIL',
+	TEA = 'TEA',
+}
