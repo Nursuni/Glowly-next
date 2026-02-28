@@ -9,9 +9,10 @@ import axios from 'axios';
 import { T } from '../../types/common';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Message } from '../../enums/common.enum';
-import { sweetErrorHandling, sweetTopSuccessAlert } from '../../sweetAlert';
+
 import { useMutation } from '@apollo/client';
 import { CREATE_BOARD_ARTICLE } from '../../../apollo/user/mutation';
+import { toastSuccess } from '../../toast';
 
 const TuiEditor = () => {
 	const editorRef = useRef<Editor>(null),
@@ -97,7 +98,7 @@ const TuiEditor = () => {
 				},
 			});
 
-			await sweetTopSuccessAlert('Article is created successfully', 700);
+			await toastSuccess('Article is created successfully', 700);
 			await router.push({
 				pathname: '/mypage',
 				query: {
@@ -106,7 +107,7 @@ const TuiEditor = () => {
 			});
 		} catch (err: any) {
 			console.log(err);
-			sweetErrorHandling(new Error(Message.INSERT_ALL_INPUTS)).then();
+			toastError(new Error(Message.INSERT_ALL_INPUTS)).then();
 		}
 	};
 

@@ -45,7 +45,7 @@ export const GET_ALL_MEMBERS_BY_ADMIN = gql`
 
 export const GET_ALL_PRODUCTS_BY_ADMIN = gql`
 	query GetAllProductsByAdmin($input: AllProductsInquiry!) {
-		GetAllProductsByAdmin(input: $input) {
+		getAllProductsByAdmin(input: $input) {
 			list {
 				_id
 				productType
@@ -178,6 +178,7 @@ export const GET_COMMENTS = gql`
 					memberFullName
 					memberImage
 					memberAddress
+					memberGender
 					memberDesc
 					memberWarnings
 					memberBlocks

@@ -15,6 +15,7 @@ export const UPDATE_MEMBER_BY_ADMIN = gql`
 			memberFullName
 			memberImage
 			memberAddress
+			memberGender
 			memberDesc
 			memberProducts
 

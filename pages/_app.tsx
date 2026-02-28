@@ -3,8 +3,11 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import React, { useState } from 'react';
 import { light } from '../scss/MaterialTheme';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { appWithTranslation } from 'next-i18next';
+import '../scss/app.scss';
+import '../scss/pc/main.scss';
 
 const App = ({ Component, pageProps }: AppProps) => {
 	// @ts-ignore
@@ -13,6 +16,17 @@ const App = ({ Component, pageProps }: AppProps) => {
 		<ThemeProvider theme={theme}>
 			<CssBaseline />
 			<Component {...pageProps} />
+			<ToastContainer
+				position="top-right"
+				autoClose={2500}
+				newestOnTop
+				closeOnClick
+				pauseOnHover
+				draggable
+				pauseOnFocusLoss
+				limit={3}
+				theme="colored"
+			/>
 		</ThemeProvider>
 	);
 };

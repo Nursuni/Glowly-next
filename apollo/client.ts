@@ -6,8 +6,9 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
 import { getJwtToken } from '../libs/auth';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
-import { sweetErrorAlert } from '../libs/sweetAlert';
+
 import { socketVar } from './store';
+import { toastError } from '../libs/toast';
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
 function getHeaders() {
@@ -94,7 +95,7 @@ function createIsomorphicLink() {
 			if (graphQLErrors) {
 				graphQLErrors.map(({ message, locations, path, extensions }) => {
 					console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
-					if (!message.includes('input')) sweetErrorAlert(message);
+					if (!message.includes('input')) toastError(message);
 				});
 			}
 

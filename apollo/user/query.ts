@@ -119,6 +119,7 @@ export const GET_PRODUCT = gql`
 				memberImage
 				memberAddress
 				memberDesc
+				memberGender
 				memberWarnings
 				memberBlocks
 				memberPoints
@@ -177,6 +178,7 @@ export const GET_PRODUCTS = gql`
 					memberDesc
 					memberWarnings
 					memberBlocks
+					memberGender
 					memberProducts
 					memberRank
 					memberPoints
@@ -270,7 +272,8 @@ export const GET_FAVORITES = gql`
 					memberImage
 					memberAddress
 					memberDesc
-					memberPro
+					memberProducts
+					memberGender
 					memberArticles
 					memberPoints
 					memberLikes
@@ -331,6 +334,7 @@ export const GET_VISITED = gql`
 					memberImage
 					memberAddress
 					memberDesc
+					memberGender
 					memberProducts
 					memberArticles
 					memberPoints
@@ -384,6 +388,7 @@ export const GET_BOARD_ARTICLE = gql`
 				memberFullName
 				memberImage
 				memberAddress
+				memberGender
 				memberDesc
 				memberWarnings
 				memberBlocks
@@ -439,6 +444,7 @@ export const GET_BOARD_ARTICLES = gql`
 					memberDesc
 					memberWarnings
 					memberBlocks
+					memberGender
 					memberProducts
 					memberRank
 					memberPoints
@@ -483,6 +489,7 @@ export const GET_COMMENTS = gql`
 					memberImage
 					memberAddress
 					memberDesc
+					memberGender
 					memberWarnings
 					memberBlocks
 					memberProducts
@@ -535,6 +542,7 @@ export const GET_MEMBER_FOLLOWERS = gql`
 					memberFullName
 					memberImage
 					memberAddress
+					memberGender
 					memberDesc
 					memberProducts
 					memberArticles
@@ -578,6 +586,7 @@ export const GET_MEMBER_FOLLOWINGS = gql`
 					memberFullName
 					memberImage
 					memberAddress
+					memberGender
 					memberDesc
 					memberProducts
 					memberArticles

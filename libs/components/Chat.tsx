@@ -11,7 +11,7 @@ import { useReactiveVar } from '@apollo/client';
 import { socketVar, userVar } from '../../apollo/store';
 import { Member } from '../types/member/member';
 import { Messages, REACT_APP_API_URL } from '../config';
-import { sweetErrorAlert } from '../sweetAlert';
+import { toastError } from '../toast';
 
 const NewMessage = (type: any) => {
 	if (type === 'right') {
@@ -62,28 +62,6 @@ const Chat = () => {
 	const socket = useReactiveVar(socketVar);
 
 	/** LIFECYCLES **/
-	useEffect(() => {
-		socket.onmessage = (msg) => {
-			const data = JSON.parse(msg.data);
-			console.log('WebSocket messageInput:', data);
-
-			switch (data.event) {
-				case 'info':
-					const newInfo: InfoPayload = data;
-					setOnlineUsers(newInfo.totalClients);
-					break;
-				case 'getMessages':
-					const list: MessagePayload[] = data.list;
-					setMessagesList(list);
-					break;
-				case 'message':
-					const newMessage: MessagePayload = data;
-					messagesList.push(newMessage);
-					setMessagesList([...messagesList]);
-					break;
-			}
-		};
-	}, [socket, messagesList]);
 
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
@@ -120,7 +98,7 @@ const Chat = () => {
 	};
 
 	const onClickHandler = () => {
-		if (!messageInput) sweetErrorAlert(Messages.error4);
+		if (!messageInput) toastError(Messages.EMPTY_MESSAGE);
 		else {
 			socket.send(JSON.stringify({ event: 'message', data: messageInput }));
 			setMessageInput('');

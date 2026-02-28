@@ -16,6 +16,7 @@ export const SIGN_UP = gql`
 			memberFullName
 			memberImage
 			memberAddress
+			memberGender
 			memberDesc
 			memberWarnings
 			memberBlocks
@@ -76,6 +77,7 @@ export const UPDATE_MEMBER = gql`
 			memberAddress
 			memberDesc
 			memberProducts
+			memberGender
 			memberRank
 			memberArticles
 			memberPoints
@@ -107,6 +109,7 @@ export const LIKE_TARGET_MEMBER = gql`
 			memberWarnings
 			memberBlocks
 			memberProducts
+			memberGender
 			memberRank
 			memberPoints
 			memberLikes
