@@ -5,7 +5,7 @@ import Head from 'next/head';
 
 import { Stack } from '@mui/material';
 import { getJwtToken, updateUserInfo } from '../../auth';
-import Chat from '../Chat';
+
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { useTranslation } from 'next-i18next';
@@ -131,8 +131,6 @@ const withLayoutBasic = (Component: any) => {
 						<Stack id={'main'}>
 							<Component {...props} />
 						</Stack>
-
-						<Chat />
 
 						<Stack id={'footer'}></Stack>
 					</Stack>
