@@ -8,10 +8,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { appWithTranslation } from 'next-i18next';
 import '../scss/app.scss';
 import '../scss/pc/main.scss';
+import { useApollo } from '../apollo/client';
 
 const App = ({ Component, pageProps }: AppProps) => {
 	// @ts-ignore
 	const [theme, setTheme] = useState(createTheme(light));
+	const client = useApollo(pageProps.initialApolloState);
 	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />
