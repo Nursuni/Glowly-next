@@ -25,7 +25,7 @@ export default function Document() {
 				<meta property="og:title" content="Glowly – Premium Cosmetics & Skincare" />
 				<meta property="og:description" content="Shop high-quality skincare and makeup products for radiant beauty." />
 				<meta property="og:type" content="website" />
-				<meta property="og:image" content="/img/logo/logoWhite.svg" />
+				<meta property="og:image" content="/img/logo/glowly.svg" />
 			</Head>
 			<body>
 				<Main />

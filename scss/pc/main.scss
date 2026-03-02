@@ -3,14 +3,15 @@
 @import '/scss/pc/general.scss';
 
 body {
-	-ms-overflow-style: none; /* for Internet Explorer, Edge */
-	scrollbar-width: none; /* for Firefox */
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 	overflow-y: scroll;
 }
 
 body::-webkit-scrollbar {
-	display: none; /* for Chrome, Safari, and Opera */
+	display: none;
 }
+
 /* =====================================
    GLOWLY GLOBAL LAYOUT
 ===================================== */
@@ -22,9 +23,15 @@ body::-webkit-scrollbar {
 	background: #fafafa;
 
 	#top {
-		position: sticky;
-		top: 0;
+		/* sticky wrapper — the navbar inside is position:fixed,
+		   so #top itself just needs to sit at z:1000 */
+		position: relative;
 		z-index: 1000;
+	}
+
+	/* Push all page content below the fixed navbar height (2px bar + 72px container) */
+	& > *:not(#top) {
+		padding-top: 74px;
 	}
 
 	#footer {
@@ -33,12 +40,11 @@ body::-webkit-scrollbar {
 }
 
 /* =====================================
-   NAVBAR (TOP)
+   NAVBAR
 ===================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
 
-/* ─── ANNOUNCEMENT BAR (optional top strip) ─── */
 .announcement-bar {
 	width: 100%;
 	background: #2a2a2a;
@@ -52,50 +58,64 @@ body::-webkit-scrollbar {
 	font-weight: 400;
 }
 
-/* ─── NAVBAR ─── */
 .navbar {
 	width: 100%;
-	position: fixed;
+	position: fixed; /* ← fixed to viewport, never moves */
 	top: 0;
+	left: 0;
+	right: 0;
 	z-index: 999;
 	transition: all 0.4s ease;
 
-	/* thin terracotta line at very top — matches footer's top border */
+	/* Shimmer gold line */
 	&::before {
 		content: '';
 		display: block;
 		width: 100%;
-		height: 3px;
+		height: 2px;
 		background: linear-gradient(90deg, #c8a882, #e2c9a8, #d4a373, #e2c9a8, #c8a882);
-		background-size: 300px 3px;
+		background-size: 300px 2px;
+		animation: shimmer 6s linear infinite;
 	}
 
+	@keyframes shimmer {
+		0% {
+			background-position: 0 0;
+		}
+		100% {
+			background-position: 300px 0;
+		}
+	}
+
+	/* ── BACKGROUND PANEL ── */
 	.navbar-main {
-		background: rgba(250, 249, 247, 0.96); /* matches footer bg */
-		backdrop-filter: blur(20px);
-		-webkit-backdrop-filter: blur(20px);
-		border-bottom: 1px solid rgba(232, 226, 218, 0.8);
-		transition: background 0.4s ease, box-shadow 0.4s ease;
+		background: rgba(250, 249, 247, 0.97);
+		backdrop-filter: blur(24px);
+		-webkit-backdrop-filter: blur(24px);
+		border-bottom: 1px solid rgba(232, 226, 218, 0.6);
+		transition: background 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
 
 		&.transparent {
-			background: rgba(250, 249, 247, 0.72);
+			background: rgba(250, 249, 247, 0.65);
+			border-color: transparent;
 			box-shadow: none;
 		}
 
 		&.scrolled {
-			box-shadow: 0 4px 32px rgba(42, 42, 42, 0.06);
+			box-shadow: 0 2px 24px rgba(42, 42, 42, 0.07);
 		}
 	}
 
+	/* ── INNER ROW ── */
 	.container {
 		max-width: 1300px;
-		margin: auto;
-		height: 76px;
+		margin: 0 auto;
+		height: 72px;
 		padding: 0 32px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 32px;
+		gap: 24px;
 	}
 
 	/* ── LOGO ── */
@@ -103,13 +123,17 @@ body::-webkit-scrollbar {
 		flex-shrink: 0;
 
 		img {
-			height: 32px;
+			height: 30px;
 			cursor: pointer;
 			display: block;
-			filter: brightness(0); /* make logo dark on light bg */
+			filter: brightness(0);
+			transition: opacity 0.2s ease;
+
+			&:hover {
+				opacity: 0.6;
+			}
 		}
 
-		/* Fallback text logo if SVG not available */
 		.logo-text {
 			font-family: 'Cormorant Garamond', serif;
 			font-size: 26px;
@@ -130,62 +154,99 @@ body::-webkit-scrollbar {
 	.router-box {
 		display: flex;
 		align-items: center;
-		gap: 0;
+		flex: 1;
+		justify-content: center;
 
 		a,
 		div {
 			position: relative;
 			font-family: 'Jost', sans-serif;
-			font-size: 12.5px;
+			font-size: 11.5px;
 			font-weight: 500;
-			letter-spacing: 0.12em;
+			letter-spacing: 0.14em;
 			text-transform: uppercase;
-			color: #5a5a5a;
+			color: #6a6a6a;
 			cursor: pointer;
-			padding: 8px 18px;
+			padding: 8px 13px;
 			text-decoration: none;
-			transition: color 0.25s ease;
+			transition: color 0.22s ease;
+			white-space: nowrap;
 
-			/* elegant underline animation */
 			&::after {
 				content: '';
 				position: absolute;
-				bottom: 2px;
-				left: 18px;
-				right: 18px;
+				bottom: 4px;
+				left: 13px;
+				right: 13px;
 				height: 1px;
 				background: #c08a5e;
 				transform: scaleX(0);
 				transform-origin: left center;
-				transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 			}
 
 			&:hover {
 				color: #2a2a2a;
-
 				&::after {
 					transform: scaleX(1);
 				}
 			}
 
-			/* active / current page indicator */
 			&.active {
 				color: #c08a5e;
-
 				&::after {
 					transform: scaleX(1);
-					background: #c08a5e;
 				}
 			}
 		}
 	}
 
-	/* ── USER BOX (right side) ── */
+	/* ── USER BOX — ALL ICONS IN ONE ROW ── */
 	.user-box {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 2px;
 		flex-shrink: 0;
+	}
+
+	/* Thin gradient divider */
+	.user-box > .divider {
+		width: 1px;
+		height: 18px;
+		background: linear-gradient(to bottom, transparent, #e0d8cf, transparent);
+		margin: 0 6px;
+		flex-shrink: 0;
+	}
+
+	/* Generic icon button (search, basket) */
+	.icon-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 10px;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		padding: 0;
+		transition: background 0.18s ease;
+
+		img {
+			width: 18px;
+			height: 18px;
+			display: block;
+			filter: brightness(0) opacity(0.55);
+			transition: filter 0.18s ease;
+		}
+
+		&:hover {
+			background: rgba(192, 138, 94, 0.08);
+
+			img {
+				filter: brightness(0) saturate(100%) invert(60%) sepia(30%) saturate(600%) hue-rotate(350deg);
+			}
+		}
 	}
 
 	/* Profile avatar */
@@ -197,42 +258,43 @@ body::-webkit-scrollbar {
 			object-fit: cover;
 			border: 1.5px solid #e2c9a8;
 			cursor: pointer;
-			transition: border-color 0.2s, transform 0.2s;
+			transition: border-color 0.2s, transform 0.22s, box-shadow 0.22s;
 
 			&:hover {
 				border-color: #c08a5e;
-				transform: scale(1.05);
+				transform: scale(1.06);
+				box-shadow: 0 0 0 3px rgba(192, 138, 94, 0.12);
 			}
 		}
 	}
 
-	/* Login / Register CTA */
+	/* Login / Register */
 	.join-box {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 7px;
 		cursor: pointer;
-		padding: 8px 18px;
+		padding: 7px 13px;
 		border: 1px solid #ddd6cc;
 		border-radius: 2px;
-		transition: all 0.25s ease;
+		transition: all 0.22s ease;
 		text-decoration: none;
+		white-space: nowrap;
 
 		svg {
-			font-size: 18px;
+			font-size: 17px;
 			color: #8a7060;
-			transition: color 0.25s;
+			transition: color 0.22s;
 		}
 
 		span {
 			font-family: 'Jost', sans-serif;
-			font-size: 12px;
+			font-size: 11.5px;
 			letter-spacing: 0.1em;
 			text-transform: uppercase;
 			color: #5a5a5a;
 			font-weight: 500;
-			transition: color 0.25s;
-			white-space: nowrap;
+			transition: color 0.22s;
 		}
 
 		&:hover {
@@ -247,89 +309,114 @@ body::-webkit-scrollbar {
 	}
 
 	/* Notification bell */
-	.notification-icon {
-		cursor: pointer;
-		color: #8a7060;
-		font-size: 22px !important;
-		transition: color 0.2s, transform 0.2s;
-
-		&:hover {
-			color: #c08a5e;
-			transform: rotate(-8deg) scale(1.1);
-		}
-	}
-
-	/* Language selector */
-	.lan-box {
+	.notification-btn {
+		position: relative;
 		display: flex;
 		align-items: center;
-		gap: 4px;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 10px;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		padding: 0;
+		transition: background 0.18s ease;
 
-		.btn-lang {
-			min-width: unset;
-			padding: 4px 8px;
-			border-radius: 2px;
-			background: transparent;
-			transition: background 0.2s;
+		svg {
+			font-size: 20px !important;
+			color: #8a7060;
+			transition: color 0.2s, transform 0.3s ease;
+		}
 
-			&:hover {
-				background: rgba(192, 138, 94, 0.08);
+		.unread-dot {
+			position: absolute;
+			top: 7px;
+			right: 7px;
+			width: 7px;
+			height: 7px;
+			border-radius: 50%;
+			background-color: #e05c5c;
+			border: 1.5px solid rgba(250, 249, 247, 0.97);
+			animation: pulse-dot 2.5s ease-in-out infinite;
+		}
+
+		&:hover {
+			background: rgba(192, 138, 94, 0.08);
+
+			svg {
+				color: #c08a5e;
+				transform: rotate(-10deg) scale(1.05);
 			}
+		}
 
-			.flag img {
-				width: 20px;
-				height: 14px;
-				object-fit: cover;
-				border-radius: 2px;
-				display: block;
+		@keyframes pulse-dot {
+			0%,
+			100% {
+				box-shadow: 0 0 0 0 rgba(224, 92, 92, 0.4);
 			}
-
-			/* CaretDown icon */
-			.MuiButton-endIcon svg {
-				color: #aaa;
-				transition: transform 0.2s;
-			}
-
-			&[aria-expanded='true'] .MuiButton-endIcon svg {
-				transform: rotate(180deg);
+			50% {
+				box-shadow: 0 0 0 4px rgba(224, 92, 92, 0);
 			}
 		}
 	}
 
-	/* ── DIVIDER BETWEEN USER ACTIONS ── */
-	.user-box > .divider {
-		width: 1px;
-		height: 20px;
-		background: #e8e2da;
-		margin: 0 4px;
-	}
-}
+	/* Language button */
+	.btn-lang {
+		min-width: unset !important;
+		padding: 5px 8px !important;
+		border-radius: 8px !important;
+		background: transparent !important;
+		border: 1px solid transparent !important;
+		display: flex !important;
+		align-items: center !important;
+		gap: 5px !important;
 
-/* ─── LANGUAGE DROPDOWN ─── */
-.MuiPaper-root {
-	.img-flag {
-		width: 20px;
-		height: 14px;
-		object-fit: cover;
-		border-radius: 2px;
-		margin-right: 10px;
+		&:hover {
+			background: rgba(192, 138, 94, 0.07) !important;
+			border-color: rgba(192, 138, 94, 0.15) !important;
+		}
+
+		.lang-caret {
+			color: #999;
+			transition: transform 0.2s ease;
+			flex-shrink: 0;
+		}
+	}
+
+	/* Circular flag used in button + dropdown */
+	.flag-circle {
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		overflow: hidden;
+		flex-shrink: 0;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
 	}
 }
 
 /* ─── LOGOUT MENU ─── */
 #basic-menu {
 	.MuiPaper-root {
-		border-radius: 4px;
+		border-radius: 10px;
 		border: 1px solid #f0ebe4;
-		box-shadow: 0 8px 32px rgba(42, 42, 42, 0.1);
-		font-family: 'Jost', sans-serif;
+		box-shadow: 0 8px 32px rgba(42, 42, 42, 0.09);
 
 		.MuiMenuItem-root {
 			font-family: 'Jost', sans-serif;
 			font-size: 13px;
-			letter-spacing: 0.05em;
+			letter-spacing: 0.04em;
 			color: #444;
-			padding: 10px 20px;
+			padding: 10px 18px;
+			border-radius: 8px;
+			margin: 2px 4px;
+			transition: background 0.15s;
 
 			&:hover {
 				background: #fdf6ef;
@@ -349,8 +436,8 @@ body::-webkit-scrollbar {
 
 	a div {
 		font-family: 'Jost', sans-serif;
-		font-size: 14px;
-		letter-spacing: 0.08em;
+		font-size: 13.5px;
+		letter-spacing: 0.1em;
 		text-transform: uppercase;
 		color: #5a5a5a;
 		padding: 14px 0;
@@ -364,11 +451,10 @@ body::-webkit-scrollbar {
 		}
 	}
 }
-/* =====================================
-   FOOTER — GLOWLY COSMETICS
-===================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap');
+/* =====================================
+   FOOTER
+===================================== */
 
 .footer-container {
 	background: #faf9f7;
@@ -381,14 +467,14 @@ body::-webkit-scrollbar {
 	position: relative;
 	overflow: visible;
 
-	/* Grass-like top border image strip */
 	&::before {
 		content: '';
 		display: block;
 		width: 100%;
-		height: 6px;
+		height: 2px;
 		background: linear-gradient(90deg, #c8a882, #e2c9a8, #c8a882, #e2c9a8, #c8a882);
-		background-size: 200px 6px;
+		background-size: 200px 2px;
+		animation: shimmer 6s linear infinite;
 	}
 
 	.main {
@@ -403,7 +489,6 @@ body::-webkit-scrollbar {
 		overflow: visible;
 	}
 
-	/* ── LEFT COLUMN ── */
 	.left {
 		display: flex;
 		flex-direction: column;
@@ -412,6 +497,7 @@ body::-webkit-scrollbar {
 		.logo {
 			height: 36px;
 			width: auto;
+			filter: brightness(0);
 		}
 
 		.footer-box {
@@ -429,7 +515,6 @@ body::-webkit-scrollbar {
 
 			p {
 				margin: 0;
-				font-size: 15px;
 				color: #2a2a2a;
 				font-weight: 300;
 				font-family: 'Cormorant Garamond', serif;
@@ -442,13 +527,13 @@ body::-webkit-scrollbar {
 				margin-top: 6px;
 
 				svg {
-					font-size: 20px;
+					font-size: 19px;
 					color: #8a7060;
 					cursor: pointer;
-					transition: color 0.2s, transform 0.2s;
+					transition: color 0.2s, transform 0.22s;
 
 					&:hover {
-						color: #2a2a2a;
+						color: #c08a5e;
 						transform: translateY(-2px);
 					}
 				}
@@ -456,13 +541,11 @@ body::-webkit-scrollbar {
 		}
 	}
 
-	/* ── CENTER BADGE (mirrors Bloomwell's green shield) ── */
 	.center-badge {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: flex-start;
-		padding-top: 0;
 		position: relative;
 		z-index: 2;
 
@@ -476,9 +559,15 @@ body::-webkit-scrollbar {
 			align-items: center;
 			text-align: center;
 			color: #fff;
-			box-shadow: 0 12px 40px rgba(192, 138, 94, 0.35);
+			box-shadow: 0 12px 40px rgba(192, 138, 94, 0.3);
 			position: relative;
-			margin-top: -60px; /* hang over the top edge significantly */
+			margin-top: -60px;
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+			&:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 18px 50px rgba(192, 138, 94, 0.38);
+			}
 
 			&::after {
 				content: '';
@@ -540,7 +629,6 @@ body::-webkit-scrollbar {
 		}
 	}
 
-	/* ── RIGHT COLUMN ── */
 	.right {
 		display: flex;
 		flex-direction: column;
@@ -550,6 +638,10 @@ body::-webkit-scrollbar {
 			display: flex;
 			flex-direction: column;
 			gap: 12px;
+			/* Reset mobile .top styles when nested in footer */
+			padding: 0;
+			background: none;
+			border: none;
 
 			strong {
 				font-family: 'Cormorant Garamond', serif;
@@ -561,9 +653,14 @@ body::-webkit-scrollbar {
 
 			div {
 				display: flex;
-				border: 1px solid #ddd;
+				border: 1px solid #e0d8cf;
 				border-radius: 2px;
 				overflow: hidden;
+				transition: border-color 0.2s;
+
+				&:focus-within {
+					border-color: #c08a5e;
+				}
 
 				input {
 					flex: 1;
@@ -576,7 +673,7 @@ body::-webkit-scrollbar {
 					color: #2a2a2a;
 
 					&::placeholder {
-						color: #bbb;
+						color: #c4bdb5;
 					}
 				}
 
@@ -584,12 +681,13 @@ body::-webkit-scrollbar {
 					padding: 11px 20px;
 					background: #2a2a2a;
 					color: #faf9f7;
-					font-size: 12px;
+					font-size: 11.5px;
 					letter-spacing: 0.12em;
 					text-transform: uppercase;
 					cursor: pointer;
 					font-weight: 500;
 					transition: background 0.2s;
+					white-space: nowrap;
 
 					&:hover {
 						background: #c08a5e;
@@ -609,34 +707,33 @@ body::-webkit-scrollbar {
 				gap: 10px;
 
 				strong {
-					font-size: 11px;
-					letter-spacing: 0.14em;
+					font-size: 10.5px;
+					letter-spacing: 0.16em;
 					text-transform: uppercase;
 					color: #2a2a2a;
-					font-weight: 500;
+					font-weight: 600;
 					margin-bottom: 4px;
 					font-family: 'Jost', sans-serif;
 				}
 
 				span {
-					font-size: 14px;
+					font-family: 'Cormorant Garamond', serif;
+					font-size: 16px;
 					color: #777;
 					cursor: pointer;
 					font-weight: 300;
-					transition: color 0.2s;
-					font-family: 'Cormorant Garamond', serif;
-					font-size: 16px;
 					letter-spacing: 0.01em;
+					transition: color 0.2s, letter-spacing 0.2s;
 
 					&:hover {
 						color: #c08a5e;
+						letter-spacing: 0.03em;
 					}
 				}
 			}
 		}
 	}
 
-	/* ── SECOND / BOTTOM BAR ── */
 	.second {
 		width: 100%;
 		max-width: 1300px;
@@ -645,7 +742,7 @@ body::-webkit-scrollbar {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		font-size: 12px;
+		font-size: 11.5px;
 		color: #aaa;
 		letter-spacing: 0.05em;
 
@@ -668,7 +765,6 @@ body::-webkit-scrollbar {
 			span {
 				cursor: pointer;
 				transition: color 0.2s;
-
 				&:hover {
 					color: #2a2a2a;
 				}
@@ -676,7 +772,6 @@ body::-webkit-scrollbar {
 		}
 	}
 
-	/* ── BOTTOM TAGLINE ── */
 	.tagline-bar {
 		width: 100%;
 		max-width: 1300px;
@@ -684,12 +779,11 @@ body::-webkit-scrollbar {
 
 		p {
 			margin: 0;
-			font-size: 13px;
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 15px;
 			color: #aaa;
 			font-weight: 300;
 			line-height: 1.7;
-			font-family: 'Cormorant Garamond', serif;
-			font-size: 15px;
 		}
 
 		.copy {
@@ -698,35 +792,6 @@ body::-webkit-scrollbar {
 			color: #bbb;
 			margin-top: 6px;
 			letter-spacing: 0.05em;
-		}
-	}
-
-	/* ── MOBILE ── */
-	@media (max-width: 768px) {
-		.main {
-			grid-template-columns: 1fr 1fr;
-			gap: 32px;
-			padding: 40px 0 30px;
-
-			.center-badge {
-				display: none;
-			}
-		}
-
-		.right {
-			.top {
-				display: none;
-			}
-
-			.bottom {
-				grid-template-columns: 1fr 1fr;
-			}
-		}
-
-		.second {
-			flex-direction: column;
-			gap: 12px;
-			text-align: center;
 		}
 	}
 }

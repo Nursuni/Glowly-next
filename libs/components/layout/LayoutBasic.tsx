@@ -27,22 +27,10 @@ const withLayoutBasic = (Component: any) => {
 			let bgImage = '';
 
 			switch (router.pathname) {
-				case '/shop':
-					title = 'Shop';
-					desc = 'Discover Your Beauty Essentials';
-					bgImage = '/img/banner/shop.jpg';
-					break;
-
-				case '/product':
-					title = 'Products';
+				case '/products':
+					title = 'Catalog';
 					desc = 'Skincare & Cosmetics Collection';
 					bgImage = '/img/banner/products.png';
-					break;
-
-				case '/about':
-					title = 'Our Story';
-					desc = 'Clean Beauty Philosophy';
-					bgImage = '/img/banner/about.jpg';
 					break;
 
 				case '/community':
@@ -51,10 +39,10 @@ const withLayoutBasic = (Component: any) => {
 					bgImage = '/img/banner/journal.jpg';
 					break;
 
-				case '/contact':
-					title = 'Contact Us';
-					desc = 'We Love Hearing From You';
-					bgImage = '/img/banner/contact.jpg';
+				case '/about':
+					title = 'Our Story';
+					desc = 'Clean Beauty Philosophy';
+					bgImage = '/img/banner/about.jpg';
 					break;
 
 				case '/account/login':
@@ -78,6 +66,7 @@ const withLayoutBasic = (Component: any) => {
 
 			return { title, desc, bgImage };
 		}, [router.pathname]);
+
 		/** LIFECYCLES **/
 		useEffect(() => {
 			const jwt = getJwtToken();

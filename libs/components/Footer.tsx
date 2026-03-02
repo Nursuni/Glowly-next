@@ -17,7 +17,7 @@ const Footer = () => {
 					{/* LEFT */}
 					<Stack className={'left'}>
 						<Box className={'footer-box'}>
-							<img src="/img/logo/glowlyDark.svg" alt="Glowly" className={'logo'} />
+							<img src="/img/logo/glowly.svg" alt="Glowly" className={'logo'} />
 						</Box>
 
 						<Box className={'footer-box'}>
