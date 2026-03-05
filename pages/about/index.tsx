@@ -12,6 +12,7 @@ const About: NextPage = () => {
 	} else {
 		return (
 			<Stack className={'about-page'}>
+				{/* INTRO */}
 				<Stack className={'intro'}>
 					<Stack className={'container'}>
 						<Stack className={'left'}>
@@ -45,6 +46,8 @@ const About: NextPage = () => {
 						</Stack>
 					</Stack>
 				</Stack>
+
+				{/* STATISTICS */}
 				<Stack className={'statistics'}>
 					<Stack className={'container'}>
 						<Stack className={'banner'}>
@@ -66,21 +69,24 @@ const About: NextPage = () => {
 						</Stack>
 					</Stack>
 				</Stack>
+
+				{/* SELLERS */}
 				<Stack className={'sellers'}>
 					<Stack className={'container'}>
 						<span className={'title'}>Meet Our Beauty Experts</span>
 						<p className={'desc'}>Passionate professionals behind Glowly’s innovation.</p>
 						<Stack className={'wrap'}>
-							{/*{[1, 2, 3, 4, 5].map(() => {*/}
-							{/*	return <SellerCard />;*/}
-							{/*})}*/}
+							{/* Seller cards here */}
 						</Stack>
 					</Stack>
 				</Stack>
+
+				{/* OPTIONS */}
 				<Stack className={'options'}>
 					<img src="/img/banner/aboutBanner.svg" alt="" className={'about-banner'} />
 					<Stack className={'container'}>
 						<strong>Discover the Perfect Beauty Routine for You</strong>
+
 						<Stack>
 							<div className={'icon-box'}>
 								<img src="/img/icons/security.svg" alt="" />
@@ -90,15 +96,17 @@ const About: NextPage = () => {
 								<p>Daily formulas designed to nourish, protect, and illuminate your skin.</p>
 							</div>
 						</Stack>
+
 						<Stack>
 							<div className={'icon-box'}>
 								<img src="/img/icons/keywording.svg" alt="" />
 							</div>
-							<div className={'text_-box'}>
+							<div className={'text-box'}>
 								<span>Makeup Collection</span>
 								<p>Refined tones and textures for effortless, everyday elegance.</p>
 							</div>
 						</Stack>
+
 						<Stack>
 							<div className={'icon-box'}>
 								<img src="/img/icons/investment.svg" alt="" />
@@ -108,12 +116,59 @@ const About: NextPage = () => {
 								<p>Advanced research meets modern luxury in every Glowly product.</p>
 							</div>
 						</Stack>
+
 						<Stack className={'btn'}>
 							Explore Glowly
 							<img src="/img/icons/rightup.svg" alt="" />
 						</Stack>
 					</Stack>
 				</Stack>
+
+				{/* NEW: GLOWLY COMMITMENTS */}
+				<Stack className={'commitments'}>
+					<Stack className={'container'}>
+						<span className={'title'}>The Glowly Standard</span>
+						<p className={'desc'}>
+							We believe modern luxury should be beautiful, responsible, and intentional.
+						</p>
+
+						<Stack className={'boxes'}>
+							<div className={'box'}>
+								<div>
+									<img src="/img/icons/crueltyfree.svg" alt="" />
+								</div>
+								<span>Cruelty-Free</span>
+								<p>We never test on animals. Compassion is part of our philosophy.</p>
+							</div>
+
+							<div className={'box'}>
+								<div>
+									<img src="/img/icons/leaf.svg" alt="" />
+								</div>
+								<span>Conscious Ingredients</span>
+								<p>Skin-loving ingredients selected for purity, safety, and performance.</p>
+							</div>
+
+							<div className={'box'}>
+								<div>
+									<img src="/img/icons/package.svg" alt="" />
+								</div>
+								<span>Responsible Packaging</span>
+								<p>Designed with elegance while minimizing environmental impact.</p>
+							</div>
+
+							<div className={'box'}>
+								<div>
+									<img src="/img/icons/luxury.svg" alt="" />
+								</div>
+								<span>Clean Performance</span>
+								<p>High-efficacy formulas without unnecessary additives.</p>
+							</div>
+						</Stack>
+					</Stack>
+				</Stack>
+
+				{/* PARTNERS */}
 				<Stack className={'partners'}>
 					<Stack className={'container'}>
 						<span>Trusted by beauty lovers worldwide</span>
@@ -122,6 +177,8 @@ const About: NextPage = () => {
 						</Stack>
 					</Stack>
 				</Stack>
+
+				{/* HELP */}
 				<Stack className={'help'}>
 					<Stack className={'container'}>
 						<Box component={'div'} className={'left'}>
