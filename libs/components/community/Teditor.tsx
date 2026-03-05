@@ -12,7 +12,7 @@ import { Message } from '../../enums/common.enum';
 
 import { useMutation } from '@apollo/client';
 import { CREATE_BOARD_ARTICLE } from '../../../apollo/user/mutation';
-import { toastSuccess } from '../../toast';
+import { toastError, toastSuccess } from '../../toast';
 
 const TuiEditor = () => {
 	const editorRef = useRef<Editor>(null),
@@ -97,8 +97,7 @@ const TuiEditor = () => {
 					input: { ...memoizedValues, articleCategory },
 				},
 			});
-
-			await toastSuccess('Article is created successfully', 700);
+			toastSuccess('Article is created successfully');
 			await router.push({
 				pathname: '/mypage',
 				query: {
@@ -107,7 +106,7 @@ const TuiEditor = () => {
 			});
 		} catch (err: any) {
 			console.log(err);
-			toastError(new Error(Message.INSERT_ALL_INPUTS)).then();
+			toastError(Message.INSERT_ALL_INPUTS);
 		}
 	};
 
@@ -134,7 +133,7 @@ const TuiEditor = () => {
 							<MenuItem value={BoardArticleCategory.FREE}>
 								<span>Free</span>
 							</MenuItem>
-							<MenuItem value={BoardArticleCategory.HUMOR}>Humor</MenuItem>
+							<MenuItem value={BoardArticleCategory.TUTORIAL}>TUTORIAL</MenuItem>
 							<MenuItem value={BoardArticleCategory.NEWS}>News</MenuItem>
 							<MenuItem value={BoardArticleCategory.RECOMMEND}>Recommendation</MenuItem>
 						</Select>

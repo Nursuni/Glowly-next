@@ -81,7 +81,7 @@ const Top = () => {
 
 	useEffect(() => {
 		switch (router.pathname) {
-			case '/product/detail':
+			case '/catalog/detail':
 				setBgColor(true);
 				break;
 			default:
@@ -137,14 +137,14 @@ const Top = () => {
 				<Link href={'/'}>
 					<div>{t('Home')}</div>
 				</Link>
-				<Link href={'/products'}>
+				<Link href={'/catalog'}>
 					<div>{t('Catalog')}</div>
 				</Link>
 				<Link href={'/seller'}>
 					<div>{t('Sellers')}</div>
 				</Link>
-				<Link href={'/community?articleCategory=FREE'}>
-					<div>{t('Community')}</div>
+				<Link href={'/blog?articleCategory=FREE'}>
+					<div>{t('Blog')}</div>
 				</Link>
 				<Link href={'/support'}>
 					<div>{t('Support')}</div>
@@ -179,14 +179,14 @@ const Top = () => {
 						<Link href={'/'}>
 							<div className={isActive('/') && router.pathname === '/' ? 'active' : ''}>{t('Home')}</div>
 						</Link>
-						<Link href={'/products'}>
-							<div className={isActive('/products') ? 'active' : ''}>{t('Catalog')}</div>
+						<Link href={'/catalog'}>
+							<div className={isActive('/catalog') ? 'active' : ''}>{t('Catalog')}</div>
 						</Link>
 						<Link href={'/seller'}>
 							<div className={isActive('/seller') ? 'active' : ''}>{t('Sellers')}</div>
 						</Link>
-						<Link href={'/community?articleCategory=FREE'}>
-							<div className={isActive('/community') ? 'active' : ''}>{t('Blog')}</div>
+						<Link href={'/blog?articleCategory=FREE'}>
+							<div className={isActive('/blog') ? 'active' : ''}>{t('Blog')}</div>
 						</Link>
 						{user?._id && (
 							<Link href={'/mypage'}>

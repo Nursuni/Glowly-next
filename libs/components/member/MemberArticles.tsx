@@ -12,7 +12,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { LIKE_TARGET_BOARD_ARTICLE } from '../../../apollo/user/mutation';
 import { GET_BOARD_ARTICLES } from '../../../apollo/user/query';
 import { Messages } from '../../config';
-import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { toastError, toastSuccess } from '../../toast';
 
 const MemberArticles: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
@@ -65,10 +65,10 @@ const MemberArticles: NextPage = ({ initialInput, ...props }: any) => {
 			});
 
 			await boardArticlesRefetch({ input: searchFilter });
-			await sweetTopSmallSuccessAlert('success', 800);
+			await toastSuccess('success');
 		} catch (err: any) {
 			console.log('ERROR, likeProductHandler:', err.message);
-			sweetMixinErrorAlert(err.message).then();
+			toastError(err.message);
 		}
 	};
 

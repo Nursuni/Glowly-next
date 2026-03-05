@@ -23,13 +23,15 @@ const tokenRefreshLink = new TokenRefreshLink({
 	accessTokenField: 'accessToken',
 	isTokenValidOrUndefined: () => {
 		return true;
-	}, // @ts-ignore
+	},
 	fetchAccessToken: () => {
 		// execute refresh token
 		return null;
 	},
+	handleFetch: (operation) => {
+		return operation;
+	},
 });
-
 //Custom WebSocket client
 class LoggingWebSocket {
 	private socket: WebSocket;

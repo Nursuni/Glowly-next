@@ -12,6 +12,8 @@ export interface TotalCounter {
 }
 
 export interface Product {
+	productCategory: string;
+	productStock: number;
 	_id: string;
 	productType: ProductType;
 	productStatus: ProductStatus;

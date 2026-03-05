@@ -11,11 +11,6 @@ import { T } from '../../libs/types/common';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { BoardArticlesInquiry } from '../../libs/types/board-article/board-article.input';
 import { BoardArticleCategory } from '../../libs/enums/board-article.enum';
-import { LIKE_TARGET_BOARD_ARTICLE } from '../../apollo/user/mutation';
-import { useMutation, useQuery } from '@apollo/client';
-import { GET_BOARD_ARTICLES } from '../../apollo/user/query';
-import { Message } from '../../libs/enums/common.enum';
-import { toastError, toastPromise } from '../../libs/toast';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -55,7 +50,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 		setSearchCommunity({ ...searchCommunity, page: 1, search: { articleCategory: value as BoardArticleCategory } });
 		await router.push(
 			{
-				pathname: '/community',
+				pathname: '/blog',
 				query: { articleCategory: value },
 			},
 			router.pathname,
@@ -65,24 +60,6 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 
 	const paginationHandler = (e: T, value: number) => {
 		setSearchCommunity({ ...searchCommunity, page: value });
-	};
-
-	const likeArticleHandler = async (e: T, user: T, id: string) => {
-		try {
-			e.stopPropagation();
-			if (!id) return;
-			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
-
-			toastPromise(Promise.resolve(), {
-				pending: 'Loading...',
-				success: 'Article liked successfully!',
-				error: 'Failed to like article',
-			});
-		} catch (err) {
-			const errorMessage = err instanceof Error ? err.message : String(err);
-			console.log('errors, likeProperrtyMember:', errorMessage);
-			toastError(errorMessage);
-		}
 	};
 
 	if (device === 'mobile') {
@@ -127,7 +104,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 									<Tab
 										value={'HUMOR'}
 										label={'Humor'}
-										className={`tab-button ${searchCommunity.search.articleCategory == 'ANNOUNCEMENT' ? 'active' : ''}`}
+										className={`tab-button ${searchCommunity.search.articleCategory == 'TUTORIAL' ? 'active' : ''}`}
 									/>
 								</TabList>
 							</Stack>
@@ -163,7 +140,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 														<CommunityCard
 															boardArticle={boardArticle}
 															key={boardArticle?._id}
-															likeArticleHandler={likeArticleHandler}
+															likeArticleHandler={undefined}
 														/>
 													);
 												})
@@ -183,7 +160,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 														<CommunityCard
 															boardArticle={boardArticle}
 															key={boardArticle?._id}
-															likeArticleHandler={likeArticleHandler}
+															likeArticleHandler={undefined}
 														/>
 													);
 												})
@@ -203,7 +180,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 														<CommunityCard
 															boardArticle={boardArticle}
 															key={boardArticle?._id}
-															likeArticleHandler={likeArticleHandler}
+															likeArticleHandler={undefined}
 														/>
 													);
 												})
@@ -223,7 +200,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 														<CommunityCard
 															boardArticle={boardArticle}
 															key={boardArticle?._id}
-															likeArticleHandler={likeArticleHandler}
+															likeArticleHandler={undefined}
 														/>
 													);
 												})

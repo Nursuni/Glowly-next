@@ -27,13 +27,13 @@ const withLayoutBasic = (Component: any) => {
 			let bgImage = '';
 
 			switch (router.pathname) {
-				case '/products':
+				case '/catalog':
 					title = 'Catalog';
 					desc = 'Skincare & Cosmetics Collection';
 					bgImage = '/img/banner/products.png';
 					break;
 
-				case '/community':
+				case '/blog':
 					title = 'Beauty Community';
 					desc = 'Tips, Trends & Skincare Knowledge';
 					bgImage = '/img/banner/journal.jpg';

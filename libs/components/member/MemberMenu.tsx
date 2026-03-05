@@ -89,7 +89,7 @@ const MemberMenu = (props: MemberMenuProps) => {
 									<Link
 										href={{
 											pathname: '/member',
-											query: { ...router.query, category: 'propeproductsrties' },
+											query: { ...router.query, category: 'popularproducts' },
 										}}
 										scroll={false}
 										style={{ width: '100%' }}

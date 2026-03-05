@@ -110,25 +110,6 @@ const Footer = () => {
 					</Box>
 				</Stack>
 
-				{/* CENTER BADGE — mirrors Bloomwell's award shield */}
-				<Box className={'center-badge'}>
-					<Box className={'badge-wrap'}>
-						<span className={'badge-number'}>
-							<sup>#</sup>1
-						</span>
-						<span className={'badge-text'}>
-							Award-winning
-							<br />
-							Beauty Brand
-						</span>
-						<div className={'badge-dots'}>
-							<span />
-							<span />
-							<span />
-						</div>
-					</Box>
-				</Box>
-
 				{/* RIGHT */}
 				<Stack className={'right'}>
 					<Box className={'top'}>

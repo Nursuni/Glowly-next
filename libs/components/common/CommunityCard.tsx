@@ -25,13 +25,13 @@ const CommunityCard = (props: CommunityCardProps) => {
 	const user = useReactiveVar(userVar);
 	const imagePath: string = boardArticle?.articleImage
 		? `${REACT_APP_API_URL}/${boardArticle?.articleImage}`
-		: '/img/community/communityImg.png';
+		: '/img/blog/communityImg.png';
 
 	/** HANDLERS **/
 	const chooseArticleHandler = (e: React.SyntheticEvent, boardArticle: BoardArticle) => {
 		router.push(
 			{
-				pathname: '/community/detail',
+				pathname: '/blog/detail',
 				query: { articleCategory: boardArticle?.articleCategory, id: boardArticle?._id },
 			},
 			undefined,

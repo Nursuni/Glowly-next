@@ -9,27 +9,31 @@ import { appWithTranslation } from 'next-i18next';
 import '../scss/app.scss';
 import '../scss/pc/main.scss';
 import { useApollo } from '../apollo/client';
+import { ApolloProvider } from '@apollo/client';
 
 const App = ({ Component, pageProps }: AppProps) => {
 	// @ts-ignore
-	const [theme, setTheme] = useState(createTheme(light));
+	const [theme] = useState(createTheme(light));
 	const client = useApollo(pageProps.initialApolloState);
+
 	return (
-		<ThemeProvider theme={theme}>
-			<CssBaseline />
-			<Component {...pageProps} />
-			<ToastContainer
-				position="top-right"
-				autoClose={2500}
-				newestOnTop
-				closeOnClick
-				pauseOnHover
-				draggable
-				pauseOnFocusLoss
-				limit={3}
-				theme="colored"
-			/>
-		</ThemeProvider>
+		<ApolloProvider client={client}>
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				<Component {...pageProps} />
+				<ToastContainer
+					position="top-right"
+					autoClose={2500}
+					newestOnTop
+					closeOnClick
+					pauseOnHover
+					draggable
+					pauseOnFocusLoss
+					limit={3}
+					theme="colored"
+				/>
+			</ThemeProvider>
+		</ApolloProvider>
 	);
 };
 

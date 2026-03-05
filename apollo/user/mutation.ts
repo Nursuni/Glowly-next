@@ -332,3 +332,35 @@ export const UNSUBSCRIBE = gql`
 		}
 	}
 `;
+
+export const CreateOrder = gql`
+	mutation CreateOrder($input: CreateOrderInput!) {
+		createOrder(input: $input) {
+			_id
+			orderStatus
+			paymentStatus
+			paymentMethod
+			deliveryMethod
+			recipientName
+			recipientPhone
+			deliveryAddress
+			orderItems {
+				_id
+				productId
+				itemQty
+				itemPrice
+				itemShade
+				productData {
+					productTitle
+					productImages
+				}
+			}
+			itemsTotal
+			deliveryFee
+			discountAmount
+			orderTotal
+			couponCode
+			createdAt
+		}
+	}
+`;

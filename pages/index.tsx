@@ -4,6 +4,12 @@ import withLayoutMain from '../libs/components/layout/LayoutHome';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Stack } from '@mui/material';
+import TrendProducts from '../libs/components/homepage/TrendProducts';
+import TopSellers from '../libs/components/homepage/TopSellers';
+import Events from '../libs/components/homepage/Events';
+import CommunityBoards from '../libs/components/homepage/CommunityBoards';
+import Advertisement from '../libs/components/homepage/Advertisement';
+import TopProducts from '../libs/components/homepage/TopProducts';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -17,7 +23,15 @@ const Home: NextPage = () => {
 	if (device === 'mobile') {
 		return <Stack className={'home-page'}></Stack>;
 	} else {
-		return <Stack className={'home-page'}></Stack>;
+		return (
+			<Stack className={'home-page'}>
+				<Advertisement />
+				<TopProducts />
+				<TopSellers />
+				<Events />
+				<CommunityBoards />
+			</Stack>
+		);
 	}
 };
 

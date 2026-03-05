@@ -4,14 +4,23 @@ import { NextPage } from 'next';
 import { Stack } from '@mui/material';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
+import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
+import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
 import { useMutation, useReactiveVar } from '@apollo/client';
-import { userVar } from '../../../apollo/store';
-import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '../../../apollo/user/mutation';
-import { Messages } from '../../config';
-import { toastError, toastInfo, toastSuccess } from '../../toast';
-import MemberFollowings from '../member/MemberFollowings';
-import MemberFollowers from '../member/MemberFollowers';
+import { userVar } from '../../apollo/store';
+import { Messages } from '../../libs/config';
+import { toastError, toastInfo, toastSuccess } from '../../libs/toast';
+import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
+import MyMenu from '../../libs/components/mypage/MyMenu';
+import AddProduct from '../../libs/components/mypage/AddNewProduct';
+import MyProducts from '../../libs/components/member/MemberProducts';
+import MyFavorites from '../../libs/components/mypage/MyFavorites';
+import RecentlyVisited from '../../libs/components/mypage/RecentlyVisited';
+import WriteArticle from '../../libs/components/mypage/WriteArticle';
+import MyArticles from '../../libs/components/mypage/MyArticles';
+import MyProfile from '../../libs/components/mypage/MyProfile';
+import MemberFollowers from '../../libs/components/member/MemberFollowers';
+import MemberFollowings from '../../libs/components/member/MemberFollowings';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -112,8 +121,8 @@ const MyPage: NextPage = () => {
 							</Stack>
 							<Stack className="main-config" mb={'76px'}>
 								<Stack className={'list-config'}>
-									{category === 'addProperty' && <AddProduct />}
-									{category === 'myProperties' && <MyProducts />}
+									{category === 'addProduct' && <AddProduct />}
+									{category === 'myProducts' && <MyProducts />}
 									{category === 'myFavorites' && <MyFavorites />}
 									{category === 'recentlyVisited' && <RecentlyVisited />}
 									{category === 'myArticles' && <MyArticles />}
