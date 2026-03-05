@@ -364,3 +364,13 @@ export const CreateOrder = gql`
 		}
 	}
 `;
+
+const SUBSCRIBE_NEWSLETTER = gql`
+	mutation SubscribeNewsletter($email: String!) {
+		subscribeNewsletter(email: $email) {
+			_id
+			email
+			createdAt
+		}
+	}
+`;
