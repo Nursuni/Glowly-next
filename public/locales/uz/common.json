@@ -1,27 +1,24 @@
 {
 	"Home": "Bosh sahifa",
-	"Shop": "Do‘kon",
-	"Products": "Mahsulotlar",
-	"Collections": "Kolleksiyalar",
-	"Beauty Journal": "Go‘zallik blogi",
-	"My Beauty": "Mening go‘zalligim",
-	"Contact": "Aloqa",
+	"Catalog": "Do‘kon",
+	"Brands": "Mahsulotlar",
+	"Blog": "Kolleksiyalar",
+	"Support": "Go‘zallik jurnali",
+	"About us": "Mening go‘zalligim",
+	"Contact": "Mijozlar xizmati",
 	"Login": "Kirish",
 	"Register": "Ro‘yxatdan o‘tish",
-
+	"FreeShipping": "$50 DAN ORTIQ BUYURTMALAR UCHUN BEPUL YETKAZIB BERISH",
 	"Category": "Kategoriya",
 	"Skin Type": "Teri turi",
 	"Concern": "Teri muammosi",
 	"Advanced": "Kengaytirilgan qidiruv",
-
 	"Product Search": "Mahsulot qidirish",
-	"Discover Your Beauty Essentials": "O‘zingizga mos go‘zallik mahsulotlarini toping",
+	"Discover Your Beauty Essentials": "Go‘zallik mahsulotlaringizni kashf eting",
 	"Home / Shop": "Bosh sahifa / Do‘kon",
-
 	"Product Page": "Mahsulot sahifasi",
 	"My Profile": "Mening profilim",
 	"Article Detail": "Maqola tafsiloti",
-
 	"Login/Signup": "Kirish / Ro‘yxatdan o‘tish",
 	"Beauty Member": "Go‘zallik a’zosi"
 }

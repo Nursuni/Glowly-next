@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import ProductBigCard from '../../libs/components/common/ProductBigCard';
-import ReviewCard from '../../libs/components/seller/ReviewCard';
+
 import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { useReactiveVar } from '@apollo/client';
@@ -19,6 +19,7 @@ import { CommentGroup } from '../../libs/enums/comment.enum';
 import { REACT_APP_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { toastError } from '../../libs/toast';
+import ReviewCard from '@/libs/components/brand/ReviewCard';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -26,20 +27,20 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const SellerDetail: NextPage = ({ initialInput, initialComment }: any) => {
+const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 
 	const [mbId, setMbId] = useState<string | null>(null);
-	const [seller, setSeller] = useState<Member | null>(null);
+	const [brand, setBrand] = useState<Member | null>(null);
 
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(initialInput);
-	const [sellerProducts, setSellerProducts] = useState<Product[]>([]);
+	const [brandProducts, setBrandProducts] = useState<Product[]>([]);
 	const [productTotal, setProductTotal] = useState<number>(0);
 
 	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
-	const [sellerComments, setSellerComments] = useState<Comment[]>([]);
+	const [brandComments, setBrandComments] = useState<Comment[]>([]);
 	const [commentTotal, setCommentTotal] = useState<number>(0);
 
 	const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
@@ -50,8 +51,8 @@ const SellerDetail: NextPage = ({ initialInput, initialComment }: any) => {
 
 	/** LIFECYCLE **/
 	useEffect(() => {
-		if (router.query.sellerId) {
-			setMbId(router.query.sellerId as string);
+		if (router.query.brandId) {
+			setMbId(router.query.brandId as string);
 		}
 	}, [router]);
 
@@ -87,31 +88,31 @@ const SellerDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	};
 
 	if (device === 'mobile') {
-		return <div>SELLER DETAIL PAGE MOBILE</div>;
+		return <div>Brand DETAIL PAGE MOBILE</div>;
 	}
 
 	return (
-		<Stack className={'seller-detail-page'}>
+		<Stack className={'brand-detail-page'}>
 			<Stack className={'container'}>
-				{/* SELLER INFO */}
-				<Stack className={'seller-info'}>
+				{/* Brand INFO */}
+				<Stack className={'brand-info'}>
 					<img
-						src={seller?.memberImage ? `${REACT_APP_API_URL}/${seller?.memberImage}` : '/img/profile/defaultUser.svg'}
+						src={brand?.memberImage ? `${REACT_APP_API_URL}/${brand?.memberImage}` : '/img/profile/defaultUser.svg'}
 						alt=""
 					/>
-					<Box component={'div'} className={'info'} onClick={() => redirectToMemberPageHandler(seller?._id as string)}>
-						<strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+					<Box component={'div'} className={'info'} onClick={() => redirectToMemberPageHandler(brand?._id as string)}>
+						<strong>{brand?.memberFullName ?? brand?.memberNick}</strong>
 						<div>
 							<img src="/img/icons/call.svg" alt="" />
-							<span>{seller?.memberPhone}</span>
+							<span>{brand?.memberPhone}</span>
 						</div>
 					</Box>
 				</Stack>
 
-				{/* SELLER PRODUCTS */}
-				<Stack className={'seller-product-list'}>
+				{/* Brand PRODUCTS */}
+				<Stack className={'brand-product-list'}>
 					<Stack className={'card-wrap'}>
-						{sellerProducts.map((product: Product) => (
+						{brandProducts.map((product: Product) => (
 							<div className={'wrap-main'} key={product?._id}>
 								<ProductBigCard product={product} likeProductHandler={undefined} />
 							</div>
@@ -159,7 +160,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment }: any) => {
 								</span>
 							</Box>
 
-							{sellerComments.map((comment: Comment) => (
+							{brandComments.map((comment: Comment) => (
 								<ReviewCard comment={comment} key={comment?._id} />
 							))}
 
@@ -206,7 +207,7 @@ const SellerDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	);
 };
 
-SellerDetail.defaultProps = {
+BrandDetail.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 9,
@@ -225,4 +226,4 @@ SellerDetail.defaultProps = {
 	},
 };
 
-export default withLayoutBasic(SellerDetail);
+export default withLayoutBasic(BrandDetail);

@@ -164,7 +164,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 		}
 	}, [insertProductData]);
 
-	if (user?.memberType !== 'SELLER') {
+	if (user?.memberType !== 'BRAND') {
 		router.back();
 	}
 

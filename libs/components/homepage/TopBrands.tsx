@@ -7,44 +7,44 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper';
 
 import { Member } from '../../types/member/member';
-import { SellersInquiry } from '../../types/member/member.input';
-import TopSellerCard from './TopSellerCard';
+import { BrandsInquiry } from '../../types/member/member.input';
+import TopBrandCard from './TopBrandCard';
 
-interface TopSellersProps {
-	initialInput: SellersInquiry;
+interface TopBrandsProps {
+	initialInput: BrandsInquiry;
 }
 
-const TopSellers = (props: TopSellersProps) => {
+const TopBrands = (props: TopBrandsProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
-	const [topSellers, setTopSellers] = useState<Member[]>([]);
+	const [topBrands, setTopBrands] = useState<Member[]>([]);
 
 	/** HANDLERS **/
 
-	const redirectToSellersPage = () => {
-		router.push('/seller');
+	const redirectToBrandsPage = () => {
+		router.push('/brand');
 	};
 
 	if (device === 'mobile') {
 		return (
-			<Stack className={'top-sellers'}>
+			<Stack className={'top-brands'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Top Sellers</span>
+						<span>Top Brands</span>
 					</Stack>
 
 					<Stack className={'wrapper'}>
 						<Swiper
-							className={'top-sellers-swiper'}
+							className={'top-brands-swiper'}
 							slidesPerView={'auto'}
 							centeredSlides={true}
 							spaceBetween={29}
 							modules={[Autoplay]}
 						>
-							{topSellers.map((seller: Member) => (
-								<SwiperSlide className={'top-sellers-slide'} key={seller?._id}>
-									<TopSellerCard seller={seller} />
+							{topBrands.map((brand: Member) => (
+								<SwiperSlide className={'top-brands-slide'} key={brand?._id}>
+									<TopBrandCard brand={brand} />
 								</SwiperSlide>
 							))}
 						</Swiper>
@@ -55,47 +55,47 @@ const TopSellers = (props: TopSellersProps) => {
 	}
 
 	return (
-		<Stack className={'top-sellers'}>
+		<Stack className={'top-brands'}>
 			<Stack className={'container'}>
 				<Stack className={'info-box'}>
 					<Box component={'div'} className={'left'}>
-						<span>Top Sellers</span>
-						<p>Our top sellers are always ready to serve you</p>
+						<span>Top Brands</span>
+						<p>Our top brands are always ready to serve you</p>
 					</Box>
 
 					<Box component={'div'} className={'right'}>
-						<div className={'more-box'} onClick={redirectToSellersPage} style={{ cursor: 'pointer' }}>
-							<span>See All Sellers</span>
+						<div className={'more-box'} onClick={redirectToBrandsPage} style={{ cursor: 'pointer' }}>
+							<span>See All Brands</span>
 							<img src="/img/icons/rightup.svg" alt="" />
 						</div>
 					</Box>
 				</Stack>
 
 				<Stack className={'wrapper'}>
-					<Box component={'div'} className={'switch-btn swiper-sellers-prev'}>
+					<Box component={'div'} className={'switch-btn swiper-brands-prev'}>
 						<ArrowBackIosNewIcon />
 					</Box>
 
 					<Box component={'div'} className={'card-wrapper'}>
 						<Swiper
-							className={'top-sellers-swiper'}
+							className={'top-brands-swiper'}
 							slidesPerView={'auto'}
 							spaceBetween={29}
 							modules={[Autoplay, Navigation, Pagination]}
 							navigation={{
-								nextEl: '.swiper-sellers-next',
-								prevEl: '.swiper-sellers-prev',
+								nextEl: '.swiper-brands-next',
+								prevEl: '.swiper-brands-prev',
 							}}
 						>
-							{topSellers.map((seller: Member) => (
-								<SwiperSlide className={'top-sellers-slide'} key={seller?._id}>
-									<TopSellerCard seller={seller} />
+							{topBrands.map((brand: Member) => (
+								<SwiperSlide className={'top-brands-slide'} key={brand?._id}>
+									<TopBrandCard brand={brand} />
 								</SwiperSlide>
 							))}
 						</Swiper>
 					</Box>
 
-					<Box component={'div'} className={'switch-btn swiper-sellers-next'}>
+					<Box component={'div'} className={'switch-btn swiper-brands-next'}>
 						<ArrowBackIosNewIcon />
 					</Box>
 				</Stack>
@@ -104,7 +104,7 @@ const TopSellers = (props: TopSellersProps) => {
 	);
 };
 
-TopSellers.defaultProps = {
+TopBrands.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 10,
@@ -114,4 +114,4 @@ TopSellers.defaultProps = {
 	},
 };
 
-export default TopSellers;
+export default TopBrands;

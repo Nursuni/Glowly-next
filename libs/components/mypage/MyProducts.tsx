@@ -11,16 +11,17 @@ import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
 import { UPDATE_PRODUCT } from '../../../apollo/user/mutation';
 import { Product } from '../../types/product/product';
-import { GET_SELLER_PRODUCTS } from '../../../apollo/user/query';
-import { SellerProductsInquiry } from '../../types/product/product.input';
+
+import { BrandProductsInquiry } from '../../types/product/product.input';
 import { ProductStatus } from '../../enums/product.enum';
 import { toastError, toastWarning } from '../../toast';
 import { ProductCard } from './ProductCard';
+import { GET_BRAND_PRODUCTS } from '@/apollo/user/query';
 
 const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
-	const [searchFilter, setSearchFilter] = useState<SellerProductsInquiry>(initialInput);
-	const [sellerProducts, setSellerProducts] = useState<Product[]>([]);
+	const [searchFilter, setSearchFilter] = useState<BrandProductsInquiry>(initialInput);
+	const [brandProducts, setBrandProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
@@ -28,17 +29,17 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	/** APOLLO REQUESTS **/
 	const [updateProduct] = useMutation(UPDATE_PRODUCT);
 	const {
-		loading: getSellerProductsLoading,
-		data: getSellerProductsData,
-		error: getSellerProductsError,
-		refetch: getSellerProductsRefetch,
-	} = useQuery(GET_SELLER_PRODUCTS, {
+		loading: getBrandProductsLoading,
+		data: getBrandProductsData,
+		error: getBrandProductsError,
+		refetch: getBrandProductsRefetch,
+	} = useQuery(GET_BRAND_PRODUCTS, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setSellerProducts(data?.getSellerProducts?.list);
-			setTotal(data?.getSellerProducts?.metaCounter[0]?.total);
+			setBrandProducts(data?.getBrandProducts?.list);
+			setTotal(data?.getBrandProducts?.metaCounter[0]?.total);
 		},
 	});
 
@@ -63,7 +64,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 					},
 				});
 
-				await getSellerProductsRefetch({ input: searchFilter });
+				await getBrandProductsRefetch({ input: searchFilter });
 			}
 		} catch (err: any) {
 			await toastError(err);
@@ -82,14 +83,14 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 					},
 				});
 
-				await getSellerProductsRefetch({ input: searchFilter });
+				await getBrandProductsRefetch({ input: searchFilter });
 			}
 		} catch (err: any) {
 			await toastError(err);
 		}
 	};
 
-	if (user?.memberType !== 'SELLER') {
+	if (user?.memberType !== 'BRAND') {
 		router.back();
 	}
 
@@ -128,13 +129,13 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 							{searchFilter.search.productStatus === 'ACTIVE' && <Typography className="title-text">Action</Typography>}
 						</Stack>
 
-						{sellerProducts?.length === 0 ? (
+						{brandProducts?.length === 0 ? (
 							<div className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
 								<p>No Product found!</p>
 							</div>
 						) : (
-							sellerProducts.map((product: Product) => {
+							brandProducts.map((product: Product) => {
 								return (
 									<ProductCard
 										product={product}
@@ -145,7 +146,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 							})
 						)}
 
-						{sellerProducts.length !== 0 && (
+						{brandProducts.length !== 0 && (
 							<Stack className="pagination-config">
 								<Stack className="pagination-box">
 									<Pagination

@@ -7,23 +7,27 @@ import typography from './typography';
  */
 export const light = {
 	palette: {
-		type: 'light',
-		background: {
-			default: '#f4f6f8',
-			paper: common.white,
-		},
+		mode: 'light',
+
 		primary: {
-			contrastText: '#ffffff',
-			main: '#E92C28',
+			main: '#F564A9',
 		},
+
 		secondary: {
-			main: '#1646C1',
+			main: '#262626',
 		},
+
+		background: {
+			default: '#FFFFFF',
+			paper: '#FFFFFF',
+		},
+
 		text: {
-			primary: '#212121',
-			secondary: '#616161',
-			dark: common.black,
+			primary: '#262626',
+			secondary: '#6B6B6B',
 		},
+
+		divider: '#E5E5E5',
 	},
 	components: {
 		MuiTypography: {

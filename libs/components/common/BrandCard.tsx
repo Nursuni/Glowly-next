@@ -10,32 +10,32 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 
-interface SellerCard {
-	seller: any;
+interface BrandCard {
+	brand: any;
 	likeMemberHandler: any;
 }
 
-const SellerCard = (props: SellerCard) => {
-	const { seller, likeMemberHandler } = props;
+const BrandCard = (props: BrandCard) => {
+	const { brand, likeMemberHandler } = props;
 
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
-	const imagePath: string = seller?.memberImage
-		? `${REACT_APP_API_URL}/${seller?.memberImage}`
+	const imagePath: string = brand?.memberImage
+		? `${REACT_APP_API_URL}/${brand?.memberImage}`
 		: '/img/profile/defaultUser.svg';
 
 	if (device === 'mobile') {
 		return (
-			<Stack className="seller-general-card">
+			<Stack className="brand-general-card">
 				<Link
 					href={{
-						pathname: '/seller/detail',
-						query: { sellerId: seller?._id },
+						pathname: '/brand/detail',
+						query: { brandId: brand?._id },
 					}}
 				>
 					<Box
 						component={'div'}
-						className={'seller-img'}
+						className={'brand-img'}
 						style={{
 							backgroundImage: `url(${imagePath})`,
 							backgroundSize: 'cover',
@@ -43,34 +43,34 @@ const SellerCard = (props: SellerCard) => {
 							backgroundRepeat: 'no-repeat',
 						}}
 					>
-						<div>{seller?.memberProducts} products</div>
+						<div>{brand?.memberProducts} products</div>
 					</Box>
 				</Link>
 
-				<Stack className={'seller-desc'}>
-					<Box component={'div'} className={'seller-info'}>
+				<Stack className={'brand-desc'}>
+					<Box component={'div'} className={'brand-info'}>
 						<Link
 							href={{
-								pathname: '/seller/detail',
-								query: { sellerId: seller?._id },
+								pathname: '/brand/detail',
+								query: { brandId: brand?._id },
 							}}
 						>
-							<strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+							<strong>{brand?.memberFullName ?? brand?.memberNick}</strong>
 						</Link>
-						<span>Seller</span>
+						<span>brand</span>
 					</Box>
 					<Box component={'div'} className={'buttons'}>
 						<Box className={'stat-item'}>
 							<RemoveRedEyeIcon fontSize="small" />
-							<Typography className="view-cnt">{seller?.memberViews}</Typography>
+							<Typography className="view-cnt">{brand?.memberViews}</Typography>
 						</Box>
-						<Box className={'stat-item'} onClick={() => likeMemberHandler(user, seller?._id)}>
-							{seller?.meLiked && seller?.meLiked[0]?.myFavorite ? (
+						<Box className={'stat-item'} onClick={() => likeMemberHandler(user, brand?._id)}>
+							{brand?.meLiked && brand?.meLiked[0]?.myFavorite ? (
 								<FavoriteIcon color={'primary'} fontSize="small" />
 							) : (
 								<FavoriteBorderIcon fontSize="small" />
 							)}
-							<Typography className="view-cnt">{seller?.memberLikes}</Typography>
+							<Typography className="view-cnt">{brand?.memberLikes}</Typography>
 						</Box>
 					</Box>
 				</Stack>
@@ -78,16 +78,16 @@ const SellerCard = (props: SellerCard) => {
 		);
 	} else {
 		return (
-			<Stack className="seller-general-card">
+			<Stack className="brand-general-card">
 				<Link
 					href={{
-						pathname: '/seller/detail',
-						query: { sellerId: seller?._id },
+						pathname: '/brand/detail',
+						query: { brandId: brand?._id },
 					}}
 				>
 					<Box
 						component={'div'}
-						className={'seller-img'}
+						className={'brand-img'}
 						style={{
 							backgroundImage: `url(${imagePath})`,
 							backgroundSize: 'cover',
@@ -95,35 +95,35 @@ const SellerCard = (props: SellerCard) => {
 							backgroundRepeat: 'no-repeat',
 						}}
 					>
-						<div>{seller?.memberProducts} products</div>
+						<div>{brand?.memberProducts} products</div>
 					</Box>
 				</Link>
 
-				<Stack className={'seller-desc'}>
-					<Box component={'div'} className={'seller-info'}>
+				<Stack className={'brand-desc'}>
+					<Box component={'div'} className={'brand-info'}>
 						<Link
 							href={{
-								pathname: '/seller/detail',
-								query: { sellerId: seller?._id },
+								pathname: '/brand/detail',
+								query: { brandId: brand?._id },
 							}}
 						>
-							<strong>{seller?.memberFullName ?? seller?.memberNick}</strong>
+							<strong>{brand?.memberFullName ?? brand?.memberNick}</strong>
 						</Link>
-						<span>Seller</span>
+						<span>brand</span>
 					</Box>
 					<Box component={'div'} className={'buttons'}>
 						<IconButton color={'default'}>
 							<RemoveRedEyeIcon />
 						</IconButton>
-						<Typography className="view-cnt">{seller?.memberViews}</Typography>
-						<IconButton color={'default'} onClick={() => likeMemberHandler(user, seller?._id)}>
-							{seller?.meLiked && seller?.meLiked[0]?.myFavorite ? (
+						<Typography className="view-cnt">{brand?.memberViews}</Typography>
+						<IconButton color={'default'} onClick={() => likeMemberHandler(user, brand?._id)}>
+							{brand?.meLiked && brand?.meLiked[0]?.myFavorite ? (
 								<FavoriteIcon color={'primary'} />
 							) : (
 								<FavoriteBorderIcon />
 							)}
 						</IconButton>
-						<Typography className="view-cnt">{seller?.memberLikes}</Typography>
+						<Typography className="view-cnt">{brand?.memberLikes}</Typography>
 					</Box>
 				</Stack>
 			</Stack>
@@ -131,4 +131,4 @@ const SellerCard = (props: SellerCard) => {
 	}
 };
 
-export default SellerCard;
+export default BrandCard;

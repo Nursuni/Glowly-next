@@ -4,9 +4,9 @@ import { gql } from '@apollo/client';
  *         MEMBER         *
  *************************/
 
-export const GET_SELLERS = gql`
-	query GetSellers($input: SellersInquiry!) {
-		getSellers(input: $input) {
+export const GET_BRANDS = gql`
+	query GetBrands($input: BrandsInquiry!) {
+		getBrands(input: $input) {
 			list {
 				_id
 				memberType
@@ -201,9 +201,9 @@ export const GET_PRODUCTS = gql`
 	}
 `;
 
-export const GET_SELLER_PRODUCTS = gql`
-	query GetSellerProducts($input: SellerProductsInquiry!) {
-		getSellerProducts(input: $input) {
+export const GET_BRAND_PRODUCTS = gql`
+	query GetBrandProducts($input: BrandProductsInquiry!) {
+		getBrandProducts(input: $input) {
 			list {
 				_id
 				productType

@@ -5,13 +5,14 @@ import withLayoutMain from '../libs/components/layout/LayoutHome';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Stack } from '@mui/material';
 import TrendProducts from '../libs/components/homepage/TrendProducts';
-import TopSellers from '../libs/components/homepage/TopSellers';
+
 import Events from '../libs/components/homepage/Events';
 import CommunityBoards from '../libs/components/homepage/CommunityBoards';
 import Advertisement from '../libs/components/homepage/Advertisement';
 import TopProducts from '../libs/components/homepage/TopProducts';
 import ShopByCategories from '../libs/components/homepage/ShopByCategories';
 import AIChat from '../libs/components/AIChat';
+import TopBrands from '@/libs/components/homepage/TopBrands';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -27,10 +28,9 @@ const Home: NextPage = () => {
 	} else {
 		return (
 			<Stack className={'home-page'}>
-				<ShopByCategories />
-
 				<TopProducts />
-				<TopSellers />
+				<TopBrands />
+				<ShopByCategories />
 				<Advertisement />
 				<AIChat />
 				<CommunityBoards />

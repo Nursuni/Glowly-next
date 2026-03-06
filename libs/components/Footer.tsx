@@ -49,7 +49,7 @@ const Footer = () => {
 								<strong>Shop</strong>
 								<span>Skincare</span>
 								<span>Makeup</span>
-								<span>Best Sellers</span>
+								<span>Best Brands</span>
 							</div>
 							<div>
 								<strong>Help</strong>
@@ -125,7 +125,7 @@ const Footer = () => {
 							<strong>Shop</strong>
 							<span>Skincare</span>
 							<span>Makeup</span>
-							<span>Best Sellers</span>
+							<span>Best Brands</span>
 						</div>
 						<div>
 							<strong>Help</strong>

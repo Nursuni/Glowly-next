@@ -52,8 +52,8 @@ const TopProducts = (props: TopProductsProps) => {
 			<Stack className={'container'}>
 				<Stack className={'info-box'}>
 					<Box component={'div'} className={'left'}>
-						<span>Top Products</span>
-						<p>Check out our Top Products</p>
+						<span>#BESTSELLERS</span>
+						<p>Featured Products</p>
 					</Box>
 
 					<Box component={'div'} className={'right'}>

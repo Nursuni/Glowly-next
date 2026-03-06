@@ -65,7 +65,7 @@ const MyMenu = () => {
 				<Stack
 					className={'section'}
 					style={{
-						height: user?.memberType === 'SELLER' ? '228px' : '153px',
+						height: user?.memberType === 'BRAND' ? '228px' : '153px',
 					}}
 				>
 					<Typography className="title" variant="h5">
@@ -73,7 +73,7 @@ const MyMenu = () => {
 					</Typography>
 
 					<List className={'sub-section'}>
-						{user?.memberType === 'SELLER' && (
+						{user?.memberType === 'BRAND' && (
 							<>
 								{/* ADD PRODUCT */}
 								<ListItem className={pathname === 'addProduct' ? 'focus' : ''}>

@@ -70,14 +70,12 @@ const About: NextPage = () => {
 					</Stack>
 				</Stack>
 
-				{/* SELLERS */}
-				<Stack className={'sellers'}>
+				{/* Brands */}
+				<Stack className={'brands'}>
 					<Stack className={'container'}>
 						<span className={'title'}>Meet Our Beauty Experts</span>
 						<p className={'desc'}>Passionate professionals behind Glowly’s innovation.</p>
-						<Stack className={'wrap'}>
-							{/* Seller cards here */}
-						</Stack>
+						<Stack className={'wrap'}>{/* Brand cards here */}</Stack>
 					</Stack>
 				</Stack>
 
@@ -128,9 +126,7 @@ const About: NextPage = () => {
 				<Stack className={'commitments'}>
 					<Stack className={'container'}>
 						<span className={'title'}>The Glowly Standard</span>
-						<p className={'desc'}>
-							We believe modern luxury should be beautiful, responsible, and intentional.
-						</p>
+						<p className={'desc'}>We believe modern luxury should be beautiful, responsible, and intentional.</p>
 
 						<Stack className={'boxes'}>
 							<div className={'box'}>

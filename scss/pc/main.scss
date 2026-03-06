@@ -7,8 +7,8 @@
 @import '/scss/pc/product/product';
 @import '/scss/pc/product/detail.scss';
 
-@import '/scss/pc/sellers/seller';
-@import '/scss/pc/sellers/detail.scss';
+@import '/scss/pc/brands/brand';
+@import '/scss/pc/brands/detail.scss';
 @import '/scss/pc/mypage/mypage.scss';
 @import '/scss/pc/mypage/addNewProduct.scss';
 @import '/scss/pc/mypage/myProducts.scss';
@@ -187,19 +187,17 @@ body::-webkit-scrollbar {
    NAVBAR
 ===================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
-
 .announcement-bar {
 	width: 100%;
-
-	color: #e2c9a8;
+	background: #f564a9;
+	color: #ffffff;
 	text-align: center;
 	padding: 8px 20px;
 	font-family: 'Jost', sans-serif;
 	font-size: 12px;
 	letter-spacing: 0.18em;
 	text-transform: uppercase;
-	font-weight: 400;
+	font-weight: 500;
 }
 
 .navbar {
@@ -323,7 +321,7 @@ body::-webkit-scrollbar {
 				left: 13px;
 				right: 13px;
 				height: 1px;
-				background: pink;
+				background: #f564a9;
 				transform: scaleX(0);
 				transform-origin: left center;
 				transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
@@ -337,7 +335,7 @@ body::-webkit-scrollbar {
 			}
 
 			&.active {
-				color: #c57ff0;
+				color: #f564a9;
 				&::after {
 					transform: scaleX(1);
 				}
@@ -385,7 +383,7 @@ body::-webkit-scrollbar {
 		}
 
 		&:hover {
-			background: rgba(192, 138, 94, 0.08);
+			background: rgba(245, 100, 169, 0.08);
 
 			img {
 				filter: brightness(0) saturate(100%) invert(60%) sepia(30%) saturate(600%) hue-rotate(350deg);
@@ -704,7 +702,7 @@ body::-webkit-scrollbar {
 				transition: border-color 0.2s;
 
 				&:focus-within {
-					border-color: pink;
+					border-color: #f564a9;
 				}
 
 				input {
@@ -728,10 +726,10 @@ body::-webkit-scrollbar {
 					color: #faf9f7;
 					font-size: 11.5px;
 					letter-spacing: 0.12em;
-					text-transform: uppercase;
+					text-transform: lowercase;
 					cursor: pointer;
 					font-weight: 500;
-					transition: background 0.2s;
+
 					white-space: nowrap;
 
 					&:hover {

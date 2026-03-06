@@ -11,13 +11,14 @@ import { ProductsInquiry } from '../../types/product/product.input';
 
 import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { Product } from '../../types/product/product';
+import { ProductCard } from '../mypage/ProductCard';
 
 const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const { memberId } = router.query;
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>({ ...initialInput });
-	const [sellerProducts, setSellerProducts] = useState<Product[]>([]);
+	const [brandProducts, setBrandProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 
 	/** APOLLO REQUESTS **/
@@ -32,7 +33,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 		skip: !searchFilter?.search?.memberId,
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: any) => {
-			setSellerProducts(data?.getProducts?.list);
+			setBrandProducts(data?.getProducts?.list);
 			setTotal(data?.getProducts?.metaCounter[0]?.total ?? 0);
 		},
 	});
@@ -63,7 +64,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 				</Stack>
 				<Stack className="products-list-box">
 					<Stack className="list-box">
-						{sellerProducts?.length > 0 && (
+						{brandProducts?.length > 0 && (
 							<Stack className="listing-title-box">
 								<Typography className="title-text">Listing title</Typography>
 								<Typography className="title-text">Date Published</Typography>
@@ -71,17 +72,17 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 								<Typography className="title-text">View</Typography>
 							</Stack>
 						)}
-						{sellerProducts?.length === 0 && (
+						{brandProducts?.length === 0 && (
 							<div className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
 								<p>No Product found!</p>
 							</div>
 						)}
-						{sellerProducts?.map((product: Product) => {
+						{brandProducts?.map((product: Product) => {
 							return <ProductCard product={product} memberPage={true} key={product?._id} />;
 						})}
 
-						{sellerProducts.length !== 0 && (
+						{brandProducts.length !== 0 && (
 							<Stack className="pagination-config">
 								<Stack className="pagination-box">
 									<Pagination

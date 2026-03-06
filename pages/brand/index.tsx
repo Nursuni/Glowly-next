@@ -4,7 +4,7 @@ import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { Stack, Box, Button, Pagination, Menu, MenuItem } from '@mui/material';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-import SellerCard from '../../libs/components/common/SellerCard';
+import BrandCard from '../../libs/components/common/BrandCard';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Member } from '../../libs/types/member/member';
@@ -15,7 +15,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const SellerList: NextPage = ({ initialInput, ...props }: any) => {
+const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -26,7 +26,7 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
 
-	const [sellers, setSellers] = useState<Member[]>([]);
+	const [brands, setBrands] = useState<Member[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [searchText, setSearchText] = useState<string>('');
@@ -37,7 +37,7 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 			const input_obj = JSON.parse(router?.query?.input as string);
 			setSearchFilter(input_obj);
 		} else {
-			router.replace(`/seller?input=${JSON.stringify(searchFilter)}`, `/seller?input=${JSON.stringify(searchFilter)}`);
+			router.replace(`/brand?input=${JSON.stringify(searchFilter)}`, `/brand?input=${JSON.stringify(searchFilter)}`);
 		}
 
 		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
@@ -79,26 +79,24 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 	/** PAGINATION **/
 	const paginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
 		searchFilter.page = value;
-		await router.push(
-			`/seller?input=${JSON.stringify(searchFilter)}`,
-			`/seller?input=${JSON.stringify(searchFilter)}`,
-			{ scroll: false },
-		);
+		await router.push(`/brand?input=${JSON.stringify(searchFilter)}`, `/brand?input=${JSON.stringify(searchFilter)}`, {
+			scroll: false,
+		});
 		setCurrentPage(value);
 	};
 
 	if (device === 'mobile') {
-		return <h1>SELLERS PAGE MOBILE</h1>;
+		return <h1>Brands PAGE MOBILE</h1>;
 	}
 
 	return (
-		<Stack className={'seller-list-page'}>
+		<Stack className={'brand-list-page'}>
 			<Stack className={'container'}>
 				<Stack className={'filter'}>
 					<Box component={'div'} className={'left'}>
 						<input
 							type="text"
-							placeholder={'Search for a seller or product'}
+							placeholder={'Search for a brand or product'}
 							value={searchText}
 							onChange={(e: any) => setSearchText(e.target.value)}
 							onKeyDown={(event: any) => {
@@ -137,20 +135,20 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 				</Stack>
 
 				<Stack className={'card-wrap'}>
-					{sellers?.length === 0 ? (
+					{brands?.length === 0 ? (
 						<div className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Sellers found!</p>
+							<p>No brands found!</p>
 						</div>
 					) : (
-						sellers.map((seller: Member) => {
-							return <SellerCard seller={seller} key={seller._id} likeMemberHandler={undefined} />;
+						brands.map((brand: Member) => {
+							return <BrandCard brand={brand} key={brand._id} likeMemberHandler={undefined} />;
 						})
 					)}
 				</Stack>
 
 				<Stack className={'pagination'}>
-					{sellers.length !== 0 && Math.ceil(total / searchFilter.limit) > 1 && (
+					{brands.length !== 0 && Math.ceil(total / searchFilter.limit) > 1 && (
 						<Pagination
 							page={currentPage}
 							count={Math.ceil(total / searchFilter.limit)}
@@ -160,9 +158,9 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 						/>
 					)}
 
-					{sellers.length !== 0 && (
+					{brands.length !== 0 && (
 						<span>
-							Total {total} seller{total > 1 ? 's' : ''} available
+							Total {total} brand{total > 1 ? 's' : ''} available
 						</span>
 					)}
 				</Stack>
@@ -171,7 +169,7 @@ const SellerList: NextPage = ({ initialInput, ...props }: any) => {
 	);
 };
 
-SellerList.defaultProps = {
+BrandList.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 10,
@@ -181,4 +179,4 @@ SellerList.defaultProps = {
 	},
 };
 
-export default withLayoutBasic(SellerList);
+export default withLayoutBasic(BrandList);

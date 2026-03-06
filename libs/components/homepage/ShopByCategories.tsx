@@ -1,103 +1,113 @@
 'use client';
 
-// components/ShopByCategories.tsx
-// Usage: import ShopByCategories from '@/components/ShopByCategories'
-// Requires: next/image, next/link — built into Next.js
-// Place your images in /public/categories/
-
+import { Box, Typography, Grid, Card, CardActionArea } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
-interface Category {
-	label: string;
-	href: string;
-	image: string;
-	alt: string;
-	count: number;
-	accent: string;
-}
+import { ProductType } from '@/libs/enums/product.enum';
 
-const categories: Category[] = [
+const categoryData = [
 	{
-		label: 'Face',
-		href: '/shop/face',
-		image: '/categories/face.jpg',
-		alt: 'Model holding face product',
-		count: 24,
+		type: ProductType.SKINCARE,
+		label: 'Skincare',
+		href: '/shop/skin',
+		image: '/img/categories/skincare.jpg',
 		accent: '#e8c9a0',
 	},
 	{
-		label: 'Eyes',
-		href: '/shop/eyes',
-		image: '/categories/eyes.jpg',
-		alt: 'Model applying eye product',
-		count: 18,
-		accent: '#b8c4bb',
-	},
-	{
-		label: 'Lips',
-		href: '/shop/lips',
-		image: '/categories/lips.jpg',
-		alt: 'Model applying lip color',
-		count: 31,
+		type: ProductType.MAKEUP,
+		label: 'Makeup',
+		href: '/shop/makeup',
+		image: '/img/categories/makeup.avif',
 		accent: '#d4a5a5',
 	},
 	{
-		label: 'Skin',
-		href: '/shop/skin',
-		image: '/categories/skin.jpg',
-		alt: 'Model holding skincare product',
-		count: 22,
+		type: ProductType.HAIRCARE,
+		label: 'Haircare',
+		href: '/shop/hair',
+		image: '/img/categories/haircare.jpg',
+		accent: '#b8c4bb',
+	},
+	{
+		type: ProductType.BODYCARE,
+		label: 'Bodycare',
+		href: '/shop/body',
+		image: '/img/categories/bodycare.jpg',
 		accent: '#c9b8a8',
+	},
+	{
+		type: ProductType.FRAGRANCE,
+		label: 'Fragrance',
+		href: '/shop/fragrance',
+		image: '/img/categories/fragrance.avif',
+		accent: '#f0d9d9',
+	},
+	{
+		type: ProductType.TOOLS,
+		label: 'Tools',
+		href: '/shop/tools',
+		image: '/img/categories/tools.webp',
+		accent: '#c9d1d3',
+	},
+	{
+		type: ProductType.WELLNESS,
+		label: 'Wellness',
+		href: '/shop/wellness',
+		image: '/img/categories/wellnesss.jpg',
+		accent: '#dcd6f7',
+	},
+
+	{
+		type: ProductType.BABYCARE,
+		label: 'Babycare',
+		href: '/shop/babycare',
+		image: '/img/categories/babycare.jpg',
+		accent: '#dcd6f7',
 	},
 ];
 
-export default function ShopByCategories(): JSX.Element {
+export default function ShopByCategories() {
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
 	return (
-		<section className="section">
-			<div className="header">
-				<h2 className="title">
-					Shop by <em>Categories</em>
-				</h2>
+		<Box className="shop-by-categories" sx={{ px: { xs: 2, md: 4 }, py: 8 }}>
+			<Box className="header" sx={{ display: 'flex', justifyContent: 'space-between', mb: 6, alignItems: 'center' }}>
+				<Typography variant="h4" fontWeight={700}>
+					Need a Little Guidance?
+				</Typography>
+				<span style={{ color: '#ec4899' }}>Check out what's popular now.</span>
+
 				<Link href="/shop" className="view-all">
-					View All
+					<Typography variant="body2" color="textSecondary">
+						View All
+					</Typography>
 				</Link>
-			</div>
+			</Box>
 
-			<div className="grid">
-				{categories.map((cat, i) => (
-					<Link
-						key={cat.label}
-						href={cat.href}
-						className="card"
-						style={{ '--accent': cat.accent } as React.CSSProperties}
-						onMouseEnter={() => setHoveredIndex(i)}
-						onMouseLeave={() => setHoveredIndex(null)}
-						aria-label={`Shop ${cat.label} — ${cat.count} products`}
-					>
-						<div className="image-wrap">
-							<Image
-								src={cat.image}
-								alt={cat.alt}
-								fill
-								sizes="(max-width: 480px) 45vw, (max-width: 900px) 45vw, 25vw"
-								className="img"
-								priority={i < 2}
-							/>
-						</div>
-
-						<div className="overlay" />
-
-						<div className="card-footer">
-							<span className="label">{cat.label}</span>
-							<span className="count">{cat.count} products</span>
-						</div>
-					</Link>
+			<Grid container spacing={3}>
+				{categoryData.map((cat, i) => (
+					<Grid item xs={6} sm={4} md={3} key={cat.type}>
+						<Card
+							className={`category-card ${hoveredIndex === i ? 'hovered' : ''}`}
+							onMouseEnter={() => setHoveredIndex(i)}
+							onMouseLeave={() => setHoveredIndex(null)}
+						>
+							<CardActionArea component={Link} href={cat.href}>
+								<Box className="image-wrapper">
+									<Image src={cat.image} alt={cat.label} fill className="image" />
+									<Box className="glow" style={{ backgroundColor: cat.accent }} />
+									<Box className="label">
+										<Typography variant="subtitle1" fontWeight={600} color="white">
+											{cat.label}
+										</Typography>
+									</Box>
+								</Box>
+							</CardActionArea>
+						</Card>
+					</Grid>
 				))}
-			</div>
-		</section>
+			</Grid>
+		</Box>
 	);
 }

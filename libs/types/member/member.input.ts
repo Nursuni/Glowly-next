@@ -19,7 +19,7 @@ interface AISearch {
 	text?: string;
 }
 
-export interface SellersInquiry {
+export interface BrandsInquiry {
 	page: number;
 	limit: number;
 	sort?: string;

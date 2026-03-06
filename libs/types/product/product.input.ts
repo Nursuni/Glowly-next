@@ -1,5 +1,5 @@
 import { Direction } from '../../enums/common.enum';
-import { ProductStatus, ProductType } from '../../enums/product.enum';
+import { ProductStatus, ProductType, SkinType } from '../../enums/product.enum';
 
 export interface ProductInput {
 	productType: ProductType;
@@ -14,10 +14,11 @@ export interface ProductInput {
 }
 
 interface PISearch {
+	productTypeList: any[];
 	memberId?: string;
 
 	typeList?: ProductType[];
-
+	skinTypeList?: SkinType[];
 	options?: string[];
 
 	pricesRange?: Range;
@@ -37,7 +38,7 @@ interface APISearch {
 	productStatus?: ProductStatus;
 }
 
-export interface SellerProductsInquiry {
+export interface BrandProductsInquiry {
 	page: number;
 	limit: number;
 	sort?: string;

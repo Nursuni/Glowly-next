@@ -130,6 +130,15 @@ const Top = () => {
 	/* helper: is this route active? */
 	const isActive = (path: string) => router.pathname === path || router.asPath.startsWith(path);
 
+	/* handlers */
+	const goToSearch = useCallback(() => {
+		router.push('/search');
+	}, [router]);
+
+	const goToBasket = useCallback(() => {
+		router.push('/basket');
+	}, [router]);
+
 	/* ─── MOBILE ─── */
 	if (device === 'mobile') {
 		return (
@@ -140,8 +149,8 @@ const Top = () => {
 				<Link href={'/catalog'}>
 					<div>{t('Catalog')}</div>
 				</Link>
-				<Link href={'/seller'}>
-					<div>{t('Sellers')}</div>
+				<Link href={'/brand'}>
+					<div>{t('Brands')}</div>
 				</Link>
 				<Link href={'/blog?articleCategory=FREE'}>
 					<div>{t('Blog')}</div>
@@ -158,134 +167,70 @@ const Top = () => {
 
 	/* ─── DESKTOP ─── */
 	return (
-		<Stack className={'navbar'}>
-			<Stack
-				className={`navbar-main
-					${colorChange ? 'transparent' : ''}
-					${bgColor ? 'transparent' : ''}
-					${scrolled ? 'scrolled' : ''}
-				`}
-			>
-				<Stack className={'container'}>
-					{/* LOGO */}
-					<Box component={'div'} className={'logo-box'}>
-						<Link href={'/'}>
-							<img src="/img/logo/Glowy.png" alt="Glowly" />
-						</Link>
-					</Box>
+		<>
+			{/* Announcement bar */}
+			<div className="announcement-bar">FREE SHIPPING ON ORDERS OVER $50</div>
 
-					{/* NAV LINKS */}
-					<Box component={'div'} className={'router-box'}>
-						<Link href={'/'}>
-							<div className={isActive('/') && router.pathname === '/' ? 'active' : ''}>{t('Home')}</div>
-						</Link>
-						<Link href={'/catalog'}>
-							<div className={isActive('/catalog') ? 'active' : ''}>{t('Catalog')}</div>
-						</Link>
-						<Link href={'/seller'}>
-							<div className={isActive('/seller') ? 'active' : ''}>{t('Sellers')}</div>
-						</Link>
-						<Link href={'/blog?articleCategory=FREE'}>
-							<div className={isActive('/blog') ? 'active' : ''}>{t('Blog')}</div>
-						</Link>
-						{user?._id && (
-							<Link href={'/mypage'}>
-								<div className={isActive('/mypage') ? 'active' : ''}>{t('My Page')}</div>
+			<div className="navbar">
+				<div
+					className={`navbar-main 
+          ${bgColor ? 'transparent' : ''} 
+          ${scrolled ? 'scrolled' : ''}`}
+				>
+					<div className="container">
+						{/* LOGO */}
+						<div className="logo-box">
+							<Link href="/">
+								<img src="/logo.svg" alt="logo" />
 							</Link>
-						)}
-						<Link href={'/support'}>
-							<div className={isActive('/support') ? 'active' : ''}>{t('Support')}</div>
-						</Link>
-						<Link href={'/about'}>
-							<div className={isActive('/about') ? 'active' : ''}>{t('About us')}</div>
-						</Link>
-					</Box>
-					<Box>
-						{' '}
-						<img src="/img/icons/search.svg" alt="profile" />
-					</Box>
+						</div>
 
-					<Box>
-						{' '}
-						<img src="/img/icons/basket.svg" alt="basket" />
-					</Box>
-					{/* USER BOX */}
-					<Box component={'div'} className={'user-box'}>
-						{/* Auth */}
-						{user?._id ? (
-							<>
-								<div className={'login-user'} onClick={(event: any) => setLogoutAnchor(event.currentTarget)}>
-									<img
-										src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/icons/userWhite.svg'}
-										alt="profile"
-									/>
-								</div>
-
-								<Menu
-									id="basic-menu"
-									anchorEl={logoutAnchor}
-									open={logoutOpen}
-									onClose={() => setLogoutAnchor(null)}
-									sx={{ mt: '6px' }}
-								>
-									<MenuItem onClick={() => logOut()}>
-										<Logout fontSize="small" style={{ color: '#c08a5e', marginRight: '10px' }} />
-										{t('Logout')}
-									</MenuItem>
-								</Menu>
-							</>
-						) : (
-							<Link href={'/account/join'}>
-								<div className={'join-box'}>
-									<AccountCircleOutlinedIcon />
-									<span>
-										{t('Login')} / {t('Register')}
-									</span>
-								</div>
+						{/* ROUTER */}
+						<div className="router-box">
+							<Link href="/" className={isActive('/') ? 'active' : ''}>
+								{t('Home')}
 							</Link>
-						)}
 
-						{/* Divider */}
-						<div className={'divider'} />
+							<Link href="/catalog" className={isActive('/catalog') ? 'active' : ''}>
+								{t('Catalog')}
+							</Link>
 
-						{/* Notifications + Language */}
-						<Box component="div" sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-							{/* Notification Bell */}
-							{user?._id && (
-								<Box
-									component="button"
-									onClick={() => router.push('/mypage?tab=notifications')}
-									sx={{
-										position: 'relative',
-										display: 'flex',
-										alignItems: 'center',
-										justifyContent: 'center',
-										width: 36,
-										height: 36,
-										borderRadius: '10px',
-										border: 'none',
-										background: 'transparent',
-										cursor: 'pointer',
-										transition: 'background 0.18s ease',
-										'&:hover': { background: 'rgba(0,0,0,0.05)' },
-									}}
-								>
-									<NotificationsOutlinedIcon sx={{ fontSize: 20, color: '#666' }} />
-									{/* Unread dot — wire to real notification count when ready */}
-									<Box
-										sx={{
-											position: 'absolute',
-											top: 7,
-											right: 7,
-											width: 7,
-											height: 7,
-											borderRadius: '50%',
-											backgroundColor: '#e05c5c',
-											border: '1.5px solid white',
-										}}
-									/>
-								</Box>
-							)}
+							<Link href="/brand" className={isActive('/brand') ? 'active' : ''}>
+								{t('Brands')}
+							</Link>
+
+							<Link href="/blog?articleCategory=FREE" className={isActive('/blog') ? 'active' : ''}>
+								{t('Blog')}
+							</Link>
+
+							<Link href="/support" className={isActive('/support') ? 'active' : ''}>
+								{t('Support')}
+							</Link>
+
+							<Link href="/about" className={isActive('/about') ? 'active' : ''}>
+								{t('About us')}
+							</Link>
+						</div>
+
+						{/* USER BOX */}
+						<div className="user-box">
+							<Box className="nav-icon" onClick={goToSearch}>
+								<img src="/img/icons/search.svg" alt="search" />
+							</Box>
+
+							<Box className="nav-icon basket-icon" onClick={goToBasket}>
+								<img src="/img/icons/basket.svg" alt="basket" />
+
+								{/* basket count */}
+								<span className="cart-count">2</span>
+							</Box>
+							{/* Notifications */}
+							<button className="notification-btn">
+								<NotificationsOutlinedIcon />
+								<span className="unread-dot"></span>
+							</button>
+
+							<div className="divider"></div>
 
 							{/* Language Button */}
 							<Button
@@ -334,81 +279,69 @@ const Top = () => {
 								/>
 							</Button>
 
-							{/* Language Dropdown */}
-							<StyledMenu
-								anchorEl={anchorEl2}
-								open={drop}
-								onClose={langClose}
-								TransitionProps={{ timeout: 150 }}
-								sx={{
-									'& .MuiPaper-root': {
-										borderRadius: '14px',
-										padding: '5px',
-										minWidth: 170,
-										boxShadow: '0 12px 40px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)',
-										border: '1px solid rgba(0,0,0,0.06)',
-										marginTop: '6px',
-									},
-									'& .MuiList-root': { padding: 0 },
-									'& .MuiMenuItem-root': {
-										borderRadius: '9px',
-										padding: '8px 11px',
-										fontSize: '13px',
-										fontWeight: 500,
-										color: '#1a1a1a',
-										display: 'flex',
-										alignItems: 'center',
-										gap: '10px',
-										transition: 'background 0.13s ease',
-										'&:hover': { backgroundColor: '#f5f5f5' },
-									},
-								}}
-							>
-								{(
-									[
-										{ id: 'en', src: '/img/flag/langen.png', label: t('English') },
-										{ id: 'kr', src: '/img/flag/langkr.png', label: t('Korean') },
-										{ id: 'uz', src: '/img/flag/languz.png', label: t('Uzbek') },
-										{ id: 'ru', src: '/img/flag/langru.png', label: t('Russian') },
-									] as const
-								).map(({ id, src, label }) => (
-									<MenuItem key={id} disableRipple onClick={langChoice} id={id}>
-										<Box
-											sx={{
-												width: 21,
-												height: 21,
-												borderRadius: '50%',
-												overflow: 'hidden',
-												flexShrink: 0,
-												boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
+							<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose}>
+								<MenuItem id="en" onClick={langChoice}>
+									<img src="/img/flag/langen.png" width="18" style={{ marginRight: 8 }} />
+									English
+								</MenuItem>
+
+								<MenuItem id="kr" onClick={langChoice}>
+									<img src="/img/flag/langkr.png" width="18" style={{ marginRight: 8 }} />
+									한국어
+								</MenuItem>
+
+								<MenuItem id="ru" onClick={langChoice}>
+									<img src="/img/flag/langru.png" width="18" style={{ marginRight: 8 }} />
+									Русский
+								</MenuItem>
+
+								<MenuItem id="uz" onClick={langChoice}>
+									<img src="/img/flag/languz.png" width="18" style={{ marginRight: 8 }} />
+									O‘zbek
+								</MenuItem>
+							</StyledMenu>
+
+							<div className="divider"></div>
+
+							{/* USER */}
+							{user ? (
+								<>
+									<div className="login-user" onClick={(e) => setLogoutAnchor(e.currentTarget)}>
+										<img
+											src={
+												user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/defaultUser.svg'
+											}
+										/>
+									</div>
+
+									<StyledMenu anchorEl={logoutAnchor} open={logoutOpen} onClose={() => setLogoutAnchor(null)}>
+										<MenuItem onClick={() => router.push('/mypage')}>
+											<AccountCircleOutlinedIcon />
+											My Page
+										</MenuItem>
+
+										<MenuItem
+											onClick={() => {
+												logOut();
+												router.push('/');
 											}}
 										>
-											<img
-												src={src}
-												alt={label}
-												style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-											/>
-										</Box>
-										<span style={{ flex: 1 }}>{label}</span>
-										{lang === id && (
-											<Box
-												sx={{
-													width: 6,
-													height: 6,
-													borderRadius: '50%',
-													backgroundColor: '#111',
-													flexShrink: 0,
-												}}
-											/>
-										)}
-									</MenuItem>
-								))}
-							</StyledMenu>
-						</Box>
-					</Box>
-				</Stack>
-			</Stack>
-		</Stack>
+											<Logout />
+											Logout
+										</MenuItem>
+									</StyledMenu>
+								</>
+							) : (
+								<Link href="/login" className="join-box">
+									<AccountCircleOutlinedIcon />
+									<span>{t('Login')}</span>
+								</Link>
+							)}
+						</div>
+					</div>
+				</div>
+			</div>
+		</>
 	);
 };
 

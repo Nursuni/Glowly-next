@@ -1,27 +1,24 @@
 {
 	"Home": "홈",
-	"Shop": "쇼핑",
-	"Products": "제품",
-	"Collections": "컬렉션",
-	"Beauty Journal": "뷰티 저널",
-	"My Beauty": "마이 뷰티",
-	"Contact": "고객센터",
+	"Catalog": "쇼핑",
+	"Brands": "브랜드",
+	"Blog": "블로그",
+	"Support": "지원",
+	"About us": "회사 소개",
+	"Contact": "문의하기",
 	"Login": "로그인",
 	"Register": "회원가입",
-
+	"FreeShipping": "$50 이상 주문 시 무료 배송",
 	"Category": "카테고리",
 	"Skin Type": "피부 타입",
 	"Concern": "피부 고민",
 	"Advanced": "상세 검색",
-
 	"Product Search": "제품 검색",
-	"Discover Your Beauty Essentials": "당신의 뷰티 아이템을 찾아보세요",
+	"Discover Your Beauty Essentials": "당신의 뷰티 필수 아이템을 찾아보세요",
 	"Home / Shop": "홈 / 쇼핑",
-
 	"Product Page": "제품 페이지",
 	"My Profile": "내 프로필",
 	"Article Detail": "게시글 상세",
-
 	"Login/Signup": "로그인 / 회원가입",
 	"Beauty Member": "뷰티 멤버"
 }

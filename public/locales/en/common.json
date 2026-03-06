@@ -1,27 +1,24 @@
 {
 	"Home": "Home",
-	"Shop": "Shop",
-	"Products": "Products",
-	"Collections": "Collections",
-	"Beauty Journal": "Beauty Journal",
-	"My Beauty": "My Beauty",
+	"Catalog": "Catalog",
+	"Brands": "Brands",
+	"Blog": "Blog",
+	"Support": "Support",
+	"About us": "About us",
 	"Contact": "Contact",
 	"Login": "Login",
 	"Register": "Register",
-
+	"FreeShipping": "FreeShipping",
 	"Category": "Category",
 	"Skin Type": "Skin Type",
-	"Concern": "Skin Concern",
-	"Advanced": "Advanced",
-
+	"Concern": "Concern",
+	"Advanced": "Advanced Search",
 	"Product Search": "Product Search",
 	"Discover Your Beauty Essentials": "Discover Your Beauty Essentials",
 	"Home / Shop": "Home / Shop",
-
 	"Product Page": "Product Page",
 	"My Profile": "My Profile",
 	"Article Detail": "Article Detail",
-
 	"Login/Signup": "Login / Signup",
 	"Beauty Member": "Beauty Member"
 }
