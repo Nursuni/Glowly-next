@@ -34,13 +34,13 @@
 @import '/scss/pc/member/memberProducts.scss';
 
 body {
-	-ms-overflow-style: none;
-	scrollbar-width: none;
+	-ms-overflow-style: none; /* for Internet Explorer, Edge */
+	scrollbar-width: none; /* for Firefox */
 	overflow-y: scroll;
 }
 
 body::-webkit-scrollbar {
-	display: none;
+	display: none; /* for Chrome, Safari, and Opera */
 }
 
 /* =====================================
@@ -48,21 +48,131 @@ body::-webkit-scrollbar {
 ===================================== */
 
 #pc-wrap {
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	background: #fafafa;
-
 	#top {
-		/* sticky wrapper — the navbar inside is position:fixed,
-		   so #top itself just needs to sit at z:1000 */
-		position: relative;
-		z-index: 1000;
-	}
-
-	/* Push all page content below the fixed navbar height (2px bar + 72px container) */
-	& > *:not(#top) {
-		padding-top: 74px;
+		.navbar {
+			.navbar-main {
+				position: fixed;
+				padding: 22px 0px;
+				width: 100%;
+				height: 87px;
+				display: flex;
+				flex-direction: row;
+				box-sizing: border-box;
+				z-index: 99;
+				align-items: center;
+				border-top: 1px solid rgba(255, 255, 255, 0.07);
+				&.transparent {
+					background-color: #181a209e;
+				}
+				.container {
+					flex-direction: row;
+					align-items: center;
+					justify-content: space-between;
+					.logo-box {
+						width: 160px;
+						flex: 0 0 160px;
+						img {
+							width: 150px;
+							cursor: pointer;
+						}
+					}
+					.router-box {
+						width: 650px;
+						flex: 0 0 650px;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						div {
+							position: relative;
+							color: #eeeeeeed;
+							font-family: $font;
+							font-size: 15px;
+							font-style: normal;
+							font-weight: 600;
+							line-height: normal;
+							cursor: pointer;
+							.community_menu {
+								position: absolute;
+								left: -177%;
+								top: 30px;
+								width: 434px;
+								height: 33px;
+								background: white;
+								transition: all ease 2s;
+								&:before {
+									content: '';
+									display: block;
+									position: absolute;
+									top: 0;
+									right: 50%;
+									width: 10px;
+									height: 10px;
+									background: white;
+									transform: translateY(-50%) rotate(45deg);
+									z-index: 0;
+								}
+							}
+						}
+					}
+					.user-box {
+						width: 220px;
+						flex: 0 0 220px;
+						.join-box {
+							width: 184px;
+							height: 47px;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							border-radius: 60px;
+							border: 1px solid #ffffff;
+							cursor: pointer;
+							svg {
+								color: #ffffff;
+								margin-right: 10px;
+							}
+							span {
+								font-family: $font;
+								font-size: 14px;
+								font-style: normal;
+								font-weight: 600;
+								line-height: normal;
+								color: #ffffff;
+							}
+						}
+						.login-user {
+							img {
+								width: 42px;
+								height: 42px;
+								border-radius: 50%;
+								object-fit: cover;
+							}
+						}
+					}
+					.lan-box {
+						margin-left: 28px;
+						display: flex;
+						align-items: center;
+						.notification-icon {
+							color: white;
+						}
+						.btn-lang {
+							border-radius: 4px;
+							img {
+								width: 24px;
+								height: 17px;
+								border-radius: 2px;
+							}
+						}
+						.img-flag {
+							width: 24px;
+							height: 17px;
+							border-radius: 2px;
+							margin-right: 8px;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	#footer {
@@ -185,9 +295,10 @@ body::-webkit-scrollbar {
 
 	/* ── NAV LINKS ── */
 	.router-box {
+		flex: 0 0 650px; // fixed width
+		max-width: 650px;
 		display: flex;
 		align-items: center;
-		flex: 1;
 		justify-content: center;
 
 		a,

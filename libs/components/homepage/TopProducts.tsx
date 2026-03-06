@@ -23,7 +23,8 @@ const TopProducts = (props: TopProductsProps) => {
 			<Stack className={'top-products'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Top Products</span>
+						<span>In the spotlight</span>
+						<span>Beauty favourites</span>
 					</Stack>
 
 					<Stack className={'card-box'}>

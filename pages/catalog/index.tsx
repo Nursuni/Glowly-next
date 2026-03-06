@@ -4,7 +4,6 @@ import { Box, Button, Menu, MenuItem, Pagination, Stack, Typography } from '@mui
 import { useRouter } from 'next/router';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 
-
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Filter from '../../libs/components/product/Filter';
@@ -13,6 +12,7 @@ import { ProductsInquiry } from '../../libs/types/product/product.input';
 import { Direction } from '../../libs/enums/common.enum';
 import { ProductCard } from '../../libs/components/mypage/ProductCard';
 import SubscribeSection from '../../libs/components/common/SubscribeSection';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -53,7 +53,7 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 
 		await router.push(
 			{
-				pathname: '/catolog',
+				pathname: '/catalog',
 				query: { input: JSON.stringify(updatedFilter) },
 			},
 			undefined,
@@ -102,7 +102,7 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 
 		await router.push(
 			{
-				pathname: '/catolog',
+				pathname: '/catalog',
 				query: { input: JSON.stringify(updatedFilter) },
 			},
 			undefined,

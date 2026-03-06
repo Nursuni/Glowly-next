@@ -10,6 +10,8 @@ import Events from '../libs/components/homepage/Events';
 import CommunityBoards from '../libs/components/homepage/CommunityBoards';
 import Advertisement from '../libs/components/homepage/Advertisement';
 import TopProducts from '../libs/components/homepage/TopProducts';
+import ShopByCategories from '../libs/components/homepage/ShopByCategories';
+import AIChat from '../libs/components/AIChat';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -25,10 +27,12 @@ const Home: NextPage = () => {
 	} else {
 		return (
 			<Stack className={'home-page'}>
-				<Advertisement />
+				<ShopByCategories />
+
 				<TopProducts />
 				<TopSellers />
-				<Events />
+				<Advertisement />
+				<AIChat />
 				<CommunityBoards />
 			</Stack>
 		);

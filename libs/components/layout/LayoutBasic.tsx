@@ -12,6 +12,8 @@ import { useTranslation } from 'next-i18next';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import Top from '../Top';
+import Footer from '../Footer';
 
 const withLayoutBasic = (Component: any) => {
 	return (props: any) => {
@@ -30,7 +32,7 @@ const withLayoutBasic = (Component: any) => {
 				case '/catalog':
 					title = 'Catalog';
 					desc = 'Skincare & Cosmetics Collection';
-					bgImage = '/img/banner/products.png';
+					bgImage = '/img/banner/banner_products.jpg';
 					break;
 
 				case '/blog':
@@ -42,7 +44,7 @@ const withLayoutBasic = (Component: any) => {
 				case '/about':
 					title = 'Our Story';
 					desc = 'Clean Beauty Philosophy';
-					bgImage = '/img/banner/about.jpg';
+					bgImage = '/img/banner/aboutus.webp';
 					break;
 
 				case '/account/login':
@@ -83,13 +85,19 @@ const withLayoutBasic = (Component: any) => {
 						<meta name={'title'} content={`Glowly`} />
 					</Head>
 					<Stack id="mobile-wrap">
-						<Stack id={'top'}></Stack>
+						<Stack id={'top'}>
+							{' '}
+							<Top />
+						</Stack>
 
 						<Stack id={'main'}>
 							<Component {...props} />
 						</Stack>
 
-						<Stack id={'footer'}></Stack>
+						<Stack id={'footer'}>
+							{' '}
+							<Footer />
+						</Stack>
 					</Stack>
 				</>
 			);
@@ -101,14 +109,19 @@ const withLayoutBasic = (Component: any) => {
 						<meta name={'title'} content={`Glowly`} />
 					</Head>
 					<Stack id="pc-wrap">
-						<Stack id={'top'}></Stack>
+						<Stack id={'top'}>
+							{' '}
+							<Top />
+						</Stack>
 
 						<Stack
-							className={`header-basic ${authHeader && 'auth'}`}
-							style={{
+							className={`header-basic ${authHeader ? 'auth' : ''}`}
+							sx={{
+								height: { xs: 700, md: 550 }, // mobile vs desktop
 								backgroundImage: `url(${memoizedValues.bgImage})`,
 								backgroundSize: 'cover',
-								boxShadow: 'inset 10px 40px 150px 40px rgb(24 22 36)',
+								backgroundPosition: 'center',
+								boxShadow: 'inset 0 0 150px rgba(24,22,36,0.4)',
 							}}
 						>
 							<Stack className={'container'}>
@@ -121,7 +134,10 @@ const withLayoutBasic = (Component: any) => {
 							<Component {...props} />
 						</Stack>
 
-						<Stack id={'footer'}></Stack>
+						<Stack id={'footer'}>
+							{' '}
+							<Footer />
+						</Stack>
 					</Stack>
 				</>
 			);

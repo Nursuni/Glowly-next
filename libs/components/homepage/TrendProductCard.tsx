@@ -27,7 +27,7 @@ const TrendProducts = (props: TrendProductsProps) => {
 			<Stack className={'trend-products'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Trending Products</span>
+						<span>Our Best Selling Products</span>
 					</Stack>
 
 					<Stack className={'card-box'}>

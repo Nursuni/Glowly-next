@@ -55,7 +55,8 @@ const CommunityBoards = () => {
 			<Stack className={'community-board'}>
 				<Stack className={'container'}>
 					<Stack>
-						<Typography variant={'h1'}>COMMUNITY BOARD HIGHLIGHTS</Typography>
+						<Typography variant={'h1'}>Blog</Typography>
+						<Typography variant={'h1'}>Expert advice, tips and tricks for healthy, glowing skin</Typography>
 					</Stack>
 					<Stack className="community-main">
 						<Stack className={'community-left'}>

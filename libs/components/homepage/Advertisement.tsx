@@ -8,32 +8,14 @@ const Advertisement = () => {
 
 	if (device == 'mobile') {
 		return (
-			<Stack className={'video-frame'}>
-				<video
-					autoPlay
-					muted
-					loop
-					playsInline
-					preload="auto"
-					style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-				>
-					<source src="/video/ads.mov" type="video/mp4" />
-				</video>
+			<Stack className={'ad-frame'}>
+				<img src="/img/banner/adv.jpg" />
 			</Stack>
 		);
 	} else {
 		return (
-			<Stack className={'video-frame'}>
-				<video
-					autoPlay
-					muted
-					loop
-					playsInline
-					preload="auto"
-					style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-				>
-					<source src="/video/ads.mov" type="video/mp4" />
-				</video>
+			<Stack className={'ad-frame'}>
+				<img src="/img/banner/adv.jpg" />
 			</Stack>
 		);
 	}
