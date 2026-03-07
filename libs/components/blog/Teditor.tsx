@@ -1,5 +1,15 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Box, Button, FormControl, MenuItem, Stack, Typography, Select, TextField } from '@mui/material';
+import {
+	Box,
+	Button,
+	FormControl,
+	MenuItem,
+	Stack,
+	Typography,
+	Select,
+	TextField,
+	SelectChangeEvent,
+} from '@mui/material';
 import { BoardArticleCategory } from '../../enums/board-article.enum';
 import { Editor } from '@toast-ui/react-editor';
 import { getJwtToken } from '../../auth';
@@ -23,13 +33,9 @@ const TuiEditor = () => {
 	/** APOLLO REQUESTS **/
 	const [createboardArticle] = useMutation(CREATE_BOARD_ARTICLE);
 
-	const memoizedValues = useMemo(() => {
-		const articleTitle = '',
-			articleContent = '',
-			articleImage = '';
-
-		return { articleTitle, articleContent, articleImage };
-	}, []);
+	const [articleTitle, setArticleTitle] = useState('');
+	const [articleContent, setArticleContent] = useState('');
+	const [articleImage, setArticleImage] = useState('');
 
 	/** HANDLERS **/
 	const uploadImage = async (image: any) => {
@@ -65,7 +71,7 @@ const TuiEditor = () => {
 
 			const responseImage = response.data.data.imageUploader;
 			console.log('=responseImage: ', responseImage);
-			memoizedValues.articleImage = responseImage;
+			setArticleImage(responseImage);
 
 			return `${REACT_APP_API_URL}/${responseImage}`;
 		} catch (err) {
@@ -73,28 +79,25 @@ const TuiEditor = () => {
 		}
 	};
 
-	const changeCategoryHandler = (e: any) => {
-		setArticleCategory(e.target.value);
+	const changeCategoryHandler = (e: SelectChangeEvent) => {
+		setArticleCategory(e.target.value as BoardArticleCategory);
 	};
 
-	const articleTitleHandler = (e: T) => {
-		console.log(e.target.value);
-		memoizedValues.articleTitle = e.target.value;
+	const articleTitleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setArticleTitle(e.target.value);
 	};
-
 	const handleRegisterButton = async () => {
 		try {
 			const editor = editorRef.current;
 			const articleContent = editor?.getInstance().getHTML() as string;
-			memoizedValues.articleContent = articleContent;
-
-			if (memoizedValues.articleContent === '' && memoizedValues.articleTitle === '') {
-				throw new Error(Message.INSERT_ALL_INPUTS);
-			}
-
 			await createboardArticle({
 				variables: {
-					input: { ...memoizedValues, articleCategory },
+					input: {
+						articleTitle,
+						articleContent,
+						articleImage,
+						articleCategory,
+					},
 				},
 			});
 			toastSuccess('Article is created successfully');
@@ -109,13 +112,15 @@ const TuiEditor = () => {
 			toastError(Message.INSERT_ALL_INPUTS);
 		}
 	};
-
 	const doDisabledCheck = () => {
-		if (memoizedValues.articleContent === '' || memoizedValues.articleTitle === '') {
+		const editor = editorRef.current;
+		const content = editor?.getInstance().getHTML() || '';
+
+		if (!articleTitle.trim() || content === '<p><br></p>' || content === '') {
 			return true;
 		}
+		return false;
 	};
-
 	return (
 		<Stack>
 			<Stack direction="row" style={{ margin: '40px' }} justifyContent="space-evenly">
@@ -153,8 +158,8 @@ const TuiEditor = () => {
 			</Stack>
 
 			<Editor
-				initialValue={'Type here'}
-				placeholder={'Type here'}
+				initialValue=""
+				placeholder="Write your article..."
 				previewStyle={'vertical'}
 				height={'640px'}
 				// @ts-ignore
@@ -183,6 +188,7 @@ const TuiEditor = () => {
 					color="primary"
 					style={{ margin: '30px', width: '250px', height: '45px' }}
 					onClick={handleRegisterButton}
+					disabled={doDisabledCheck()}
 				>
 					Register
 				</Button>

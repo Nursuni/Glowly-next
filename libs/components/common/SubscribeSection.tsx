@@ -1,8 +1,11 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
+import { toast } from 'react-toastify';
+
+const API_URL = process.env.NEXT_PUBLIC_API_GRAPHQL_URL;
 
 export default function SubscribeSection() {
-	const [email, setEmail] = useState<string>('');
-	const [message, setMessage] = useState<string>('');
+	const [email, setEmail] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setEmail(e.target.value);
@@ -11,22 +14,29 @@ export default function SubscribeSection() {
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
+		if (!email.includes('@')) {
+			toast.error('Please enter a valid email.');
+			return;
+		}
+
+		setLoading(true);
+
 		try {
-			const res = await fetch('http://localhost:4001/graphql', {
+			const res = await fetch(API_URL!, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
 					query: `
-          mutation SubscribeNewsletter($email: String!) {
-            subscribeNewsletter(email: $email) {
-              _id
-              email
-              createdAt
+            mutation SubscribeNewsletter($email: String!) {
+              subscribeNewsletter(email: $email) {
+                _id
+                email
+                createdAt
+              }
             }
-          }
-        `,
+          `,
 					variables: { email },
 				}),
 			});
@@ -34,13 +44,15 @@ export default function SubscribeSection() {
 			const result = await res.json();
 
 			if (result.data) {
-				setMessage('Successfully subscribed!');
+				toast.success('Successfully subscribed!');
 				setEmail('');
 			} else {
-				setMessage(result.errors?.[0]?.message || 'Something went wrong.');
+				toast.error(result.errors?.[0]?.message || 'Something went wrong.');
 			}
-		} catch (error) {
-			setMessage('Server error.');
+		} catch (error: any) {
+			toast.error(error.message || 'Server error.');
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -58,12 +70,11 @@ export default function SubscribeSection() {
 					required
 					className="border px-3 py-2 w-full rounded"
 				/>
-				<button type="submit" className="bg-black text-white px-4 py-2 rounded">
-					Subscribe
+
+				<button type="submit" disabled={loading} className="bg-black text-white px-4 py-2 rounded disabled:opacity-50">
+					{loading ? 'Submitting...' : 'Subscribe'}
 				</button>
 			</form>
-
-			{message && <p className="mt-3 text-sm text-green-600">{message}</p>}
 		</section>
 	);
 }

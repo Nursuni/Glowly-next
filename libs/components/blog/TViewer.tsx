@@ -3,24 +3,24 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import { Viewer } from '@toast-ui/react-editor';
 import { Box, Stack, CircularProgress } from '@mui/material';
 
-const TViewer = (props: any) => {
+interface TViewerProps {
+	markdown: string;
+}
+
+const TViewer: React.FC<TViewerProps> = ({ markdown }) => {
 	const [editorLoaded, setEditorLoaded] = useState(false);
 
-	/** LIFECYCLES **/
+	/** LIFECYCLE **/
 	useEffect(() => {
-		if (props.markdown) {
-			setEditorLoaded(true);
-		} else {
-			setEditorLoaded(false);
-		}
-	}, [props.markdown]);
+		setEditorLoaded(!!markdown);
+	}, [markdown]);
 
 	return (
 		<Stack sx={{ background: 'white', mt: '30px', borderRadius: '10px' }}>
-			<Box component={'div'} sx={{ m: '40px' }}>
+			<Box sx={{ m: '40px' }}>
 				{editorLoaded ? (
 					<Viewer
-						initialValue={props.markdown}
+						initialValue={markdown}
 						customHTMLRenderer={{
 							htmlBlock: {
 								iframe(node: any) {
@@ -37,7 +37,12 @@ const TViewer = (props: any) => {
 								},
 								div(node: any) {
 									return [
-										{ type: 'openTag', tagName: 'div', outerNewLine: true, attributes: node.attrs },
+										{
+											type: 'openTag',
+											tagName: 'div',
+											outerNewLine: true,
+											attributes: node.attrs,
+										},
 										{ type: 'html', content: node.childrenHTML ?? '' },
 										{ type: 'closeTag', tagName: 'div', outerNewLine: true },
 									];
