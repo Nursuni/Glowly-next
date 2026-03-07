@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter, withRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { getJwtToken, logOut, updateUserInfo } from '../auth';
 import { Stack, Box } from '@mui/material';
@@ -15,12 +15,13 @@ import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutline
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { Logout } from '@mui/icons-material';
-import { MagnifyingGlass, CaretDown } from 'phosphor-react';
+import { CaretDown } from 'phosphor-react';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { REACT_APP_API_URL } from '../config';
+import Image from 'next/image';
 
 const StyledMenu = styled((props: MenuProps) => (
 	<Menu
@@ -59,11 +60,8 @@ const Top = () => {
 	const { t } = useTranslation('common');
 	const router = useRouter();
 
-	console.log('locale:', router.locale);
-	console.log('home:', t('home'));
-
 	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
-	const [lang, setLang] = useState<string | null>('en');
+	const [lang, setLang] = useState<string>(router.locale || 'en');
 	const drop = Boolean(anchorEl2);
 
 	const [scrolled, setScrolled] = useState(false);
@@ -74,7 +72,7 @@ const Top = () => {
 	const userDropRef = useRef<HTMLDivElement>(null);
 
 	const catalogTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
+	const avatar = user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/defaultUser.svg';
 	useEffect(() => {
 		setNavReady(false);
 		const id = setTimeout(() => setNavReady(true), 30);
@@ -82,10 +80,8 @@ const Top = () => {
 	}, [router.pathname]);
 
 	useEffect(() => {
-		const stored = localStorage.getItem('locale');
-		setLang(stored ?? 'en');
-		if (!stored) localStorage.setItem('locale', 'en');
-	}, [router]);
+		setLang(router.locale || 'en');
+	}, [router.locale]);
 
 	useEffect(() => {
 		setBgColor(router.pathname === '/catalog/detail');
@@ -97,7 +93,7 @@ const Top = () => {
 	}, []);
 
 	useEffect(() => {
-		const onScroll = () => setScrolled(window.scrollY >= 50);
+		const onScroll = () => setScrolled(window.scrollY > 50);
 		window.addEventListener('scroll', onScroll);
 		return () => window.removeEventListener('scroll', onScroll);
 	}, []);
@@ -120,12 +116,15 @@ const Top = () => {
 			setLang(id);
 			localStorage.setItem('locale', id);
 			setAnchorEl2(null);
-			router.push(router.pathname, router.asPath, { locale: id });
+			router.push(router.asPath, undefined, { locale: id });
 		},
 		[router],
 	);
 
-	const isActive = (path: string) => router.pathname === path || router.asPath.startsWith(path);
+	const isActive = (path: string) => {
+		if (path === '/') return router.pathname === '/';
+		return router.pathname.startsWith(path);
+	};
 
 	const goToBasket = useCallback(() => router.push('/basket'), [router]);
 
@@ -166,7 +165,7 @@ const Top = () => {
 						{/* LOGO */}
 						<div className="logo-box nb-item">
 							<Link href="/">
-								<img src="/logo.svg" alt="Glowly" />
+								<Image src="/logo.svg" alt="Glowly" width={120} height={40} />
 							</Link>
 						</div>
 
@@ -223,11 +222,7 @@ const Top = () => {
 									onClick={() => setUserDropOpen((v) => !v)}
 									aria-label="Account"
 								>
-									{user?.memberImage ? (
-										<img src={`${REACT_APP_API_URL}/${user.memberImage}`} className="user-avatar" alt="avatar" />
-									) : (
-										<PersonOutlineOutlinedIcon />
-									)}
+									<img src={avatar} className="user-avatar" alt="avatar" />
 								</button>
 
 								{userDropOpen && (
@@ -375,4 +370,4 @@ const Top = () => {
 	);
 };
 
-export default withRouter(Top);
+export default Top;

@@ -4,7 +4,7 @@ import TelegramIcon from '@mui/icons-material/Telegram';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import { Stack, Box } from '@mui/material';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useEffect, useRef } from 'react';
 
 const BADGES = [
@@ -102,7 +102,7 @@ const Footer = () => {
 				</Stack>
 
 				<Stack className={'second'}>
-					<span>© Glowly Cosmetics {moment().year()}</span>
+					<span>© Glowly Cosmetics {dayjs().year()}</span>
 				</Stack>
 			</Stack>
 		);
@@ -241,7 +241,7 @@ const Footer = () => {
 
 			{/* COPYRIGHT ONLY */}
 			<Box className={'tagline-bar gf-fade'}>
-				<p className={'copy'}>© {moment().year()} Glowly Cosmetics. All Rights Reserved.</p>
+				<p className={'copy'}>© {dayjs().year()} Glowly Cosmetics. All Rights Reserved.</p>
 			</Box>
 		</Stack>
 	);

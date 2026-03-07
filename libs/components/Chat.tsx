@@ -79,17 +79,14 @@ const Chat = () => {
 		setOpen((prevState) => !prevState);
 	};
 
-	const getInputMessageHandler = useCallback(
-		(e: any) => {
-			const text = e.target.value;
-			setMessageInput(text);
-		},
-		[messageInput],
-	);
+	const getInputMessageHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		const text = e.target.value;
+		setMessageInput(text);
+	}, []);
 
 	const getKeyHandler = (e: any) => {
 		try {
-			if (e.key == 'Enter') {
+			if (e.key === 'Enter') {
 				onClickHandler();
 			}
 		} catch (err: any) {
@@ -98,13 +95,14 @@ const Chat = () => {
 	};
 
 	const onClickHandler = () => {
-		if (!messageInput) toastError(Messages.EMPTY_MESSAGE);
-		else {
-			socket.send(JSON.stringify({ event: 'message', data: messageInput }));
-			setMessageInput('');
+		if (!messageInput.trim()) {
+			toastError(Messages.EMPTY_MESSAGE);
+			return;
 		}
-	};
 
+		socket.send(JSON.stringify({ event: 'message', data: messageInput }));
+		setMessageInput('');
+	};
 	return (
 		<Stack className="chatting">
 			{openButton ? (
@@ -123,7 +121,7 @@ const Chat = () => {
 							<Box flexDirection={'row'} style={{ display: 'flex' }} sx={{ m: '10px 0px' }} component={'div'}>
 								<div className={'welcome'}>Welcome to Live chat!</div>
 							</Box>
-							{messagesList.map((ele: MessagePayload) => {
+							{messagesList.map((ele: MessagePayload, index: number) => {
 								const { text, memberData } = ele;
 								const memberImage = memberData?.memberImage
 									? `${REACT_APP_API_URL}/${memberData.memberImage}`
@@ -140,7 +138,7 @@ const Chat = () => {
 										<div className={'msg-right'}>{text}</div>
 									</Box>
 								) : (
-									<Box flexDirection={'row'} style={{ display: 'flex' }} sx={{ m: '10px 0px' }} component={'div'}>
+									<Box key={index} flexDirection={'row'} style={{ display: 'flex' }} sx={{ m: '10px 0px' }}>
 										<Avatar alt={'jonik'} src={memberImage} />
 										<div className={'msg-left'}>{text}</div>
 									</Box>
