@@ -59,6 +59,9 @@ const Top = () => {
 	const { t } = useTranslation('common');
 	const router = useRouter();
 
+	console.log('locale:', router.locale);
+	console.log('home:', t('home'));
+
 	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
 	const [lang, setLang] = useState<string | null>('en');
 	const drop = Boolean(anchorEl2);
@@ -117,7 +120,7 @@ const Top = () => {
 			setLang(id);
 			localStorage.setItem('locale', id);
 			setAnchorEl2(null);
-			await router.push(router.asPath, router.asPath, { locale: id });
+			router.push(router.pathname, router.asPath, { locale: id });
 		},
 		[router],
 	);

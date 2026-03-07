@@ -70,58 +70,6 @@ const About: NextPage = () => {
 					</Stack>
 				</Stack>
 
-				{/* Brands */}
-				<Stack className={'brands'}>
-					<Stack className={'container'}>
-						<span className={'title'}>Meet Our Beauty Experts</span>
-						<p className={'desc'}>Passionate professionals behind Glowly’s innovation.</p>
-						<Stack className={'wrap'}>{/* Brand cards here */}</Stack>
-					</Stack>
-				</Stack>
-
-				{/* OPTIONS */}
-				<Stack className={'options'}>
-					<img src="/img/banner/aboutBanner.svg" alt="" className={'about-banner'} />
-					<Stack className={'container'}>
-						<strong>Discover the Perfect Beauty Routine for You</strong>
-
-						<Stack>
-							<div className={'icon-box'}>
-								<img src="/img/icons/security.svg" alt="" />
-							</div>
-							<div className={'text-box'}>
-								<span>Skincare Essentials</span>
-								<p>Daily formulas designed to nourish, protect, and illuminate your skin.</p>
-							</div>
-						</Stack>
-
-						<Stack>
-							<div className={'icon-box'}>
-								<img src="/img/icons/keywording.svg" alt="" />
-							</div>
-							<div className={'text-box'}>
-								<span>Makeup Collection</span>
-								<p>Refined tones and textures for effortless, everyday elegance.</p>
-							</div>
-						</Stack>
-
-						<Stack>
-							<div className={'icon-box'}>
-								<img src="/img/icons/investment.svg" alt="" />
-							</div>
-							<div className={'text-box'}>
-								<span>Beauty Innovation</span>
-								<p>Advanced research meets modern luxury in every Glowly product.</p>
-							</div>
-						</Stack>
-
-						<Stack className={'btn'}>
-							Explore Glowly
-							<img src="/img/icons/rightup.svg" alt="" />
-						</Stack>
-					</Stack>
-				</Stack>
-
 				{/* NEW: GLOWLY COMMITMENTS */}
 				<Stack className={'commitments'}>
 					<Stack className={'container'}>
@@ -161,36 +109,6 @@ const About: NextPage = () => {
 								<p>High-efficacy formulas without unnecessary additives.</p>
 							</div>
 						</Stack>
-					</Stack>
-				</Stack>
-
-				{/* PARTNERS */}
-				<Stack className={'partners'}>
-					<Stack className={'container'}>
-						<span>Trusted by beauty lovers worldwide</span>
-						<Stack className={'wrap'}>
-							<img src="/img/icons/brands/amazon.svg" alt="" />
-						</Stack>
-					</Stack>
-				</Stack>
-
-				{/* HELP */}
-				<Stack className={'help'}>
-					<Stack className={'container'}>
-						<Box component={'div'} className={'left'}>
-							<strong>Need beauty advice? Our Glowly experts are here.</strong>
-							<p>Discover personalized recommendations tailored to your skin.</p>
-						</Box>
-						<Box component={'div'} className={'right'}>
-							<div className={'white'}>
-								Contact Us
-								<img src="/img/icons/rightup.svg" alt="" />
-							</div>
-							<div className={'black'}>
-								<img src="/img/icons/call.svg" alt="" />
-								937971971741
-							</div>
-						</Box>
 					</Stack>
 				</Stack>
 			</Stack>

@@ -1,184 +1,417 @@
-#pc-wrap {
-	#community-list-page {
-		position: relative;
-		.container {
-			padding-top: 100px;
-			flex-direction: column;
-			gap: 64px;
-			.main-box {
-				flex-direction: row;
-				gap: 31px;
-				.left-config {
-					width: 266px;
-					height: fit-content;
-					gap: 30px;
-					padding: 30px 15px 57px 21px;
-					margin-top: 100px;
-					margin-bottom: 50px;
-					border-radius: 12px;
-					border: 1px solid rgba(196, 196, 196, 0.79);
-					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-					.image-info {
-						width: 100%;
-						flex-direction: row;
-						gap: 11px;
-						img {
-							width: 80px;
-							height: 80px;
-							border-radius: 50%;
-							object-fit: cover;
-						}
-						.community-name {
-							.name {
-								margin-top: 15px;
-								color: #181a20;
-								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-							}
-						}
-					}
-					.tab-button {
-						width: 216.612px;
-						height: 36px;
-						padding: 0;
-						justify-content: center;
-						align-items: center;
-						border-radius: 6px;
-						border: 1px solid #181a20;
-						margin-bottom: 10px;
-						color: #181a20;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 500;
-						line-height: 150%;
-						letter-spacing: -0.266px;
-					}
-					.tab-button.active {
-						width: 216.612px;
-						height: 36px;
-						padding: 0;
-						justify-content: center;
-						align-items: center;
-						background-color: #000000;
-						color: #ffffff;
-						border-radius: 6px;
-						margin-bottom: 10px;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 500;
-						line-height: 150%;
-						letter-spacing: -0.266px;
-					}
-				}
-				.right-config {
-					width: 100%;
-					height: auto;
-					.panel-config {
-						width: 100%;
-						height: auto;
-						.title-box {
-							width: 100%;
-							height: auto;
-							flex-direction: row;
-							justify-content: space-between;
-							align-items: center;
-							margin-bottom: 45px;
-							.left {
-								width: 60%;
-								height: auto;
-								.title {
-									color: #000;
-									font-family: $font;
-									font-size: 24px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-									letter-spacing: 0.24px;
-								}
-								.sub-title {
-									color: #757575;
-									font-family: $font;
-									font-size: 13px;
-									font-style: normal;
-									font-weight: 700;
-									line-height: normal;
-									letter-spacing: 0.325px;
-								}
-							}
-							.right {
-								width: 91px;
-								height: 32px;
-								border-radius: 4px;
-								background: #eb6753;
-								color: #fff;
-								font-family: $font;
-								font-size: 13px;
-								font-style: normal;
-								font-weight: 500;
-								line-height: normal;
-								letter-spacing: 0.39px;
-							}
-						}
-						.list-box {
-							width: 100%;
-							height: auto;
-							flex-direction: row;
-							flex-wrap: wrap;
-							gap: 30px;
-						}
-					}
-				}
+// =============================================
+// COMMUNITY DETAIL PAGE — MOBILE STYLES
+// =============================================
+
+#community-detail-page.mobile {
+	min-height: 100vh;
+	background: #fdf6fa;
+	padding-bottom: 80px;
+
+	// ── Scroll reveal animation ──────────────
+	.scroll-reveal {
+		opacity: 0;
+		transform: translateY(20px);
+		transition: opacity 0.45s ease, transform 0.45s ease;
+		&.in-view {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	// ── Category Tab Bar ─────────────────────
+	.mobile-tab-bar {
+		display: flex;
+		flex-direction: row;
+		gap: 8px;
+		padding: 14px 16px;
+		overflow-x: auto;
+		background: #fff;
+		border-bottom: 1px solid #f5e0ef;
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		&::-webkit-scrollbar {
+			display: none;
+		}
+
+		.mobile-tab-pill {
+			flex-shrink: 0;
+			height: 34px;
+			padding: 0 16px;
+			border-radius: 20px;
+			border: 1.5px solid #f0d8ea;
+			background: #fff;
+			color: #7a5570;
+			font-family: $font;
+			font-size: 13px;
+			font-weight: 500;
+			cursor: pointer;
+			transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+			white-space: nowrap;
+
+			&.active {
+				background: #f564a9;
+				color: #fff;
+				border-color: #f564a9;
+				box-shadow: 0 2px 12px rgba(245, 100, 169, 0.3);
 			}
-			.similar-articles-config {
-				width: 100%;
-				height: auto;
-				gap: 75px;
-				padding: 30px 9px 28px 9px;
-				border-radius: 10px;
-				border: 1px solid #c4c4c4;
-				.similar-articles-title {
-					padding-left: 56px;
-					color: #000;
+		}
+	}
+
+	// ── Detail Body ──────────────────────────
+	.mobile-detail-body {
+		padding: 20px 16px;
+	}
+
+	// ── Article Header ───────────────────────
+	.mobile-article-header {
+		background: #fff;
+		border-radius: 12px;
+		padding: 20px 16px 16px;
+		margin-bottom: 14px;
+		border: 1px solid #f5e0ef;
+		box-shadow: 0 2px 12px rgba(245, 100, 169, 0.07);
+
+		.mobile-article-category {
+			display: inline-block;
+			font-family: $font;
+			font-size: 11px;
+			font-weight: 600;
+			color: #f564a9;
+			background: rgba(245, 100, 169, 0.1);
+			padding: 3px 10px;
+			border-radius: 20px;
+			margin-bottom: 10px;
+			letter-spacing: 0.5px;
+		}
+
+		.mobile-article-title {
+			font-family: $font;
+			font-size: 18px;
+			font-weight: 700;
+			color: #2d1a26;
+			line-height: 1.4;
+			margin-bottom: 14px;
+			letter-spacing: -0.3px;
+		}
+
+		.mobile-article-meta {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 10px;
+
+			.mobile-member-img {
+				width: 36px;
+				height: 36px;
+				border-radius: 50%;
+				object-fit: cover;
+				cursor: pointer;
+				border: 2px solid #f9d0ec;
+				flex-shrink: 0;
+			}
+
+			.mobile-meta-info {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+
+				.mobile-member-nick {
 					font-family: $font;
-					font-size: 30px;
-					font-style: normal;
+					font-size: 13px;
 					font-weight: 600;
-					line-height: normal;
+					color: #2d1a26;
+					cursor: pointer;
 				}
-				.articles-box-row {
-					width: 100%;
-					height: auto;
-					flex-direction: row;
-					gap: 5px;
+
+				.mobile-time {
+					font-family: $font;
+					font-size: 11px;
+					color: #b09aa8;
 				}
 			}
-			.pagination-config {
-				width: 100%;
+
+			.mobile-stats {
+				display: flex;
+				flex-direction: row;
+				gap: 10px;
 				align-items: center;
-				justify-content: center;
-				margin-bottom: 50px;
-				gap: 20px;
-				padding-left: 270px;
-				.pagination-box {
+
+				span {
+					display: flex;
 					align-items: center;
-					justify-content: center;
-				}
-				.total-result {
-					p {
-						color: #181a20;
-						text-align: center;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
+					gap: 3px;
+					font-family: $font;
+					font-size: 12px;
+					color: #a08898;
+
+					svg {
+						font-size: 14px !important;
+						color: #c4a0b8;
 					}
+				}
+			}
+		}
+	}
+
+	// ── Article Content ──────────────────────
+	.mobile-article-content {
+		background: #fff;
+		border-radius: 12px;
+		padding: 4px 4px;
+		margin-bottom: 14px;
+		border: 1px solid #f5e0ef;
+		box-shadow: 0 2px 8px rgba(245, 100, 169, 0.05);
+		overflow: hidden;
+	}
+
+	// ── Like Section ─────────────────────────
+	.mobile-like-section {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 22px;
+
+		.mobile-like-btn {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			height: 44px;
+			padding: 0 28px;
+			border-radius: 22px;
+			border: 1.5px solid #f0d8ea;
+			background: #fff;
+			cursor: pointer;
+			font-family: $font;
+			font-size: 14px;
+			font-weight: 600;
+			color: #a08898;
+			transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+
+			svg {
+				font-size: 18px !important;
+				color: #f564a9;
+			}
+
+			&:active {
+				background: rgba(245, 100, 169, 0.08);
+				border-color: #f564a9;
+			}
+		}
+	}
+
+	// ── Comments Section ─────────────────────
+	.mobile-comments-section {
+		background: #fff;
+		border-radius: 12px;
+		padding: 18px 16px;
+		border: 1px solid #f5e0ef;
+		box-shadow: 0 2px 8px rgba(245, 100, 169, 0.05);
+
+		.mobile-comments-heading {
+			font-family: $font;
+			font-size: 15px;
+			font-weight: 700;
+			color: #2d1a26;
+			margin-bottom: 14px;
+		}
+
+		// Comment input
+		.mobile-comment-input-box {
+			border: 1.5px solid #f0d8ea;
+			border-radius: 10px;
+			overflow: hidden;
+			margin-bottom: 18px;
+
+			input {
+				width: 100%;
+				padding: 12px 14px;
+				border: none;
+				outline: none;
+				font-family: $font;
+				font-size: 14px;
+				color: #2d1a26;
+				background: #fffbfd;
+
+				&::placeholder {
+					color: #c4a0b8;
+				}
+			}
+
+			.mobile-comment-actions {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+				padding: 8px 14px;
+				background: #fdf6fa;
+				border-top: 1px solid #f5e0ef;
+
+				.mobile-word-count {
+					font-family: $font;
+					font-size: 12px;
+					color: #b09aa8;
+				}
+
+				.mobile-comment-submit {
+					height: 30px;
+					padding: 0 18px;
+					border-radius: 6px;
+					background: #eb6753;
+					color: #fff;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 500;
+					border: none;
+					cursor: pointer;
+				}
+			}
+		}
+
+		// Individual comment card
+		.mobile-comment-card {
+			padding: 14px 0;
+			border-bottom: 1px solid #f9edf5;
+
+			&:last-of-type {
+				border-bottom: none;
+			}
+
+			.mobile-comment-header {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 10px;
+				margin-bottom: 8px;
+
+				img {
+					width: 34px;
+					height: 34px;
+					border-radius: 50%;
+					object-fit: cover;
+					cursor: pointer;
+					flex-shrink: 0;
+					border: 1.5px solid #f9d0ec;
+				}
+
+				.mobile-comment-meta {
+					flex: 1;
+
+					.mobile-comment-name {
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 600;
+						color: #2d1a26;
+					}
+
+					.mobile-comment-date {
+						font-family: $font;
+						font-size: 11px;
+						color: #b09aa8;
+					}
+				}
+
+				.mobile-comment-btns {
+					display: flex;
+					flex-direction: row;
+					gap: 2px;
+				}
+			}
+
+			.mobile-comment-body {
+				font-family: $font;
+				font-size: 14px;
+				color: #3d2535;
+				line-height: 1.55;
+				padding-left: 44px;
+			}
+		}
+
+		// Pagination
+		.mobile-pagination {
+			width: 100%;
+			align-items: center;
+			justify-content: center;
+			margin-top: 16px;
+		}
+	}
+
+	// ── Edit Comment Backdrop Sheet ───────────
+	.mobile-edit-sheet {
+		width: 100%;
+		background: #fff;
+		border-radius: 18px 18px 0 0;
+		padding: 22px 20px 32px;
+		gap: 14px;
+		box-shadow: 0 -4px 30px rgba(245, 100, 169, 0.15);
+
+		.mobile-edit-title {
+			font-family: $font;
+			font-size: 16px;
+			font-weight: 700;
+			color: #2d1a26;
+		}
+
+		.mobile-edit-input {
+			width: 100%;
+			height: 46px;
+			padding: 0 14px;
+			border: 1.5px solid #f0d8ea;
+			border-radius: 8px;
+			font-family: $font;
+			font-size: 14px;
+			color: #2d1a26;
+			outline: none;
+			background: #fffbfd;
+
+			&:focus {
+				border-color: #f564a9;
+			}
+		}
+
+		.mobile-edit-footer {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+
+			span {
+				font-family: $font;
+				font-size: 12px;
+				color: #b09aa8;
+			}
+
+			.mobile-edit-actions {
+				display: flex;
+				flex-direction: row;
+				gap: 10px;
+
+				.mobile-edit-cancel {
+					height: 36px;
+					padding: 0 18px;
+					border-radius: 6px;
+					border: 1.5px solid #f0d8ea;
+					background: #fff;
+					color: #7a5570;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 500;
+					cursor: pointer;
+				}
+
+				.mobile-edit-save {
+					height: 36px;
+					padding: 0 18px;
+					border-radius: 6px;
+					background: #f564a9;
+					color: #fff;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 500;
+					border: none;
+					cursor: pointer;
 				}
 			}
 		}
