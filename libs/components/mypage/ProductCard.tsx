@@ -6,7 +6,7 @@ import ModeIcon from '@mui/icons-material/Mode';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { formatterStr } from '../../utils';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { Product } from '../../types/product/product';
 import { ProductStatus } from '../../enums/product.enum';
@@ -69,7 +69,7 @@ export const ProductCard = (props: ProductCardProps) => {
 				</Stack>
 				<Stack className="date-box">
 					<Typography className="date">
-						<Moment format="DD MMMM, YYYY">{product.createdAt}</Moment>
+						<Typography className="date">{dayjs(product.createdAt).format('DD MMMM, YYYY')}</Typography>
 					</Typography>
 				</Stack>
 				<Stack className="status-box">

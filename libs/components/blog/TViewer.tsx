@@ -5,9 +5,10 @@ import { Box, Stack, CircularProgress } from '@mui/material';
 
 interface TViewerProps {
 	markdown: string;
+	className?: string;
 }
 
-const TViewer: React.FC<TViewerProps> = ({ markdown }) => {
+const TViewer: React.FC<TViewerProps> = ({ markdown, className }) => {
 	const [editorLoaded, setEditorLoaded] = useState(false);
 
 	/** LIFECYCLE **/
@@ -16,7 +17,10 @@ const TViewer: React.FC<TViewerProps> = ({ markdown }) => {
 	}, [markdown]);
 
 	return (
-		<Stack sx={{ background: 'white', mt: '30px', borderRadius: '10px' }}>
+		<Stack
+			sx={{ background: 'white', mt: '30px', borderRadius: '10px' }}
+			className={className} // <-- apply className here
+		>
 			<Box sx={{ m: '40px' }}>
 				{editorLoaded ? (
 					<Viewer

@@ -6,7 +6,8 @@ import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { Button, Stack, Typography, Tab, Tabs, IconButton, Backdrop, Pagination } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useReactiveVar } from '@apollo/client';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
+
 import { userVar } from '../../apollo/store';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
@@ -143,9 +144,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 								<span className="mobile-member-nick" onClick={() => goMemberPage(boardArticle?.memberData?._id)}>
 									{boardArticle?.memberData?.memberNick}
 								</span>
-								<Moment className="mobile-time" format="DD MMM YYYY · HH:mm">
-									{boardArticle?.createdAt}
-								</Moment>
+								<span className="mobile-time">{dayjs(boardArticle?.createdAt).format('DD MMM YYYY · HH:mm')}</span>
 							</div>
 							<div className="mobile-stats">
 								<span>
@@ -211,9 +210,9 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 									/>
 									<div className="mobile-comment-meta">
 										<span className="mobile-comment-name">{commentData?.memberData?.memberNick}</span>
-										<Moment className="mobile-comment-date" format="DD MMM · HH:mm">
-											{commentData?.createdAt}
-										</Moment>
+										<span className="mobile-comment-date">
+											{dayjs(commentData?.createdAt).format('DD MMM · HH:mm')}
+										</span>
 									</div>
 									{commentData?.memberId === user?._id && (
 										<div className="mobile-comment-btns">
@@ -345,9 +344,9 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 												{boardArticle?.memberData?.memberNick}
 											</Typography>
 											<Stack className="divider" />
-											<Moment className={'time-added'} format={'DD.MM.YY HH:mm'}>
-												{boardArticle?.createdAt}
-											</Moment>
+											<Typography className="time-added">
+												{dayjs(boardArticle?.createdAt).format('DD.MM.YY HH:mm')}
+											</Typography>
 										</Stack>
 									</Stack>
 									<Stack className="info">
@@ -426,9 +425,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 												<Stack className="name-date-column">
 													<Typography className="name">{commentData?.memberData?.memberNick}</Typography>
 													<Typography className="date">
-														<Moment className={'time-added'} format={'DD.MM.YY HH:mm'}>
-															{commentData?.createdAt}
-														</Moment>
+														<span className="time-added">{dayjs(commentData?.createdAt).format('DD.MM.YY HH:mm')}</span>
 													</Typography>
 												</Stack>
 											</Stack>
