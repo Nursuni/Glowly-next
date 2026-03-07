@@ -1,11 +1,12 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, useState, useEffect } from 'react';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import { AccordionDetails, Box, Stack, Typography } from '@mui/material';
 import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import { useRouter } from 'next/router';
 import { styled } from '@mui/material/styles';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 
 type FAQItem = {
 	id: string;
@@ -14,44 +15,70 @@ type FAQItem = {
 };
 
 type FAQData = Record<string, FAQItem[]>;
+
 const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)(
-	({ theme }) => ({
-		border: `1px solid ${theme.palette.divider}`,
-		'&:not(:last-child)': {
-			borderBottom: 0,
-		},
-		'&:before': {
-			display: 'none',
-		},
+	() => ({
+		background: 'transparent',
+		borderBottom: '1px solid rgba(212, 175, 95, 0.15)',
+		'&:before': { display: 'none' },
 	}),
 );
+
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
-	<MuiAccordionSummary expandIcon={<KeyboardArrowDownRoundedIcon sx={{ fontSize: '1.4rem' }} />} {...props} />
-))(({ theme }) => ({
-	backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, .05)' : '#fff',
+	<MuiAccordionSummary
+		expandIcon={<AddRoundedIcon className="expand-icon-add" sx={{ fontSize: '1.2rem', color: '#d4af5f' }} />}
+		{...props}
+	/>
+))(() => ({
+	backgroundColor: 'transparent',
+	padding: '0 8px',
+	minHeight: '70px',
+	'& .MuiAccordionSummary-expandIconWrapper': {
+		transition: 'all 0.3s ease',
+	},
 	'& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-		transform: 'rotate(180deg)',
+		transform: 'rotate(0deg)',
+		'& .expand-icon-add': { display: 'none' },
 	},
 	'& .MuiAccordionSummary-content': {
-		marginLeft: theme.spacing(1),
+		margin: '16px 0',
 	},
 }));
+
+const categories = [
+	{ key: 'products', label: 'Products', icon: '✦' },
+	{ key: 'orders', label: 'Orders', icon: '✦' },
+	{ key: 'payment', label: 'Payment', icon: '✦' },
+	{ key: 'skincare', label: 'Skincare', icon: '✦' },
+	{ key: 'membership', label: 'Membership', icon: '✦' },
+	{ key: 'community', label: 'Community', icon: '✦' },
+	{ key: 'other', label: 'Other', icon: '✦' },
+];
 
 const Faq = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [category, setCategory] = useState<string>('products');
 	const [expanded, setExpanded] = useState<string | false>(false);
+	const [visible, setVisible] = useState<boolean>(false);
+	const [transitioning, setTransitioning] = useState<boolean>(false);
 
-	/** APOLLO REQUESTS **/
-	/** LIFECYCLES **/
+	useEffect(() => {
+		const timer = setTimeout(() => setVisible(true), 100);
+		return () => clearTimeout(timer);
+	}, []);
 
-	/** HANDLERS **/
-	const changeCategoryHandler = (category: string) => {
-		setCategory(category);
+	const changeCategoryHandler = (newCategory: string) => {
+		if (newCategory === category) return;
+		setTransitioning(true);
+		setExpanded(false);
+		setTimeout(() => {
+			setCategory(newCategory);
+			setTransitioning(false);
+		}, 250);
 	};
 
-	const handleChange = (panel: string) => (event: SyntheticEvent, newExpanded: boolean) => {
+	const handleChange = (panel: string) => (_event: SyntheticEvent, newExpanded: boolean) => {
 		setExpanded(newExpanded ? panel : false);
 	};
 
@@ -86,7 +113,6 @@ const Faq = () => {
 				content: 'Store products in a cool, dry place away from direct sunlight to maintain quality and effectiveness.',
 			},
 		],
-
 		orders: [
 			{
 				id: 'c006',
@@ -109,7 +135,6 @@ const Faq = () => {
 				content: 'Yes, international shipping is available to selected countries.',
 			},
 		],
-
 		payment: [
 			{
 				id: 'c010',
@@ -127,7 +152,6 @@ const Faq = () => {
 				content: 'Refunds are available for damaged or incorrect items according to our refund policy.',
 			},
 		],
-
 		skincare: [
 			{
 				id: 'c013',
@@ -145,7 +169,6 @@ const Faq = () => {
 				content: 'Yes, sunscreen should be applied daily to protect your skin from UV damage.',
 			},
 		],
-
 		membership: [
 			{
 				id: 'c016',
@@ -158,7 +181,6 @@ const Faq = () => {
 				content: 'Yes, creating an account and joining our loyalty program is completely free.',
 			},
 		],
-
 		community: [
 			{
 				id: 'c018',
@@ -171,7 +193,6 @@ const Faq = () => {
 				content: 'Our moderators review reports and remove content that violates community guidelines.',
 			},
 		],
-
 		other: [
 			{
 				id: 'c020',
@@ -188,44 +209,42 @@ const Faq = () => {
 
 	if (device === 'mobile') {
 		return <div>FAQ MOBILE</div>;
-	} else {
-		return (
-			<Stack className={'faq-content'}>
-				<Box className={'categories'} component={'div'}>
-					<div className={category === 'products' ? 'active' : ''} onClick={() => changeCategoryHandler('products')}>
-						Products
-					</div>
-					<div onClick={() => changeCategoryHandler('orders')}>Orders</div>
-					<div onClick={() => changeCategoryHandler('payment')}>Payment</div>
-					<div onClick={() => changeCategoryHandler('skincare')}>Skincare</div>
-					<div onClick={() => changeCategoryHandler('membership')}>Membership</div>
-					<div onClick={() => changeCategoryHandler('community')}>Community</div>
-					<div onClick={() => changeCategoryHandler('other')}>Other</div>
-				</Box>
-				<Box className={'wrap'} component={'div'}>
-					{data[category] &&
-						data[category].map((ele: FAQItem) => (
-							<Accordion expanded={expanded === ele?.id} onChange={handleChange(ele?.id)} key={ele?.subject}>
-								<AccordionSummary id="panel1d-header" className="question" aria-controls="panel1d-content">
-									<Typography className="badge" variant={'h4'}>
-										Q
-									</Typography>
-									<Typography> {ele?.subject}</Typography>
-								</AccordionSummary>
-								<AccordionDetails>
-									<Stack className={'answer flex-box'}>
-										<Typography className="badge" variant={'h4'} color={'primary'}>
-											A
-										</Typography>
-										<Typography> {ele?.content}</Typography>
-									</Stack>
-								</AccordionDetails>
-							</Accordion>
-						))}
-				</Box>
-			</Stack>
-		);
 	}
+
+	return (
+		<Stack className={`faq-content ${visible ? 'faq-visible' : ''}`}>
+			<Box className={'faq-categories'} component={'div'}>
+				{categories.map(({ key, label }) => (
+					<button
+						key={key}
+						className={`faq-cat-btn ${category === key ? 'active' : ''}`}
+						onClick={() => changeCategoryHandler(key)}
+					>
+						{label}
+					</button>
+				))}
+			</Box>
+
+			<Box className={`faq-wrap ${transitioning ? 'faq-transitioning' : 'faq-entered'}`} component={'div'}>
+				{data[category]?.map((ele: FAQItem, index: number) => (
+					<Accordion
+						expanded={expanded === ele?.id}
+						onChange={handleChange(ele?.id)}
+						key={ele?.id}
+						className={'faq-accordion'}
+						style={{ animationDelay: `${index * 60}ms` }}
+					>
+						<AccordionSummary className="faq-question" aria-controls={`${ele.id}-content`} id={`${ele.id}-header`}>
+							<Typography className="faq-q-text">{ele?.subject}</Typography>
+						</AccordionSummary>
+						<AccordionDetails className="faq-answer-details">
+							<Typography className="faq-a-text">{ele?.content}</Typography>
+						</AccordionDetails>
+					</Accordion>
+				))}
+			</Box>
+		</Stack>
+	);
 };
 
 export default Faq;

@@ -1,0 +1,485 @@
+// ============================================================
+//  Support Page — PC  (blush light theme · #F564A9)
+// ============================================================
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
+
+// ── Tokens ───────────────────────────────────────────────────
+$bg: #fdf7f9;
+$bg-hero: #fceef4;
+$surface: #ffffff;
+$surface-2: #fdf0f5;
+$border: rgba(245, 100, 169, 0.14);
+$border-soft: #f0e0ea;
+$pink: #f564a9;
+$pink-light: #f888bf;
+$pink-dim: rgba(245, 100, 169, 0.07);
+$text-primary: #1e1218;
+$text-secondary: #5c4556;
+$text-muted: #a08898;
+$text-dim: #cdb8c6;
+$font-display: 'Cormorant Garamond', Georgia, serif;
+$font-body: 'DM Sans', sans-serif;
+
+// ── Keyframes ─────────────────────────────────────────────────
+@keyframes fadeUp {
+	from {
+		opacity: 0;
+		transform: translateY(28px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes slideInLeft {
+	from {
+		opacity: 0;
+		transform: translateX(-18px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+// ── Page Shell ────────────────────────────────────────────────
+#pc-wrap {
+	.support-page {
+		position: relative;
+		min-height: 100vh;
+		background: $bg;
+		padding: 0 0 100px;
+		font-family: $font-body;
+
+		// The global .container inside support-content only
+		.support-content {
+			max-width: 1100px;
+			margin: 0 auto;
+			width: 100%;
+			padding: 0 40px;
+		}
+
+		// Override the layout's .container so hero can sit full-width
+		> .container {
+			max-width: 100% !important;
+			width: 100% !important;
+			padding: 0 !important;
+			margin: 0 !important;
+		}
+	}
+
+	// ── Hero Band — full viewport width ─────────────────────────
+	.support-main-info {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		background: $bg-hero;
+		width: 100%;
+		padding: 72px 40px 60px;
+		border-bottom: 1px solid $border-soft;
+		position: relative;
+		overflow: hidden;
+		animation: fadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+		// decorative blurred blob
+		&::before {
+			content: '';
+			position: absolute;
+			top: -80px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 600px;
+			height: 380px;
+			background: radial-gradient(ellipse at center, rgba(245, 100, 169, 0.15) 0%, transparent 68%);
+			pointer-events: none;
+		}
+
+		.info {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 14px;
+
+			.support-eyebrow {
+				font-size: 11px;
+				font-weight: 500;
+				letter-spacing: 3px;
+				text-transform: uppercase;
+				color: $pink;
+				opacity: 0;
+				animation: fadeIn 0.5s ease 0.2s forwards;
+			}
+
+			.support-heading {
+				font-family: $font-display;
+				font-size: clamp(46px, 5.5vw, 72px);
+				font-weight: 400;
+				line-height: 1.08;
+				color: $text-primary;
+				letter-spacing: -1px;
+				opacity: 0;
+				animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+
+				em {
+					font-style: italic;
+					color: $pink;
+				}
+			}
+
+			.support-sub {
+				font-size: 15px;
+				font-weight: 300;
+				color: $text-secondary;
+				max-width: 380px;
+				line-height: 1.65;
+				opacity: 0;
+				animation: fadeIn 0.6s ease 0.35s forwards;
+			}
+		}
+
+		.btns {
+			position: relative;
+			z-index: 1;
+			margin-top: 48px;
+			display: flex;
+			opacity: 0;
+			animation: fadeUp 0.6s ease 0.5s forwards;
+
+			.tab-btn {
+				position: relative;
+				padding: 13px 48px;
+				background: $surface;
+				border: 1px solid $border-soft;
+				color: $text-muted;
+				font-family: $font-body;
+				font-size: 12px;
+				font-weight: 500;
+				letter-spacing: 1.8px;
+				text-transform: uppercase;
+				cursor: pointer;
+				transition: all 0.25s ease;
+				outline: none;
+				overflow: hidden;
+
+				&:first-child {
+					border-radius: 3px 0 0 3px;
+				}
+				&:last-child {
+					border-radius: 0 3px 3px 0;
+					border-left: none;
+				}
+
+				&::after {
+					content: '';
+					position: absolute;
+					bottom: 0;
+					left: 50%;
+					right: 50%;
+					height: 2px;
+					background: $pink;
+					transition: left 0.3s ease, right 0.3s ease;
+				}
+
+				&:hover {
+					color: $text-primary;
+					border-color: rgba(245, 100, 169, 0.3);
+					&::after {
+						left: 0;
+						right: 0;
+					}
+				}
+
+				&.active {
+					background: $pink;
+					border-color: $pink;
+					color: #fff;
+					box-shadow: 0 4px 18px rgba(245, 100, 169, 0.28);
+					&::after {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+
+	// ── Content Area ────────────────────────────────────────────
+	.support-content {
+		margin-top: 56px;
+		max-width: 1100px;
+		margin-left: auto;
+		margin-right: auto;
+		width: 100%;
+		padding: 0 40px;
+		box-sizing: border-box;
+
+		.pagination {
+			margin-top: 60px;
+			display: flex;
+			justify-content: center;
+		}
+	}
+
+	// ── Notice ──────────────────────────────────────────────────
+	.notice-content {
+		gap: 0;
+
+		&.notice-visible .notice-row {
+			animation: slideInLeft 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+		}
+
+		.notice-header {
+			margin-bottom: 36px;
+
+			.notice-title-text {
+				font-family: $font-display;
+				font-size: 38px;
+				font-weight: 400;
+				color: $text-primary;
+				letter-spacing: -0.5px;
+				line-height: 1;
+			}
+
+			.notice-subtitle {
+				margin-top: 8px;
+				font-size: 14px;
+				color: $text-muted;
+				font-weight: 300;
+			}
+		}
+
+		.notice-table {
+			border: 1px solid $border-soft;
+			border-radius: 6px;
+			overflow: hidden;
+			box-shadow: 0 2px 20px rgba(245, 100, 169, 0.07);
+		}
+
+		.notice-table-head {
+			display: flex;
+			align-items: center;
+			padding: 13px 28px;
+			background: $surface-2;
+			border-bottom: 1px solid $border-soft;
+
+			span {
+				font-size: 10px;
+				font-weight: 600;
+				letter-spacing: 2px;
+				text-transform: uppercase;
+				color: $text-dim;
+			}
+		}
+
+		.col-type {
+			width: 90px;
+			flex-shrink: 0;
+		}
+		.col-num {
+			width: 50px;
+			flex-shrink: 0;
+		}
+		.col-title {
+			flex: 1;
+		}
+		.col-date {
+			width: 110px;
+			flex-shrink: 0;
+			text-align: right;
+		}
+
+		.notice-table-body {
+			gap: 0;
+		}
+
+		.notice-row {
+			display: flex;
+			align-items: center;
+			padding: 20px 28px;
+			border-bottom: 1px solid $border-soft;
+			background: $surface;
+			transition: background 0.18s ease;
+			cursor: default;
+
+			&:last-child {
+				border-bottom: none;
+			}
+			&:hover {
+				background: #fdf5f9;
+			}
+
+			&.notice-row--event {
+				background: rgba(245, 100, 169, 0.03);
+				&:hover {
+					background: rgba(245, 100, 169, 0.07);
+				}
+			}
+
+			.badge-event {
+				display: inline-block;
+				padding: 3px 11px;
+				border-radius: 100px;
+				background: rgba(245, 100, 169, 0.1);
+				border: 1px solid rgba(245, 100, 169, 0.28);
+				color: $pink;
+				font-size: 10px;
+				letter-spacing: 1px;
+				text-transform: uppercase;
+				font-weight: 600;
+			}
+
+			.badge-notice {
+				display: inline-block;
+				padding: 3px 11px;
+				border-radius: 100px;
+				background: transparent;
+				border: 1px solid $border-soft;
+				color: $text-dim;
+				font-size: 10px;
+				letter-spacing: 1px;
+				text-transform: uppercase;
+				font-weight: 500;
+			}
+
+			.notice-num {
+				color: $text-dim;
+				font-size: 13px;
+			}
+
+			.notice-row-title {
+				color: $text-primary;
+				font-size: 15px;
+				font-weight: 400;
+				line-height: 1.5;
+			}
+
+			.notice-date {
+				color: $text-muted;
+				font-size: 12px;
+				font-weight: 300;
+				letter-spacing: 0.4px;
+			}
+		}
+	}
+
+	// ── FAQ ──────────────────────────────────────────────────────
+	.faq-content {
+		gap: 0;
+		opacity: 0;
+		transform: translateY(14px);
+		transition: opacity 0.55s ease, transform 0.55s ease;
+
+		&.faq-visible {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		.faq-categories {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			justify-content: center;
+			margin-bottom: 52px;
+
+			.faq-cat-btn {
+				padding: 8px 22px;
+				background: $surface;
+				border: 1px solid $border-soft;
+				border-radius: 100px;
+				color: $text-muted;
+				font-family: $font-body;
+				font-size: 12px;
+				font-weight: 400;
+				letter-spacing: 0.8px;
+				text-transform: uppercase;
+				cursor: pointer;
+				transition: all 0.22s ease;
+				outline: none;
+
+				&:hover {
+					border-color: rgba(245, 100, 169, 0.35);
+					color: $text-primary;
+					background: $pink-dim;
+				}
+
+				&.active {
+					background: $pink;
+					border-color: $pink;
+					color: #fff;
+					box-shadow: 0 4px 14px rgba(245, 100, 169, 0.28);
+				}
+			}
+		}
+
+		.faq-wrap {
+			transition: opacity 0.22s ease, transform 0.22s ease;
+
+			&.faq-transitioning {
+				opacity: 0;
+				transform: translateY(8px);
+			}
+
+			&.faq-entered {
+				opacity: 1;
+				transform: translateY(0);
+
+				.faq-accordion {
+					animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+				}
+			}
+		}
+
+		.faq-accordion {
+			background: transparent !important;
+			border-bottom: 1px solid $border-soft !important;
+		}
+
+		.faq-question {
+			padding: 4px 0;
+			min-height: 68px !important;
+
+			.faq-q-text {
+				font-size: 16px;
+				font-weight: 400;
+				color: $text-primary;
+				line-height: 1.5;
+				transition: color 0.2s ease;
+			}
+
+			&:hover .faq-q-text {
+				color: $pink;
+			}
+			&.Mui-expanded .faq-q-text {
+				color: $pink;
+			}
+
+			.MuiAccordionSummary-expandIconWrapper svg {
+				color: $pink !important;
+			}
+		}
+
+		.faq-answer-details {
+			padding: 0 0 28px 4px !important;
+			background: transparent !important;
+
+			.faq-a-text {
+				font-size: 14px;
+				font-weight: 300;
+				color: $text-secondary;
+				line-height: 1.85;
+				max-width: 680px;
+			}
+		}
+	}
+}

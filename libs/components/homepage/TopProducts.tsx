@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Stack, Box } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import WestIcon from '@mui/icons-material/West';
@@ -6,17 +6,10 @@ import EastIcon from '@mui/icons-material/East';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper';
 import TopProductCard from './TopProductCard';
-import { ProductsInquiry } from '../../types/product/product.input';
-import { Product } from '../../types/product/product';
+import { dummyProducts } from '@/libs/dummyProducts';
 
-interface TopProductsProps {
-	initialInput: ProductsInquiry;
-}
-
-const TopProducts = (props: TopProductsProps) => {
-	const { initialInput } = props;
+const TopProducts = () => {
 	const device = useDeviceDetect();
-	const [topProducts, setTopProducts] = useState<Product[]>([]);
 
 	if (device === 'mobile') {
 		return (
@@ -26,7 +19,6 @@ const TopProducts = (props: TopProductsProps) => {
 						<span>In the spotlight</span>
 						<span>Beauty favourites</span>
 					</Stack>
-
 					<Stack className={'card-box'}>
 						<Swiper
 							className={'top-product-swiper'}
@@ -35,8 +27,8 @@ const TopProducts = (props: TopProductsProps) => {
 							spaceBetween={15}
 							modules={[Autoplay]}
 						>
-							{topProducts.map((product: Product) => (
-								<SwiperSlide className={'top-product-slide'} key={product?._id}>
+							{dummyProducts.map((product) => (
+								<SwiperSlide key={product._id} className={'top-product-slide'}>
 									<TopProductCard product={product} />
 								</SwiperSlide>
 							))}
@@ -55,7 +47,6 @@ const TopProducts = (props: TopProductsProps) => {
 						<span>#BESTSELLERS</span>
 						<p>Featured Products</p>
 					</Box>
-
 					<Box component={'div'} className={'right'}>
 						<div className={'pagination-box'}>
 							<WestIcon className={'swiper-top-prev'} />
@@ -79,8 +70,8 @@ const TopProducts = (props: TopProductsProps) => {
 							el: '.swiper-top-pagination',
 						}}
 					>
-						{topProducts.map((product: Product) => (
-							<SwiperSlide className={'top-product-slide'} key={product?._id}>
+						{dummyProducts.map((product) => (
+							<SwiperSlide key={product._id} className={'top-product-slide'}>
 								<TopProductCard product={product} />
 							</SwiperSlide>
 						))}
@@ -89,16 +80,6 @@ const TopProducts = (props: TopProductsProps) => {
 			</Stack>
 		</Stack>
 	);
-};
-
-TopProducts.defaultProps = {
-	initialInput: {
-		page: 1,
-		limit: 8,
-		sort: 'productRank',
-		direction: 'DESC',
-		search: {},
-	},
 };
 
 export default TopProducts;

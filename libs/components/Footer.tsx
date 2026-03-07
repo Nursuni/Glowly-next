@@ -5,51 +5,84 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import { Stack, Box } from '@mui/material';
 import moment from 'moment';
+import { useEffect, useRef } from 'react';
+
+const BADGES = [
+	{ icon: '🌿', title: 'Cruelty-Free', sub: 'Certified brands only' },
+	{ icon: '🚚', title: 'Free Shipping', sub: 'On orders over ₩80,000' },
+	{ icon: '📍', title: 'South Korea', sub: 'Worldwide delivery' },
+	{ icon: '💬', title: 'Expert Support', sub: '7 days · 9 am – 9 pm' },
+];
 
 const Footer = () => {
 	const device = useDeviceDetect();
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	/* scroll fade-in */
+	useEffect(() => {
+		const root = containerRef.current;
+		if (!root) return;
+		const targets = root.querySelectorAll<HTMLElement>('.gf-fade');
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((e) => {
+					if (e.isIntersecting) {
+						e.target.classList.add('gf-visible');
+						observer.unobserve(e.target);
+					}
+				});
+			},
+			{ threshold: 0.15 },
+		);
+		targets.forEach((el) => observer.observe(el));
+		return () => observer.disconnect();
+	}, []);
 
 	/* ─── MOBILE ─── */
 	if (device === 'mobile') {
 		return (
-			<Stack className={'footer-container'}>
+			<Stack className={'footer-container'} ref={containerRef}>
 				<Stack className={'main'}>
-					{/* LEFT */}
-					<Stack className={'left'}>
-						<Box className={'footer-box'}>
-							<img src="/img/logo/glowly.svg" alt="Glowly" className={'logo'} />
+					<Stack className={'left gf-fade'}>
+						<Box className={'footer-box logo-box'}>
+							<img src="/img/logo/Glowly.svg" alt="Glowly" className={'logo'} />
 						</Box>
-
+						<p className={'tagline'}>Curated beauty from the world's finest brands — crafted for the skin you're in.</p>
 						<Box className={'footer-box'}>
 							<span>Customer Care</span>
 							<p>+82 10 4867 2909</p>
 						</Box>
-
 						<Box className={'footer-box'}>
 							<span>Beauty Support</span>
 							<p>support@glowly.com</p>
-							<span>We're here for your glow ✨</span>
 						</Box>
-
 						<Box className={'footer-box'}>
 							<span>Follow Glowly</span>
 							<div className={'media-box'}>
-								<FacebookOutlinedIcon />
-								<TelegramIcon />
-								<InstagramIcon />
-								<TwitterIcon />
+								<a href="#">
+									<FacebookOutlinedIcon />
+								</a>
+								<a href="#">
+									<TelegramIcon />
+								</a>
+								<a href="#">
+									<InstagramIcon />
+								</a>
+								<a href="#">
+									<TwitterIcon />
+								</a>
 							</div>
 						</Box>
 					</Stack>
 
-					{/* RIGHT */}
-					<Stack className={'right'}>
+					<Stack className={'right gf-fade'}>
 						<Box className={'bottom'}>
 							<div>
 								<strong>Shop</strong>
 								<span>Skincare</span>
 								<span>Makeup</span>
 								<span>Best Brands</span>
+								<span>New Arrivals</span>
 							</div>
 							<div>
 								<strong>Help</strong>
@@ -62,17 +95,14 @@ const Footer = () => {
 								<strong>Discover</strong>
 								<span>About Glowly</span>
 								<span>Beauty Blog</span>
-								<span>New Arrivals</span>
 								<span>Glow Tips</span>
 							</div>
 						</Box>
 					</Stack>
 				</Stack>
 
-				{/* BOTTOM BAR */}
 				<Stack className={'second'}>
-					<span className={'locale'}>🌏 Australia (English)</span>
-					<span>© Glowly Cosmetics {moment().year()} — All rights reserved.</span>
+					<span>© Glowly Cosmetics {moment().year()}</span>
 				</Stack>
 			</Stack>
 		);
@@ -80,52 +110,98 @@ const Footer = () => {
 
 	/* ─── DESKTOP ─── */
 	return (
-		<Stack className={'footer-container'}>
+		<Stack className={'footer-container'} ref={containerRef as any}>
+			{/* MARQUEE */}
+			<div className={'gf-marquee-wrap gf-fade'}>
+				<div className={'gf-marquee'}>
+					<span>
+						Glow with <em>Confidence</em> &nbsp;·&nbsp;
+					</span>
+					<span>
+						Beauty for <em>Every</em> Skin &nbsp;·&nbsp;
+					</span>
+					<span>
+						Your Radiance <em>Starts Here</em> &nbsp;·&nbsp;
+					</span>
+					<span>
+						Glow with <em>Confidence</em> &nbsp;·&nbsp;
+					</span>
+					<span>
+						Beauty for <em>Every</em> Skin &nbsp;·&nbsp;
+					</span>
+					<span>
+						Your Radiance <em>Starts Here</em> &nbsp;·&nbsp;
+					</span>
+				</div>
+			</div>
+
 			<Stack className={'main'}>
 				{/* LEFT */}
-				<Stack className={'left'}>
-					<Box className={'footer-box'}>
-						<img src="/img/logo/glowlyDark.svg" alt="Glowly" className={'logo'} />
+				<Stack className={'left gf-fade'}>
+					<Box className={'footer-box logo-box'}>
+						<img src="/img/logo/Glowly.svg" alt="Glowly" className={'logo'} />
 					</Box>
-
-					<Box className={'footer-box'}>
-						<span>Customer Care</span>
-						<p>+82 10 4867 2909</p>
-					</Box>
-
-					<Box className={'footer-box'}>
-						<span>Beauty Support Line</span>
-						<p>support@glowly.com</p>
-						<span>Glow with confidence </span>
-					</Box>
-
+					<p className={'tagline'}>
+						Curated beauty from the world's finest brands —<br />
+						crafted for the skin you're in.
+					</p>
+					<div className={'contact-group'}>
+						<Box className={'footer-box'}>
+							<span>Customer Care</span>
+							<p>+82 10 4867 2909</p>
+						</Box>
+						<Box className={'footer-box'}>
+							<span>Beauty Support</span>
+							<p>support@glowly.com</p>
+						</Box>
+					</div>
 					<Box className={'footer-box'}>
 						<span>Follow Glowly</span>
 						<div className={'media-box'}>
-							<FacebookOutlinedIcon />
-							<TelegramIcon />
-							<InstagramIcon />
-							<TwitterIcon />
+							<a href="#">
+								<FacebookOutlinedIcon />
+							</a>
+							<a href="#">
+								<TelegramIcon />
+							</a>
+							<a href="#">
+								<InstagramIcon />
+							</a>
+							<a href="#">
+								<TwitterIcon />
+							</a>
 						</div>
 					</Box>
 				</Stack>
 
+				<div className={'vdivider'} />
+
 				{/* RIGHT */}
-				<Stack className={'right'}>
+				<Stack className={'right gf-fade'}>
 					<Box className={'top'}>
-						<strong>Join Our Beauty Newsletter</strong>
-						<div>
-							<input type="text" placeholder={'Your Email'} />
+						<p className={'newsletter-label'}>Beauty Insider</p>
+						<strong>
+							Unlock <em>early access</em>, new arrivals & glow tips.
+						</strong>
+						<div className={'input-row'}>
+							<input type="email" placeholder={'Your email address'} />
 							<span>Subscribe</span>
 						</div>
 					</Box>
-
 					<Box className={'bottom'}>
 						<div>
 							<strong>Shop</strong>
 							<span>Skincare</span>
 							<span>Makeup</span>
 							<span>Best Brands</span>
+							<span>New Arrivals</span>
+						</div>
+						<div>
+							<strong>Discover</strong>
+							<span>About Glowly</span>
+							<span>Beauty Blog</span>
+							<span>Glow Tips</span>
+							<span>Ingredients</span>
 						</div>
 						<div>
 							<strong>Help</strong>
@@ -134,34 +210,38 @@ const Footer = () => {
 							<span>Terms of Service</span>
 							<span>FAQs</span>
 						</div>
-						<div>
-							<strong>Discover</strong>
-							<span>About Glowly</span>
-							<span>Beauty Blog</span>
-							<span>New Arrivals</span>
-							<span>Glow Tips</span>
-						</div>
 					</Box>
 				</Stack>
 			</Stack>
 
-			{/* SECOND / LOCALE + LEGAL */}
-			<Stack className={'second'}>
-				<Box className={'locale'}> South Korea</Box>
+			{/* TRUST BADGES — separator only between items, not after last */}
+			<div className={'badges gf-fade'}>
+				{BADGES.map((b, i) => (
+					<>
+						<div className={'badge'} key={b.title}>
+							<div className={'badge-icon'}>{b.icon}</div>
+							<div className={'badge-text'}>
+								<strong>{b.title}</strong>
+								<span>{b.sub}</span>
+							</div>
+						</div>
+						{i < BADGES.length - 1 && <div className={'badge-sep'} key={`sep-${i}`} />}
+					</>
+				))}
+			</div>
+
+			{/* BOTTOM BAR */}
+			<Stack className={'second gf-fade'}>
 				<Box className={'links'}>
 					<span>Privacy Policy</span>
-					<span>Terms of Conditions</span>
+					<span>Terms of Service</span>
+					<span>Cookie Settings</span>
 				</Box>
 			</Stack>
 
-			{/* TAGLINE BAR */}
-			<Box className={'tagline-bar'}>
-				<p>
-					At <strong>Glowly</strong>, we believe your skin is your canvas — a place to express your inner radiance,
-					connect with your confidence, and embrace every version of yourself. We're not just a cosmetics brand; we're
-					your partners in creating a luminous, vibrant life.
-				</p>
-				<p className={'copy'}>©{moment().year()} Glowly Cosmetics. All Rights Reserved.</p>
+			{/* COPYRIGHT ONLY */}
+			<Box className={'tagline-bar gf-fade'}>
+				<p className={'copy'}>© {moment().year()} Glowly Cosmetics. All Rights Reserved.</p>
 			</Box>
 		</Stack>
 	);

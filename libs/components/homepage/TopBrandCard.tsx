@@ -1,34 +1,26 @@
 import React from 'react';
-import { useRouter } from 'next/router';
-import { Stack } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Member } from '../../types/member/member';
 
-interface TopBrandProps {
+interface TopBrandCardProps {
 	brand: Member;
 }
 
-const TopBrandCard = (props: TopBrandProps) => {
-	const { brand } = props;
-	const device = useDeviceDetect();
-	const router = useRouter();
-
-	const brandImage = brand?.memberImage
-		? `${process.env.REACT_APP_API_URL}/${brand?.memberImage}`
-		: '/img/profile/defaultUser.svg';
-
-	/** HANDLERS **/
-	const redirectHandler = () => {
-		router.push(`/brand/detail?brandId=${brand?._id}`);
-	};
+const TopBrandCard = ({ brand }: TopBrandCardProps) => {
+	const logo = brand?.memberImage ? `/img/brands/${brand.memberImage}` : '/img/profile/defaultUser.svg';
 
 	return (
-		<Stack className="top-brand-card" onClick={redirectHandler} style={{ cursor: 'pointer' }}>
-			<img src={brandImage} alt="" />
-
-			<strong>{brand?.memberNick}</strong>
-			<span>{brand?.memberType}</span>
-		</Stack>
+		<div style={{ width: '100px', height: '100px', cursor: 'pointer' }}>
+			<img
+				src={logo}
+				alt={brand.memberNick}
+				style={{
+					width: '100%',
+					height: '100%',
+					objectFit: 'contain', // fit the logo nicely
+					borderRadius: '12px', // optional
+				}}
+			/>
+		</div>
 	);
 };
 

@@ -27,12 +27,19 @@ const TopProductCard = (props: TopProductCardProps) => {
 			<Box
 				component={'div'}
 				className={'card-img'}
-				style={{ backgroundImage: `url(${REACT_APP_API_URL}/${firstImage})` }}
+				style={{
+					backgroundImage: `url(${firstImage})`,
+					backgroundSize: 'cover',
+					backgroundPosition: 'center',
+				}}
+				//	component={'div'}
+				//	className={'card-img'}
+				//	style={{ backgroundImage: `url(${REACT_APP_API_URL}/${firstImage})` }}
 			>
 				<div>${product?.productPrice}</div>
 			</Box>
 			<Box component={'div'} className={'info'}>
-				<strong className={'title'}>title</strong>
+				<strong className={'title'}>{product?.productTitle}</strong>
 				<p className={'desc'}>{product?.productDesc ?? 'No description'}</p>
 
 				<Divider sx={{ mt: '15px', mb: '17px' }} />

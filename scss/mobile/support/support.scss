@@ -1,0 +1,378 @@
+// ============================================================
+//  Support Page — Mobile  (blush light theme · #F564A9)
+// ============================================================
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
+
+// ── Tokens ───────────────────────────────────────────────────
+$bg: #fdf7f9;
+$bg-hero: #fceef4;
+$surface: #ffffff;
+$surface-2: #fdf0f5;
+$border-soft: #f0e0ea;
+$pink: #f564a9;
+$pink-dim: rgba(245, 100, 169, 0.07);
+$text-primary: #1e1218;
+$text-secondary: #5c4556;
+$text-muted: #a08898;
+$text-dim: #cdb8c6;
+$font-display: 'Cormorant Garamond', Georgia, serif;
+$font-body: 'DM Sans', sans-serif;
+
+// ── Keyframes ─────────────────────────────────────────────────
+@keyframes fadeUpMobile {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes fadeInMobile {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+// ── Page Shell ────────────────────────────────────────────────
+#mobile-wrap {
+	.support-page {
+		background: $bg;
+		min-height: 100vh;
+		padding: 0 0 80px;
+		font-family: $font-body;
+
+		> .container {
+			max-width: 100% !important;
+			width: 100% !important;
+			padding: 0 !important;
+			margin: 0 !important;
+		}
+	}
+
+	// ── Hero Band ────────────────────────────────────────────────
+	.support-main-info {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		background: $bg-hero;
+		padding: 48px 24px 44px;
+		border-bottom: 1px solid $border-soft;
+		position: relative;
+		overflow: hidden;
+		animation: fadeUpMobile 0.65s ease forwards;
+
+		&::before {
+			content: '';
+			position: absolute;
+			top: -60px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 340px;
+			height: 260px;
+			background: radial-gradient(ellipse at center, rgba(245, 100, 169, 0.14) 0%, transparent 70%);
+			pointer-events: none;
+		}
+
+		.info {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 12px;
+
+			.support-eyebrow {
+				font-size: 10px;
+				font-weight: 500;
+				letter-spacing: 2.5px;
+				text-transform: uppercase;
+				color: $pink;
+			}
+
+			.support-heading {
+				font-family: $font-display;
+				font-size: 38px;
+				font-weight: 400;
+				line-height: 1.1;
+				color: $text-primary;
+				letter-spacing: -0.5px;
+
+				em {
+					font-style: italic;
+					color: $pink;
+				}
+			}
+
+			.support-sub {
+				font-size: 13px;
+				font-weight: 300;
+				color: $text-secondary;
+				line-height: 1.6;
+			}
+		}
+
+		.btns {
+			position: relative;
+			z-index: 1;
+			margin-top: 36px;
+			display: flex;
+			width: 100%;
+
+			.tab-btn {
+				flex: 1;
+				padding: 12px 0;
+				background: $surface;
+				border: 1px solid $border-soft;
+				color: $text-muted;
+				font-family: $font-body;
+				font-size: 11px;
+				font-weight: 500;
+				letter-spacing: 1.5px;
+				text-transform: uppercase;
+				cursor: pointer;
+				transition: all 0.22s ease;
+				outline: none;
+
+				&:first-child {
+					border-radius: 3px 0 0 3px;
+				}
+				&:last-child {
+					border-radius: 0 3px 3px 0;
+					border-left: none;
+				}
+
+				&.active {
+					background: $pink;
+					border-color: $pink;
+					color: #fff;
+					box-shadow: 0 4px 14px rgba(245, 100, 169, 0.25);
+				}
+			}
+		}
+	}
+
+	// ── Content ──────────────────────────────────────────────────
+	.support-content {
+		margin-top: 40px;
+		padding: 0 20px;
+		box-sizing: border-box;
+	}
+
+	// ── Notice ──────────────────────────────────────────────────
+	.notice-content {
+		&.notice-visible .notice-row {
+			animation: fadeUpMobile 0.4s ease both;
+		}
+
+		.notice-header {
+			margin-bottom: 28px;
+			margin-top: 28px;
+			.notice-title-text {
+				font-family: $font-display;
+				font-size: 30px;
+				font-weight: 400;
+				color: $text-primary;
+				letter-spacing: -0.3px;
+			}
+
+			.notice-subtitle {
+				margin-top: 6px;
+				font-size: 12px;
+				color: $text-muted;
+				font-weight: 300;
+			}
+		}
+
+		.notice-table {
+			border: 1px solid $border-soft;
+			border-radius: 6px;
+			overflow: hidden;
+			box-shadow: 0 2px 16px rgba(245, 100, 169, 0.07);
+		}
+
+		// Hide column header row on mobile — cards tell their own story
+		.notice-table-head {
+			display: none;
+		}
+
+		.notice-table-body {
+			gap: 0;
+		}
+
+		.notice-row {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			padding: 18px 18px;
+			border-bottom: 1px solid $border-soft;
+			background: $surface;
+			transition: background 0.18s ease;
+
+			&:last-child {
+				border-bottom: none;
+			}
+			&.notice-row--event {
+				background: rgba(245, 100, 169, 0.03);
+			}
+
+			.col-type {
+				order: 1;
+			}
+			.col-num {
+				display: none;
+			}
+			.col-title {
+				order: 2;
+			}
+			.col-date {
+				order: 3;
+				width: auto;
+				text-align: left;
+			}
+
+			.badge-event {
+				display: inline-block;
+				padding: 3px 11px;
+				border-radius: 100px;
+				background: rgba(245, 100, 169, 0.1);
+				border: 1px solid rgba(245, 100, 169, 0.28);
+				color: $pink;
+				font-size: 10px;
+				letter-spacing: 1px;
+				text-transform: uppercase;
+				font-weight: 600;
+			}
+
+			.badge-notice {
+				display: inline-block;
+				padding: 3px 11px;
+				border-radius: 100px;
+				background: transparent;
+				border: 1px solid $border-soft;
+				color: $text-dim;
+				font-size: 10px;
+				letter-spacing: 1px;
+				text-transform: uppercase;
+			}
+
+			.notice-row-title {
+				color: $text-primary;
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 1.5;
+			}
+
+			.notice-date {
+				color: $text-muted;
+				font-size: 11px;
+				font-weight: 300;
+				letter-spacing: 0.4px;
+			}
+		}
+	}
+
+	// ── FAQ ──────────────────────────────────────────────────────
+	.faq-content {
+		opacity: 0;
+		transform: translateY(12px);
+		transition: opacity 0.5s ease, transform 0.5s ease;
+
+		&.faq-visible {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		.faq-categories {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			justify-content: flex-start;
+			margin-bottom: 36px;
+
+			.faq-cat-btn {
+				padding: 7px 16px;
+				background: $surface;
+				border: 1px solid $border-soft;
+				border-radius: 100px;
+				color: $text-muted;
+				font-family: $font-body;
+				font-size: 11px;
+				font-weight: 400;
+				letter-spacing: 0.8px;
+				text-transform: uppercase;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				outline: none;
+
+				&.active {
+					background: $pink;
+					border-color: $pink;
+					color: #fff;
+					box-shadow: 0 3px 10px rgba(245, 100, 169, 0.25);
+				}
+			}
+		}
+
+		.faq-wrap {
+			transition: opacity 0.2s ease, transform 0.2s ease;
+
+			&.faq-transitioning {
+				opacity: 0;
+				transform: translateY(6px);
+			}
+
+			&.faq-entered {
+				opacity: 1;
+				transform: translateY(0);
+
+				.faq-accordion {
+					animation: fadeUpMobile 0.38s ease both;
+				}
+			}
+		}
+
+		.faq-accordion {
+			background: transparent !important;
+			border-bottom: 1px solid $border-soft !important;
+		}
+
+		.faq-question {
+			padding: 4px 0;
+			min-height: 60px !important;
+
+			.faq-q-text {
+				font-size: 14px;
+				font-weight: 400;
+				color: $text-primary;
+				line-height: 1.5;
+			}
+
+			&.Mui-expanded .faq-q-text {
+				color: $pink;
+			}
+
+			.MuiAccordionSummary-expandIconWrapper svg {
+				color: $pink !important;
+			}
+		}
+
+		.faq-answer-details {
+			padding: 0 0 22px 4px !important;
+			background: transparent !important;
+
+			.faq-a-text {
+				font-size: 13px;
+				font-weight: 300;
+				color: $text-secondary;
+				line-height: 1.8;
+			}
+		}
+	}
+}

@@ -14,6 +14,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import Top from '../Top';
 import Footer from '../Footer';
+import Chat from '../Chat';
 
 const withLayoutBasic = (Component: any) => {
 	return (props: any) => {
@@ -30,19 +31,19 @@ const withLayoutBasic = (Component: any) => {
 
 			switch (router.pathname) {
 				case '/catalog':
-					title = 'Catalog';
+					title = 'Home/Catalog';
 					desc = 'Skincare & Cosmetics Collection';
 					bgImage = '/img/banner/banner_products.jpg';
 					break;
 
 				case '/blog':
-					title = 'Beauty Community';
+					title = 'Home/Blog';
 					desc = 'Tips, Trends & Skincare Knowledge';
 					bgImage = '/img/banner/journal.jpg';
 					break;
 
 				case '/about':
-					title = 'Our Story';
+					title = 'Home/Our Story';
 					desc = 'Clean Beauty Philosophy';
 					bgImage = '/img/banner/aboutus.webp';
 					break;
@@ -55,13 +56,13 @@ const withLayoutBasic = (Component: any) => {
 					break;
 
 				case '/mypage':
-					title = 'My Beauty';
+					title = 'Home/My Beauty';
 					desc = 'Your Orders & Favorites';
 					bgImage = '/img/banner/profile.jpg';
 					break;
 
 				default:
-					title = 'Beauty Redefined';
+					title = 'Home/Beauty Redefined';
 					desc = 'Glow Naturally';
 					bgImage = '/img/banner/main.jpg';
 			}
@@ -117,7 +118,6 @@ const withLayoutBasic = (Component: any) => {
 						<Stack
 							className={`header-basic ${authHeader ? 'auth' : ''}`}
 							sx={{
-								height: { xs: 700, md: 550 }, // mobile vs desktop
 								backgroundImage: `url(${memoizedValues.bgImage})`,
 								backgroundSize: 'cover',
 								backgroundPosition: 'center',
@@ -133,7 +133,7 @@ const withLayoutBasic = (Component: any) => {
 						<Stack id={'main'}>
 							<Component {...props} />
 						</Stack>
-
+						{user?._id && <Chat />}
 						<Stack id={'footer'}>
 							{' '}
 							<Footer />

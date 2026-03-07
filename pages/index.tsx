@@ -12,7 +12,7 @@ import Advertisement from '../libs/components/homepage/Advertisement';
 import TopProducts from '../libs/components/homepage/TopProducts';
 import ShopByCategories from '../libs/components/homepage/ShopByCategories';
 import AIChat from '../libs/components/AIChat';
-import TopBrands from '@/libs/components/homepage/TopBrands';
+import TopBrandsCarousel from '@/libs/components/homepage/TopBrandsCarousel';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -29,7 +29,7 @@ const Home: NextPage = () => {
 		return (
 			<Stack className={'home-page'}>
 				<TopProducts />
-				<TopBrands />
+				<TopBrandsCarousel brands={[]} />
 				<ShopByCategories />
 				<Advertisement />
 				<AIChat />
