@@ -3,11 +3,10 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { Button, Stack, Typography, Tab, Tabs, IconButton, Backdrop, Pagination } from '@mui/material';
+import { Button, Stack, Typography, Tabs, Tab, IconButton, Backdrop, Pagination } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useReactiveVar } from '@apollo/client';
 import dayjs from 'dayjs';
-
 import { userVar } from '../../apollo/store';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
@@ -30,6 +29,13 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
+const tabs = [
+	{ value: 'FREE', label: 'Open Forum', icon: '✦' },
+	{ value: 'RECOMMEND', label: 'Recommendations', icon: '♡' },
+	{ value: 'NEWS', label: 'Beauty News', icon: '◎' },
+	{ value: 'HUMOR', label: 'Lighthearted', icon: '✿' },
+];
+
 const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
@@ -44,8 +50,6 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	const [total, setTotal] = useState<number>(0);
 	const [searchFilter, setSearchFilter] = useState<CommentsInquiry>({ ...initialInput });
 	const [memberImage, setMemberImage] = useState<string>('/img/community/articleImg.png');
-	const [anchorEl, setAnchorEl] = useState<any | null>(null);
-	const open = Boolean(anchorEl);
 	const [openBackdrop, setOpenBackdrop] = useState<boolean>(false);
 	const [updatedComment, setUpdatedComment] = useState<string>('');
 	const [updatedCommentId, setUpdatedCommentId] = useState<string>('');
@@ -74,47 +78,29 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 	const tabChangeHandler = (event: React.SyntheticEvent, value: string) => {
 		router.replace({ pathname: '/blog', query: { articleCategory: value } }, '/blog', { shallow: true });
 	};
-
 	const creteCommentHandler = async () => {};
 	const updateButtonHandler = async (commentId: string, commentStatus?: CommentStatus.DELETED) => {};
-
-	const getCommentMemberImage = (imageUrl: string | undefined) => {
-		if (imageUrl) return `${process.env.REACT_APP_API_URL}/${imageUrl}`;
-		return '/img/community/articleImg.png';
-	};
-
+	const getCommentMemberImage = (imageUrl: string | undefined) =>
+		imageUrl ? `${process.env.REACT_APP_API_URL}/${imageUrl}` : '/img/community/articleImg.png';
 	const goMemberPage = (id: any) => {
 		if (id === user?._id) router.push('/mypage');
 		else router.push(`/member?memberId=${id}`);
 	};
-
 	const cancelButtonHandler = () => {
 		setOpenBackdrop(false);
 		setUpdatedComment('');
 		setUpdatedCommentWordsCnt(0);
 	};
-
 	const updateCommentInputHandler = (value: string) => {
 		if (value.length > 100) return;
 		setUpdatedCommentWordsCnt(value.length);
 		setUpdatedComment(value);
 	};
-
-	const paginationHandler = (e: T, value: number) => {
-		setSearchFilter({ ...searchFilter, page: value });
-	};
-
-	const tabs = [
-		{ value: 'FREE', label: 'Free Board' },
-		{ value: 'RECOMMEND', label: 'Recommendation' },
-		{ value: 'NEWS', label: 'News' },
-		{ value: 'HUMOR', label: 'Humor' },
-	];
+	const paginationHandler = (e: T, value: number) => setSearchFilter({ ...searchFilter, page: value });
 
 	if (device === 'mobile') {
 		return (
 			<div id="community-detail-page" className="mobile">
-				{/* Mobile category pill bar */}
 				<div className="mobile-tab-bar">
 					{tabs.map((tab) => (
 						<button
@@ -122,17 +108,16 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 							className={`mobile-tab-pill ${articleCategory === tab.value ? 'active' : ''}`}
 							onClick={(e) => tabChangeHandler(e as any, tab.value)}
 						>
+							<span className="pill-icon">{tab.icon}</span>
 							{tab.label}
 						</button>
 					))}
 				</div>
 
 				<div className="mobile-detail-body">
-					{/* Article header */}
 					<div className="mobile-article-header scroll-reveal">
 						<Typography className="mobile-article-category">{articleCategory} BOARD</Typography>
 						<Typography className="mobile-article-title">{boardArticle?.articleTitle}</Typography>
-
 						<div className="mobile-article-meta">
 							<img
 								src={memberImage}
@@ -161,26 +146,25 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 						</div>
 					</div>
 
-					{/* Article content */}
 					<div className="mobile-article-content scroll-reveal">
 						<ToastViewerComponent markdown={boardArticle?.articleContent} className={'ytb_play'} />
 					</div>
 
-					{/* Like button */}
 					<div className="mobile-like-section scroll-reveal">
 						<button className="mobile-like-btn">
 							{boardArticle?.meLiked ? <ThumbUpAltIcon /> : <ThumbUpOffAltIcon />}
-							<span>{boardArticle?.articleLikes}</span>
+							<span>{boardArticle?.articleLikes} found this helpful</span>
 						</button>
 					</div>
 
-					{/* Comments section */}
 					<div className="mobile-comments-section scroll-reveal">
-						<Typography className="mobile-comments-heading">Comments ({total})</Typography>
+						<Typography className="mobile-comments-heading">
+							{total > 0 ? `${total} Responses` : 'Start the Conversation'}
+						</Typography>
 						<div className="mobile-comment-input-box">
 							<input
 								type="text"
-								placeholder="Leave a comment…"
+								placeholder="Share your thoughts…"
 								value={comment}
 								onChange={(e) => {
 									if (e.target.value.length > 100) return;
@@ -254,10 +238,9 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 					</div>
 				</div>
 
-				{/* Edit backdrop */}
 				<Backdrop sx={{ zIndex: 999, alignItems: 'flex-end' }} open={openBackdrop} onClick={cancelButtonHandler}>
 					<Stack className="mobile-edit-sheet" onClick={(e) => e.stopPropagation()}>
-						<Typography className="mobile-edit-title">Edit Comment</Typography>
+						<Typography className="mobile-edit-title">Edit Your Response</Typography>
 						<input
 							autoFocus
 							value={updatedComment}
@@ -269,10 +252,10 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 							<span>{updatedCommentWordsCnt}/100</span>
 							<div className="mobile-edit-actions">
 								<button className="mobile-edit-cancel" onClick={cancelButtonHandler}>
-									Cancel
+									Discard
 								</button>
 								<button className="mobile-edit-save" onClick={() => updateButtonHandler(updatedCommentId, undefined)}>
-									Save
+									Save Changes
 								</button>
 							</div>
 						</div>
@@ -287,16 +270,20 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 		<div id="community-detail-page">
 			<div className="container">
 				<Stack className="main-box">
+					{/* ── Sidebar ── */}
 					<Stack className="left-config scroll-reveal">
-						<Stack className={'image-info'}>
-							<img src={'/img/logo/logoText.svg'} />
-							<Stack className={'community-name'}>
-								<Typography className={'name'}>Community Board Article</Typography>
+						<Stack className="image-info">
+							<img src={'/img/logo/logoText.svg'} alt="Glowly" />
+							<Stack className="community-name">
+								<span className="name-eyebrow">✦ Community</span>
+								<Typography className="name">Article</Typography>
+								<Typography className="name-sub">Thoughtful writing, shared with care.</Typography>
 							</Stack>
 						</Stack>
+
 						<Tabs
 							orientation="vertical"
-							aria-label="Community tabs"
+							aria-label="Community categories"
 							TabIndicatorProps={{ style: { display: 'none' } }}
 							onChange={tabChangeHandler}
 							value={articleCategory}
@@ -305,30 +292,41 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 								<Tab
 									key={tab.value}
 									value={tab.value}
-									label={tab.label}
+									label={
+										<span className="tab-label-inner">
+											<span className="tab-icon">{tab.icon}</span>
+											{tab.label}
+										</span>
+									}
 									className={`tab-button ${articleCategory === tab.value ? 'active' : ''}`}
 								/>
 							))}
 						</Tabs>
+
+						<div className="sidebar-divider" />
+						<Typography className="sidebar-note">Every voice matters here. Write with kindness.</Typography>
 					</Stack>
 
+					{/* ── Article Area ── */}
 					<div className="community-detail-config">
 						<Stack className="title-box scroll-reveal">
 							<Stack className="left">
-								<Typography className="title">{articleCategory} BOARD</Typography>
+								<span className="title-eyebrow">{articleCategory} BOARD</span>
+								<Typography className="title">Reading an Article</Typography>
 								<Typography className="sub-title">
-									Share your thoughts and experiences freely—no content restrictions.
+									Share your perspective in the comments below — all thoughtful voices are welcome.
 								</Typography>
 							</Stack>
 							<Button
-								className="right"
+								className="write-btn"
 								onClick={() => router.push({ pathname: '/mypage', query: { category: 'writeArticle' } })}
 							>
-								Write
+								✦ Compose
 							</Button>
 						</Stack>
 
 						<div className="config">
+							{/* Article Card */}
 							<Stack className="first-box-config scroll-reveal">
 								<Stack className="content-and-info">
 									<Stack className="content">
@@ -345,7 +343,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 											</Typography>
 											<Stack className="divider" />
 											<Typography className="time-added">
-												{dayjs(boardArticle?.createdAt).format('DD.MM.YY HH:mm')}
+												{dayjs(boardArticle?.createdAt).format('DD MMM YYYY · HH:mm')}
 											</Typography>
 										</Stack>
 									</Stack>
@@ -370,28 +368,30 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 										</Stack>
 									</Stack>
 								</Stack>
-								<Stack>
+
+								<Stack className="article-body">
 									<ToastViewerComponent markdown={boardArticle?.articleContent} className={'ytb_play'} />
 								</Stack>
+
 								<Stack className="like-and-dislike">
 									<Stack className="top">
-										<Button>
+										<Button className="like-btn">
 											{boardArticle?.meLiked ? <ThumbUpAltIcon /> : <ThumbUpOffAltIcon />}
-											<Typography className="text">{boardArticle?.articleLikes}</Typography>
+											<Typography className="text">{boardArticle?.articleLikes} found this helpful</Typography>
 										</Button>
 									</Stack>
 								</Stack>
 							</Stack>
 
-							<Stack
-								className="second-box-config scroll-reveal"
-								sx={{ borderBottom: total > 0 ? 'none' : '1px solid #f0e0ea', border: '1px solid #f0e0ea' }}
-							>
-								<Typography className="title-text">Comments ({total})</Typography>
+							{/* Comment Input */}
+							<Stack className="second-box-config scroll-reveal">
+								<Typography className="title-text">
+									{total > 0 ? `${total} Responses` : 'Start the Conversation'}
+								</Typography>
 								<Stack className="leave-comment">
 									<input
 										type="text"
-										placeholder="Leave a comment"
+										placeholder="Share your thoughts with the community…"
 										value={comment}
 										onChange={(e) => {
 											if (e.target.value.length > 100) return;
@@ -401,17 +401,19 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 									/>
 									<Stack className="button-box">
 										<Typography>{wordsCnt}/100</Typography>
-										<Button onClick={creteCommentHandler}>comment</Button>
+										<Button onClick={creteCommentHandler}>Post Response</Button>
 									</Stack>
 								</Stack>
 							</Stack>
 
+							{/* Comments header */}
 							{total > 0 && (
 								<Stack className="comments">
-									<Typography className="comments-title">Comments</Typography>
+									<Typography className="comments-title">Responses</Typography>
 								</Stack>
 							)}
 
+							{/* Comment list */}
 							{comments?.map((commentData, index) => (
 								<Stack
 									className="comments-box scroll-reveal"
@@ -425,21 +427,24 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 												<Stack className="name-date-column">
 													<Typography className="name">{commentData?.memberData?.memberNick}</Typography>
 													<Typography className="date">
-														<span className="time-added">{dayjs(commentData?.createdAt).format('DD.MM.YY HH:mm')}</span>
+														{dayjs(commentData?.createdAt).format('DD MMM YYYY · HH:mm')}
 													</Typography>
 												</Stack>
 											</Stack>
+
 											{commentData?.memberId === user?._id && (
 												<Stack className="buttons">
 													<IconButton
+														title="Remove this response"
 														onClick={() => {
 															setUpdatedCommentId(commentData?._id);
 															updateButtonHandler(commentData?._id, CommentStatus.DELETED);
 														}}
 													>
-														<DeleteForeverIcon sx={{ color: '#a08898', cursor: 'pointer' }} />
+														<DeleteForeverIcon sx={{ color: '#a08898' }} />
 													</IconButton>
 													<IconButton
+														title="Edit your response"
 														onClick={() => {
 															setUpdatedComment(commentData?.commentContent);
 															setUpdatedCommentWordsCnt(commentData?.commentContent?.length);
@@ -449,15 +454,16 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 													>
 														<EditIcon sx={{ color: '#a08898' }} />
 													</IconButton>
+
+													{/* Edit Backdrop */}
 													<Backdrop
 														sx={{
 															top: '40%',
 															right: '25%',
 															left: '25%',
-															width: '1000px',
+															width: '800px',
 															height: 'fit-content',
 															borderRadius: '10px',
-															color: '#ffffff',
 															zIndex: 999,
 														}}
 														open={openBackdrop}
@@ -465,59 +471,73 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 														<Stack
 															sx={{
 																width: '100%',
-																height: '100%',
-																background: 'white',
+																background: '#fff',
 																border: '1px solid #f0e0ea',
-																padding: '20px',
-																gap: '12px',
+																padding: '28px',
+																gap: '16px',
 																borderRadius: '10px',
-																boxShadow: '0 8px 32px rgba(245,100,169,0.12)',
+																boxShadow: '0 8px 40px rgba(245,100,169,0.14)',
 															}}
 														>
-															<Typography variant="h4" color={'#5c4556'}>
-																Update comment
+															<Typography
+																variant="h5"
+																sx={{ fontFamily: "'Cormorant Garamond', serif", color: '#2a2520', fontWeight: 400 }}
+															>
+																Edit Your Response
 															</Typography>
-															<Stack gap={'16px'}>
-																<input
-																	autoFocus
-																	value={updatedComment}
-																	onChange={(e) => updateCommentInputHandler(e.target.value)}
-																	type="text"
-																	style={{
-																		border: '1px solid #f0e0ea',
-																		outline: 'none',
-																		height: '44px',
-																		padding: '0 12px',
-																		borderRadius: '6px',
-																		fontFamily: 'DM Sans, sans-serif',
-																	}}
-																/>
-																<Stack
-																	width={'100%'}
-																	flexDirection={'row'}
-																	justifyContent={'space-between'}
-																	alignItems="center"
+															<input
+																autoFocus
+																value={updatedComment}
+																onChange={(e) => updateCommentInputHandler(e.target.value)}
+																type="text"
+																style={{
+																	border: '1px solid #f0e0ea',
+																	outline: 'none',
+																	height: '48px',
+																	padding: '0 14px',
+																	borderRadius: '4px',
+																	fontFamily: "'Jost', sans-serif",
+																	fontSize: '14px',
+																	color: '#2a2520',
+																	width: '100%',
+																}}
+																placeholder="Refine your thoughts…"
+															/>
+															<Stack flexDirection="row" justifyContent="space-between" alignItems="center">
+																<Typography
+																	sx={{ fontFamily: "'Jost', sans-serif", fontSize: '12px', color: '#a08898' }}
 																>
-																	<Typography variant="subtitle1" color={'#a08898'}>
-																		{updatedCommentWordsCnt}/100
-																	</Typography>
-																	<Stack sx={{ flexDirection: 'row', gap: '10px' }}>
-																		<Button
-																			variant="outlined"
-																			color="inherit"
-																			onClick={cancelButtonHandler}
-																			sx={{ borderColor: '#f0e0ea', color: '#5c4556' }}
-																		>
-																			Cancel
-																		</Button>
-																		<Button
-																			variant="contained"
-																			onClick={() => updateButtonHandler(updatedCommentId, undefined)}
-																			sx={{ background: '#F564A9', '&:hover': { background: '#d94d92' } }}
-																		>
-																			Update
-																		</Button>
-																	</Stack>
+																	{updatedCommentWordsCnt}/100 characters
+																</Typography>
+																<Stack flexDirection="row" gap="10px">
+																	<Button
+																		variant="outlined"
+																		onClick={cancelButtonHandler}
+																		sx={{
+																			borderColor: '#f0e0ea',
+																			color: '#7a7067',
+																			fontFamily: "'Jost', sans-serif",
+																			textTransform: 'none',
+																			fontSize: '13px',
+																			borderRadius: '3px',
+																		}}
+																	>
+																		Discard
+																	</Button>
+																	<Button
+																		variant="contained"
+																		onClick={() => updateButtonHandler(updatedCommentId, undefined)}
+																		sx={{
+																			background: '#f564a9',
+																			fontFamily: "'Jost', sans-serif",
+																			textTransform: 'none',
+																			fontSize: '13px',
+																			borderRadius: '3px',
+																			'&:hover': { background: '#d94d92' },
+																		}}
+																	>
+																		Save Changes
+																	</Button>
 																</Stack>
 															</Stack>
 														</Stack>

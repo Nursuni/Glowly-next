@@ -18,6 +18,20 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
+const tabs = [
+	{ value: 'FREE', label: 'Open Forum', icon: '✦' },
+	{ value: 'RECOMMEND', label: 'Recommendations', icon: '♡' },
+	{ value: 'NEWS', label: 'Beauty News', icon: '◎' },
+	{ value: 'HUMOR', label: 'Lighthearted', icon: '✿' },
+];
+
+const tabMeta: Record<string, { title: string; sub: string }> = {
+	FREE: { title: 'Open Forum', sub: 'A space to speak freely — no topic is too big or too small.' },
+	RECOMMEND: { title: 'Recommendations', sub: 'Discover what the community loves and trusts.' },
+	NEWS: { title: 'Beauty News', sub: 'The latest launches, trends, and stories worth knowing.' },
+	HUMOR: { title: 'Lighthearted', sub: 'A little laughter goes a long way — share the joy.' },
+};
+
 const Community: NextPage = ({ initialInput, ...props }: T) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
@@ -26,8 +40,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 	const [searchCommunity, setSearchCommunity] = useState<BoardArticlesInquiry>(initialInput);
 	const [boardArticles, setBoardArticles] = useState<BoardArticle[]>([]);
 	const [totalCount, setTotalCount] = useState<number>(0);
-	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-	const headerRef = useRef<HTMLDivElement>(null);
+
 	if (articleCategory) initialInput.search.articleCategory = articleCategory;
 
 	/** APOLLO REQUESTS **/
@@ -40,17 +53,13 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 			});
 	}, []);
 
-	// Scroll animation observer
 	useEffect(() => {
 		const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						entry.target.classList.add('in-view');
-					}
-				});
-			},
-			{ threshold: 0.1 },
+			(entries) =>
+				entries.forEach((e) => {
+					if (e.isIntersecting) e.target.classList.add('in-view');
+				}),
+			{ threshold: 0.08 },
 		);
 		document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
 		return () => observer.disconnect();
@@ -60,34 +69,27 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 	const tabChangeHandler = async (e: T, value: string) => {
 		setSearchCommunity({ ...searchCommunity, page: 1, search: { articleCategory: value as BoardArticleCategory } });
 		await router.push({ pathname: '/blog', query: { articleCategory: value } }, router.pathname, { shallow: true });
-		setMobileMenuOpen(false);
 	};
 
-	const paginationHandler = (e: T, value: number) => {
-		setSearchCommunity({ ...searchCommunity, page: value });
-	};
-
-	const tabs = [
-		{ value: 'FREE', label: 'Free Board' },
-		{ value: 'RECOMMEND', label: 'Recommendation' },
-		{ value: 'NEWS', label: 'News' },
-		{ value: 'HUMOR', label: 'Humor' },
-	];
+	const paginationHandler = (e: T, value: number) => setSearchCommunity({ ...searchCommunity, page: value });
 
 	const currentTab = searchCommunity.search.articleCategory;
+	const meta = tabMeta[currentTab] ?? tabMeta['FREE'];
 
 	if (device === 'mobile') {
 		return (
 			<div id="community-list-page" className="mobile">
-				{/* Mobile Hero Header */}
+				{/* Mobile Hero */}
 				<div className="mobile-hero scroll-reveal">
 					<div className="mobile-hero-glow" />
-					<img src={'/img/logo/logoText.svg'} className="mobile-logo" alt="logo" />
-					<Typography className="mobile-community-title">Glowly</Typography>
-					<Typography className="mobile-community-sub">Share beauty tips, news & more</Typography>
+					<img src={'/img/logo/logoText.svg'} className="mobile-logo" alt="Glowly" />
+					<Typography className="mobile-community-title">Community</Typography>
+					<Typography className="mobile-community-sub">
+						Where beauty enthusiasts connect, share, and inspire.
+					</Typography>
 				</div>
 
-				{/* Mobile Category Scrollbar */}
+				{/* Mobile Tab Pills */}
 				<div className="mobile-tab-bar">
 					{tabs.map((tab) => (
 						<button
@@ -95,6 +97,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 							className={`mobile-tab-pill ${currentTab === tab.value ? 'active' : ''}`}
 							onClick={(e) => tabChangeHandler(e, tab.value)}
 						>
+							<span className="pill-icon">{tab.icon}</span>
 							{tab.label}
 						</button>
 					))}
@@ -104,14 +107,14 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 				<div className="mobile-content-area">
 					<div className="mobile-board-header scroll-reveal">
 						<div>
-							<Typography className="mobile-board-title">{currentTab} BOARD</Typography>
-							<Typography className="mobile-board-sub">Express your opinions freely</Typography>
+							<Typography className="mobile-board-title">{meta.title}</Typography>
+							<Typography className="mobile-board-sub">{meta.sub}</Typography>
 						</div>
 						<Button
 							className="mobile-write-btn"
 							onClick={() => router.push({ pathname: '/mypage', query: { category: 'writeArticle' } })}
 						>
-							+ Write
+							+ Compose
 						</Button>
 					</div>
 
@@ -124,8 +127,9 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 							))
 						) : (
 							<Stack className="no-data scroll-reveal">
-								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No articles found yet</p>
+								<span className="no-data-icon">✦</span>
+								<p>No articles have been shared here yet.</p>
+								<span className="no-data-cta">Be the first to write something beautiful.</span>
 							</Stack>
 						)}
 					</Stack>
@@ -152,16 +156,20 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 			<div className="container">
 				<TabContext value={searchCommunity.search.articleCategory}>
 					<Stack className="main-box">
+						{/* ── Sidebar ── */}
 						<Stack className="left-config scroll-reveal">
-							<Stack className={'image-info'}>
-								<img src={'/img/logo/logoText.svg'} />
-								<Stack className={'community-name'}>
-									<Typography className={'name'}>lowly</Typography>
+							<Stack className="image-info">
+								<img src={'/img/logo/logoText.svg'} alt="Glowly" />
+								<Stack className="community-name">
+									<span className="name-eyebrow">✦ Community</span>
+									<Typography className="name">Glowly</Typography>
+									<Typography className="name-sub">Where beauty finds its voice.</Typography>
 								</Stack>
 							</Stack>
+
 							<TabList
 								orientation="vertical"
-								aria-label="Community tabs"
+								aria-label="Community categories"
 								TabIndicatorProps={{ style: { display: 'none' } }}
 								onChange={tabChangeHandler}
 							>
@@ -169,27 +177,35 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 									<Tab
 										key={tab.value}
 										value={tab.value}
-										label={tab.label}
-										className={`tab-button ${searchCommunity.search.articleCategory === tab.value ? 'active' : ''}`}
+										label={
+											<span className="tab-label-inner">
+												<span className="tab-icon">{tab.icon}</span>
+												{tab.label}
+											</span>
+										}
+										className={`tab-button ${currentTab === tab.value ? 'active' : ''}`}
 									/>
 								))}
 							</TabList>
+
+							<div className="sidebar-divider" />
+							<Typography className="sidebar-note">Respectful conversation is always welcome here.</Typography>
 						</Stack>
 
+						{/* ── Main content ── */}
 						<Stack className="right-config">
 							<Stack className="panel-config">
 								<Stack className="title-box scroll-reveal">
 									<Stack className="left">
-										<Typography className="title">{searchCommunity.search.articleCategory} BOARD</Typography>
-										<Typography className="sub-title">
-											Share your thoughts and experiences freely—no content restrictions.
-										</Typography>
+										<span className="title-eyebrow">{currentTab} BOARD</span>
+										<Typography className="title">{meta.title}</Typography>
+										<Typography className="sub-title">{meta.sub}</Typography>
 									</Stack>
 									<Button
-										className="right"
+										className="write-btn"
 										onClick={() => router.push({ pathname: '/mypage', query: { category: 'writeArticle' } })}
 									>
-										Write
+										✦ Compose
 									</Button>
 								</Stack>
 
@@ -207,9 +223,10 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 													</div>
 												))
 											) : (
-												<Stack className={'no-data scroll-reveal'}>
-													<img src="/img/icons/icoAlert.svg" alt="" />
-													<p>No Article found!</p>
+												<Stack className="no-data scroll-reveal">
+													<span className="no-data-icon">✦</span>
+													<p>Nothing here just yet.</p>
+													<span className="no-data-cta">Be the first to share something with the community.</span>
 												</Stack>
 											)}
 										</Stack>
@@ -233,7 +250,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 						</Stack>
 						<Stack className="total-result">
 							<Typography>
-								Total {totalCount} article{totalCount > 1 ? 's' : ''} available
+								{totalCount} article{totalCount !== 1 ? 's' : ''} in this collection
 							</Typography>
 						</Stack>
 					</Stack>
