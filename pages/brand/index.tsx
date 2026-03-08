@@ -4,6 +4,7 @@ import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { Stack, Box, Button, Pagination, Menu, MenuItem } from '@mui/material';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import SearchIcon from '@mui/icons-material/Search';
 import BrandCard from '../../libs/components/common/BrandCard';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -15,17 +16,22 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
+const SORT_OPTIONS = [
+	{ id: 'recent', label: 'Recent', sort: 'createdAt', direction: 'DESC' },
+	{ id: 'old', label: 'Oldest', sort: 'createdAt', direction: 'ASC' },
+	{ id: 'likes', label: 'Likes', sort: 'memberLikes', direction: 'DESC' },
+	{ id: 'views', label: 'Views', sort: 'memberViews', direction: 'DESC' },
+];
+
 const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [filterSortName, setFilterSortName] = useState('Recent');
 	const [sortingOpen, setSortingOpen] = useState(false);
-
 	const [searchFilter, setSearchFilter] = useState<any>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
-
 	const [brands, setBrands] = useState<Member[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
@@ -39,7 +45,6 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 		} else {
 			router.replace(`/brand?input=${JSON.stringify(searchFilter)}`, `/brand?input=${JSON.stringify(searchFilter)}`);
 		}
-
 		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
 	}, [router]);
 
@@ -55,23 +60,10 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 	};
 
 	const sortingHandler = (e: React.MouseEvent<HTMLLIElement>) => {
-		switch (e.currentTarget.id) {
-			case 'recent':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: 'DESC' });
-				setFilterSortName('Recent');
-				break;
-			case 'old':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: 'ASC' });
-				setFilterSortName('Oldest');
-				break;
-			case 'likes':
-				setSearchFilter({ ...searchFilter, sort: 'memberLikes', direction: 'DESC' });
-				setFilterSortName('Likes');
-				break;
-			case 'views':
-				setSearchFilter({ ...searchFilter, sort: 'memberViews', direction: 'DESC' });
-				setFilterSortName('Views');
-				break;
+		const option = SORT_OPTIONS.find((o) => o.id === e.currentTarget.id);
+		if (option) {
+			setSearchFilter({ ...searchFilter, sort: option.sort, direction: option.direction });
+			setFilterSortName(option.label);
 		}
 		sortingCloseHandler();
 	};
@@ -92,61 +84,85 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 	return (
 		<Stack className={'brand-list-page'}>
 			<Stack className={'container'}>
+				{/* ── Page heading ── */}
+				<Stack className={'page-header'}>
+					<span className={'page-header__eyebrow'}>Discover</span>
+					<h1 className={'page-header__title'}>Our Brands</h1>
+					<p className={'page-header__sub'}>
+						{total > 0
+							? `We have gathered ${total} wonderful beauty brand${
+									total !== 1 ? 's' : ''
+							  } — we hope you find something you love.`
+							: 'We have handpicked the finest beauty brands to help you discover what you truly love.'}
+					</p>
+				</Stack>
+
+				{/* ── Filter bar ── */}
 				<Stack className={'filter'}>
 					<Box component={'div'} className={'left'}>
-						<input
-							type="text"
-							placeholder={'Search for a brand'}
-							value={searchText}
-							onChange={(e: any) => setSearchText(e.target.value)}
-							onKeyDown={(event: any) => {
-								if (event.key === 'Enter') {
-									setSearchFilter({
-										...searchFilter,
-										search: { ...searchFilter.search, text: searchText },
-									});
-								}
-							}}
-						/>
+						<div className={'search-wrap'}>
+							<SearchIcon className={'search-icon'} />
+							<input
+								type="text"
+								placeholder={'Search for a brand…'}
+								value={searchText}
+								onChange={(e: any) => setSearchText(e.target.value)}
+								onKeyDown={(event: any) => {
+									if (event.key === 'Enter') {
+										setSearchFilter({
+											...searchFilter,
+											search: { ...searchFilter.search, text: searchText },
+										});
+									}
+								}}
+							/>
+						</div>
 					</Box>
 
 					<Box component={'div'} className={'right'}>
-						<span>Sort by</span>
-						<div>
-							<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
+						<span className={'sort-label'}>Sort by</span>
+						<div className={'sort-btn-wrap'}>
+							<Button className={'sort-btn'} onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
 								{filterSortName}
 							</Button>
-							<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler}>
-								<MenuItem onClick={sortingHandler} id={'recent'} disableRipple>
-									Recent
-								</MenuItem>
-								<MenuItem onClick={sortingHandler} id={'old'} disableRipple>
-									Oldest
-								</MenuItem>
-								<MenuItem onClick={sortingHandler} id={'likes'} disableRipple>
-									Likes
-								</MenuItem>
-								<MenuItem onClick={sortingHandler} id={'views'} disableRipple>
-									Views
-								</MenuItem>
+							<Menu
+								anchorEl={anchorEl}
+								open={sortingOpen}
+								onClose={sortingCloseHandler}
+								className={'sort-menu'}
+								transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+								anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+							>
+								{SORT_OPTIONS.map((opt) => (
+									<MenuItem
+										key={opt.id}
+										onClick={sortingHandler}
+										id={opt.id}
+										disableRipple
+										className={filterSortName === opt.label ? 'active' : ''}
+									>
+										{opt.label}
+									</MenuItem>
+								))}
 							</Menu>
 						</div>
 					</Box>
 				</Stack>
 
+				{/* ── Cards ── */}
 				<Stack className={'card-wrap'}>
 					{brands?.length === 0 ? (
 						<div className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No brands found!</p>
+							<p>We couldn't find any brands matching your search.</p>
+							<span>Try adjusting your filters or search with a different keyword.</span>
 						</div>
 					) : (
-						brands.map((brand: Member) => {
-							return <BrandCard brand={brand} key={brand._id} likeMemberHandler={undefined} />;
-						})
+						brands.map((brand: Member) => <BrandCard brand={brand} key={brand._id} likeMemberHandler={undefined} />)
 					)}
 				</Stack>
 
+				{/* ── Pagination ── */}
 				<Stack className={'pagination'}>
 					{brands.length !== 0 && Math.ceil(total / searchFilter.limit) > 1 && (
 						<Pagination
@@ -157,10 +173,9 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 							color="primary"
 						/>
 					)}
-
 					{brands.length !== 0 && (
 						<span>
-							Total {total} brand{total > 1 ? 's' : ''} available
+							Showing {total} beautiful brand{total !== 1 ? 's' : ''} for you
 						</span>
 					)}
 				</Stack>

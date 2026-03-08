@@ -7,51 +7,235 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
+
 		.container {
 			display: flex;
 			flex-direction: column;
+
+			// ── Page header ────────────────────────────────────
+			.page-header {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+				margin-bottom: 52px;
+
+				&__eyebrow {
+					display: inline-flex;
+					align-items: center;
+					gap: 6px;
+					color: #9b8ea0;
+					font-family: $font;
+					font-size: 11px;
+					font-style: normal;
+					font-weight: 500;
+					line-height: normal;
+					letter-spacing: 0.18em;
+					text-transform: uppercase;
+					margin-bottom: 10px;
+
+					// decorative line either side
+					&::before,
+					&::after {
+						content: '';
+						display: block;
+						width: 32px;
+						height: 1px;
+						background: #9b8ea0;
+						opacity: 0.5;
+					}
+				}
+
+				&__title {
+					margin: 0 0 12px;
+					color: #181a20;
+					font-family: $font;
+					font-size: 42px;
+					font-style: italic;
+					font-weight: 400;
+					line-height: 1.15;
+					letter-spacing: -0.8px;
+				}
+
+				&__sub {
+					margin: 0;
+					color: #717171;
+					font-family: $font;
+					font-size: 14px;
+					font-style: normal;
+					font-weight: 400;
+					line-height: 26px;
+				}
+			}
+
+			// ── Filter bar ─────────────────────────────────────
 			.filter {
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
 				align-items: center;
+
 				.left {
 					display: flex;
 					flex-direction: row;
-					input {
-						padding: 20px 20px;
-						width: 200px;
-						height: 50px;
-						border-radius: 40px;
-						border: 1px solid #ddd;
-						background: #fff;
-						color: #181a20;
+
+					// Search input with icon
+					.search-wrap {
+						position: relative;
+						display: flex;
+						align-items: center;
+
+						.search-icon {
+							position: absolute;
+							left: 16px;
+							width: 18px;
+							height: 18px;
+							color: #aaa;
+							pointer-events: none;
+							transition: color 0.2s;
+						}
+
+						input {
+							padding: 0 20px 0 46px;
+							width: 260px;
+							height: 50px;
+							border-radius: 40px;
+							border: 1px solid #ddd;
+							background: #fff;
+							color: #181a20;
+							font-family: $font;
+							font-size: 14px;
+							font-style: normal;
+							font-weight: 400;
+							line-height: 26px;
+							box-sizing: border-box;
+							outline: none;
+							transition: border-color 0.2s, box-shadow 0.2s;
+
+							&::placeholder {
+								color: #bbb;
+							}
+
+							&:focus {
+								border-color: #181a20;
+								box-shadow: 0 0 0 3px rgba(24, 26, 32, 0.06);
+
+								& + .search-icon,
+								~ .search-icon {
+									color: #181a20;
+								}
+							}
+
+							// sibling trick — icon is before input in DOM so use ~ on the wrap
+						}
+
+						&:focus-within .search-icon {
+							color: #181a20;
+						}
+					}
+				}
+
+				.right {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					gap: 4px;
+
+					.sort-label {
+						color: #717171;
 						font-family: $font;
 						font-size: 14px;
 						font-style: normal;
 						font-weight: 400;
 						line-height: 26px;
-						box-sizing: border-box;
 					}
-				}
-				.right {
-					display: flex;
-					flex-direction: row;
-					align-items: center;
-					button {
-						margin-left: 10px;
-						color: #181a20;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: bold;
-						line-height: 26px;
-						&:hover {
-							background: none;
+
+					.sort-btn-wrap {
+						position: relative;
+
+						// MUI Button override
+						.sort-btn {
+							margin-left: 6px;
+							padding: 6px 12px;
+							border-radius: 40px;
+							border: 1px solid #ddd;
+							background: #fff;
+							color: #181a20;
+							font-family: $font;
+							font-size: 14px;
+							font-style: normal;
+							font-weight: 600;
+							line-height: 26px;
+							text-transform: none;
+							transition: border-color 0.2s, background 0.2s;
+
+							&:hover {
+								background: #f6f6f6;
+								border-color: #181a20;
+							}
+
+							.MuiButton-endIcon {
+								margin-left: 4px;
+								transition: transform 0.2s;
+							}
+
+							&[aria-expanded='true'] .MuiButton-endIcon {
+								transform: rotate(180deg);
+							}
 						}
 					}
 				}
 			}
+
+			// ── Sort dropdown menu (MUI Menu override) ──────────
+			// Placed outside .filter so MUI portal is targeted
+		}
+	}
+
+	// MUI Menu portal — must be at #pc-wrap level
+	.sort-menu {
+		.MuiPaper-root {
+			margin-top: 6px;
+			border-radius: 12px;
+			border: 1px solid #ddd;
+			box-shadow: 0px 8px 24px rgba(24, 26, 32, 0.08);
+			min-width: 140px;
+		}
+
+		.MuiList-root {
+			padding: 6px;
+		}
+
+		.MuiMenuItem-root {
+			border-radius: 8px;
+			color: #717171;
+			font-family: $font;
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 26px;
+			transition: background 0.15s, color 0.15s;
+
+			&:hover {
+				background: #f6f6f6;
+				color: #181a20;
+			}
+
+			&.active {
+				background: #181a20;
+				color: #ffffff;
+				font-weight: 600;
+
+				&:hover {
+					background: lighten(#181a20, 8%);
+				}
+			}
+		}
+	}
+
+	.brand-list-page {
+		.container {
+			// ── Card grid ───────────────────────────────────────
 			.card-wrap {
 				position: relative;
 				margin-top: 35px;
@@ -61,11 +245,69 @@
 				display: flex;
 				flex-direction: row;
 				flex-wrap: wrap;
+				gap: 0; // BrandCard has its own margin-right / margin-bottom
+
+				.no-data {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					gap: 16px;
+
+					img {
+						width: 48px;
+						height: 48px;
+						opacity: 0.4;
+					}
+
+					p {
+						color: #717171;
+						font-family: $font;
+						font-size: 15px;
+						font-style: normal;
+						font-weight: 400;
+						line-height: normal;
+					}
+				}
 			}
+
+			// ── Pagination ──────────────────────────────────────
 			.pagination {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
+				margin-top: 48px;
+				gap: 0;
+
+				// MUI Pagination overrides — matches site palette
+				.MuiPagination-root {
+					.MuiPaginationItem-root {
+						font-family: $font;
+						font-size: 14px;
+						color: #717171;
+						border-radius: 50%;
+						transition: background 0.2s, color 0.2s;
+
+						&:hover {
+							background: #f6f6f6;
+							color: #181a20;
+						}
+
+						&.Mui-selected {
+							background: #181a20;
+							color: #ffffff;
+							font-weight: 600;
+
+							&:hover {
+								background: lighten(#181a20, 10%);
+							}
+						}
+					}
+				}
+
 				span {
 					margin-top: 20px;
 					color: #181a20;
@@ -73,7 +315,7 @@
 					font-size: 14px;
 					font-style: normal;
 					font-weight: 400;
-					line-height: 26px; /* 185.714% */
+					line-height: 26px;
 				}
 			}
 		}
