@@ -57,7 +57,6 @@ const categoryData = [
 		image: '/img/categories/wellnesss.jpg',
 		accent: '#dcd6f7',
 	},
-
 	{
 		type: ProductType.BABYCARE,
 		label: 'Babycare',
@@ -71,43 +70,46 @@ export default function ShopByCategories() {
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
 	return (
-		<Box className="shop-by-categories" sx={{ px: { xs: 2, md: 4 }, py: 8 }}>
-			<Box className="header" sx={{ display: 'flex', justifyContent: 'space-between', mb: 6, alignItems: 'center' }}>
-				<Typography variant="h4" fontWeight={700}>
-					Need a Little Guidance?
-				</Typography>
-				<span style={{ color: '#ec4899' }}>Check out what's popular now.</span>
-
-				<Link href="/shop" className="view-all">
-					<Typography variant="body2" color="textSecondary">
+		<Box className="shop-by-categories">
+			<Box className="container">
+				{/* ── Header ── */}
+				<Box className="section-header">
+					<Box className="header-text">
+						<Typography className="section-title">Not Sure Where to Start?</Typography>
+						<Typography className="section-sub">
+							Explore our curated collection and find what your skin truly needs.
+						</Typography>
+					</Box>
+					<Link href="/shop" className="view-all-link">
 						View All
-					</Typography>
-				</Link>
-			</Box>
+					</Link>
+				</Box>
 
-			<Grid container spacing={3}>
-				{categoryData.map((cat, i) => (
-					<Grid item xs={6} sm={4} md={3} key={cat.type}>
-						<Card
-							className={`category-card ${hoveredIndex === i ? 'hovered' : ''}`}
-							onMouseEnter={() => setHoveredIndex(i)}
-							onMouseLeave={() => setHoveredIndex(null)}
-						>
-							<CardActionArea component={Link} href={cat.href}>
-								<Box className="image-wrapper">
-									<Image src={cat.image} alt={cat.label} fill className="image" />
-									<Box className="glow" style={{ backgroundColor: cat.accent }} />
-									<Box className="label">
-										<Typography variant="subtitle1" fontWeight={600} color="white">
-											{cat.label}
-										</Typography>
+				{/* ── Grid ── */}
+				<Grid container spacing={3}>
+					{categoryData.map((cat, i) => (
+						<Grid item xs={6} sm={4} md={3} key={cat.type}>
+							<Card
+								className={`category-card ${hoveredIndex === i ? 'hovered' : ''}`}
+								onMouseEnter={() => setHoveredIndex(i)}
+								onMouseLeave={() => setHoveredIndex(null)}
+							>
+								<CardActionArea component={Link} href={cat.href}>
+									<Box className="image-wrapper">
+										<Image src={cat.image} alt={cat.label} fill className="image" />
+										<Box className="glow" style={{ backgroundColor: cat.accent }} />
+										<Box className="label">
+											<Typography variant="subtitle1" fontWeight={600} color="white">
+												{cat.label}
+											</Typography>
+										</Box>
 									</Box>
-								</Box>
-							</CardActionArea>
-						</Card>
-					</Grid>
-				))}
-			</Grid>
+								</CardActionArea>
+							</Card>
+						</Grid>
+					))}
+				</Grid>
+			</Box>
 		</Box>
 	);
 }

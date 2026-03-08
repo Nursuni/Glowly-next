@@ -27,7 +27,7 @@ const Home: NextPage = () => {
 		return (
 			<Stack className={'home-page'}>
 				<TopProducts />
-				<TopBrandsCarousel brands={[]} />
+				<TopBrandsCarousel />
 				<ShopByCategories />
 				<Advertisement />
 				<AIChat />
