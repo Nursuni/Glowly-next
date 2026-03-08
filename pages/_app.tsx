@@ -13,6 +13,7 @@ import { useApollo } from '../apollo/client';
 import { CurrencyProvider } from '../libs/context/CurrencyContext';
 import { ApolloProvider } from '@apollo/client';
 import { appWithTranslation } from 'next-i18next';
+import ScrollToTop from '@/libs/components/common/ScrollToTop';
 
 const light = {
 	palette: {
@@ -31,6 +32,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 				<ThemeProvider theme={theme}>
 					<CssBaseline />
 					<Component {...pageProps} />
+					<ScrollToTop />
 					<ToastContainer
 						position="top-right"
 						autoClose={2500}

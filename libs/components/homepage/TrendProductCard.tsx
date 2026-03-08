@@ -1,119 +1,113 @@
-import React, { useState } from 'react';
-import { Stack, Box } from '@mui/material';
+import React from 'react';
+import { Stack, Box, Divider, Typography } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import WestIcon from '@mui/icons-material/West';
-import EastIcon from '@mui/icons-material/East';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation, Pagination } from 'swiper';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Product } from '../../types/product/product';
-import { ProductsInquiry } from '../../types/product/product.input';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { REACT_APP_API_URL } from '../../config';
+import { useRouter } from 'next/router';
+import { useReactiveVar } from '@apollo/client';
+import { userVar } from '../../../apollo/store';
 
-import TrendProductCard from './TrendProducts';
-import { ProductCard } from '../mypage/ProductCard';
-
-interface TrendProductsProps {
-	initialInput: ProductsInquiry;
+interface TrendProductCardProps {
+	product: Product;
 }
 
-const TrendProducts = (props: TrendProductsProps) => {
-	const { initialInput } = props;
+const TrendProductCard = (props: TrendProductCardProps) => {
+	const { product } = props;
 	const device = useDeviceDetect();
-	const [trendProducts, setTrendProducts] = useState<Product[]>([]);
+	const router = useRouter();
+	const user = useReactiveVar(userVar);
 
-	if (!trendProducts) return null;
+	const redirectHandler = (e: React.MouseEvent) => {
+		router.push(`/product/detail?productId=${product._id}`);
+	};
 
-	if (device === 'mobile') {
-		return (
-			<Stack className={'trend-products'}>
-				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<span>Our Best Selling Products</span>
-					</Stack>
+	const likeHandler = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		// like handler logic here
+	};
 
-					<Stack className={'card-box'}>
-						{trendProducts.length === 0 ? (
-							<Box component={'div'} className={'empty-list'}>
-								No Trending Products
-							</Box>
-						) : (
-							<Swiper
-								className={'trend-product-swiper'}
-								slidesPerView={'auto'}
-								centeredSlides={true}
-								spaceBetween={15}
-								modules={[Autoplay]}
-							>
-								{trendProducts.map((product: Product) => (
-									<SwiperSlide key={product._id} className={'trend-product-slide'}>
-										<ProductCard product={product} />
-									</SwiperSlide>
-								))}
-							</Swiper>
-						)}
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	}
+	const formattedPrice = product?.productPrice ? `$${Number(product.productPrice).toLocaleString()}` : '';
+
+	const isLiked = product?.meLiked && product?.meLiked[0]?.myFavorite;
 
 	return (
-		<Stack className={'trend-products'}>
-			<Stack className={'container'}>
-				<Stack className={'info-box'}>
-					<Box component={'div'} className={'left'}>
-						<span>Trending Products</span>
-						<p>Trending based on likes</p>
-					</Box>
+		<Stack className="trend-card-box" key={product._id} onClick={redirectHandler}>
+			{/* Image Section */}
+			<Box className="card-img-wrap">
+				<Box
+					className="card-img"
+					style={{
+						backgroundImage: `url(${REACT_APP_API_URL}/${product?.productImages?.[0]})`,
+					}}
+				>
+					{/* Hover overlay */}
+					<Box className="card-overlay" />
 
-					<Box component={'div'} className={'right'}>
-						<div className={'pagination-box'}>
-							<WestIcon className={'swiper-trend-prev'} />
-							<div className={'swiper-trend-pagination'}></div>
-							<EastIcon className={'swiper-trend-next'} />
-						</div>
-					</Box>
-				</Stack>
+					{/* Category tag */}
+					{product.productCategory && <span className="card-category">{product.productCategory}</span>}
 
-				<Stack className={'card-box'}>
-					{trendProducts.length === 0 ? (
-						<Box component={'div'} className={'empty-list'}>
-							No Trending Products
+					{/* Price badge */}
+					{formattedPrice && <span className="card-price">{formattedPrice}</span>}
+
+					{/* Quick action */}
+					<Box className="card-quick-view">
+						<span>View Details</span>
+					</Box>
+				</Box>
+			</Box>
+
+			{/* Info Section */}
+			<Box className="card-info">
+				{/* Title */}
+				<strong className="card-title">{product.productTitle ?? 'Product Name'}</strong>
+
+				{/* Description */}
+				<p className="card-desc">{product.productDesc ?? 'No description available.'}</p>
+
+				{/* Meta row */}
+				<Box className="card-meta">
+					<Box className="meta-item">
+						<span className="meta-label">Stock</span>
+						<span className="meta-value">{product.productStock ?? 0}</span>
+					</Box>
+					<Box className="meta-dot" />
+					<Box className="meta-item">
+						<span className="meta-label">Status</span>
+						<span className={`meta-value status-${(product.productStatus ?? 'available').toLowerCase()}`}>
+							{product.productStatus ?? 'Available'}
+						</span>
+					</Box>
+				</Box>
+
+				<Divider className="card-divider" />
+
+				{/* Bottom row */}
+				<Box className="card-bottom">
+					<Box className="card-stats">
+						{/* Views */}
+						<Box className="stat-item">
+							<RemoveRedEyeIcon className="stat-icon" />
+							<span className="stat-count">{product?.productViews ?? 0}</span>
 						</Box>
-					) : (
-						<Swiper
-							className={'trend-product-swiper'}
-							slidesPerView={'auto'}
-							spaceBetween={15}
-							modules={[Autoplay, Navigation, Pagination]}
-							navigation={{
-								nextEl: '.swiper-trend-next',
-								prevEl: '.swiper-trend-prev',
-							}}
-							pagination={{
-								el: '.swiper-trend-pagination',
-							}}
-						>
-							{trendProducts.map((product: Product) => (
-								<SwiperSlide key={product._id} className={'trend-product-slide'}>
-									<TrendProductCard product={product} />
-								</SwiperSlide>
-							))}
-						</Swiper>
-					)}
-				</Stack>
-			</Stack>
+
+						{/* Likes */}
+						<Box className="stat-item">
+							<IconButton className={`like-btn ${isLiked ? 'liked' : ''}`} onClick={likeHandler} disableRipple>
+								{isLiked ? <FavoriteIcon className="like-icon active" /> : <FavoriteBorderIcon className="like-icon" />}
+							</IconButton>
+							<span className="stat-count">{product?.productLikes ?? 0}</span>
+						</Box>
+					</Box>
+
+					<Box className="card-arrow">→</Box>
+				</Box>
+			</Box>
 		</Stack>
 	);
 };
 
-TrendProducts.defaultProps = {
-	initialInput: {
-		page: 1,
-		limit: 8,
-		sort: 'productLikes',
-		direction: 'DESC',
-		search: {},
-	},
-};
-
-export default TrendProducts;
+export default TrendProductCard;

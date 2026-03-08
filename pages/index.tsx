@@ -11,6 +11,7 @@ import TopProducts from '../libs/components/homepage/TopProducts';
 import ShopByCategories from '../libs/components/homepage/ShopByCategories';
 import AIChat from '../libs/components/AIChat';
 import TopBrandsCarousel from '@/libs/components/homepage/TopBrandsCarousel';
+import TrendProductCard from '@/libs/components/homepage/TrendProducts';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -30,7 +31,7 @@ const Home: NextPage = () => {
 				<TopBrandsCarousel />
 				<ShopByCategories />
 				<Advertisement />
-				<AIChat />
+				<TrendProductCard />
 				<CommunityBoards />
 			</Stack>
 		);

@@ -80,7 +80,7 @@ export default function ShopByCategories() {
 							Explore our curated collection and find what your skin truly needs.
 						</Typography>
 					</Box>
-					<Link href="/shop" className="view-all-link">
+					<Link href="/catalog" className="view-all-link">
 						View All
 					</Link>
 				</Box>
