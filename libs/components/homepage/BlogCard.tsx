@@ -20,34 +20,31 @@ const BlogCard = ({ vertical, article, index }: BlogCardProps) => {
 
 	const linkHref = `/blog/detail?articleCategory=${article?.articleCategory}&id=${article?._id}`;
 
-	if (device === 'mobile') {
-		return <div>BLOG CARD (MOBILE)</div>;
-	}
+	if (device === 'mobile') return <div>BLOG CARD (MOBILE)</div>;
 
 	if (vertical) {
 		return (
-			<Link href={linkHref}>
-				<Box component="div" className="vertical-card">
+			<Link href={linkHref} style={{ animationDelay: `${index * 80}ms` }}>
+				<Box className="vertical-card">
 					<div className="community-img" style={{ backgroundImage: `url(${articleImage})` }}>
 						<div>{index + 1}</div>
 					</div>
-
 					<strong>{article?.articleTitle}</strong>
-					<span>{article?.articleCategory}</span>
+					<span className={'article-category'}>{article?.articleCategory}</span>
 				</Box>
 			</Link>
 		);
 	}
 
 	return (
-		<Link href={linkHref}>
-			<Box component="div" className="horizontal-card">
-				<img src={articleImage} alt={article?.articleTitle} />
-
-				<div>
+		<Link href={linkHref} style={{ animationDelay: `${index * 100}ms` }}>
+			<Box className="horizontal-card">
+				<div className={'h-card-img-wrap'}>
+					<img src={articleImage} alt={article?.articleTitle} />
+				</div>
+				<div className={'h-card-body'}>
 					<strong>{article?.articleTitle}</strong>
-
-					<span>{dayjs(article?.createdAt).format('DD.MM.YY')}</span>
+					<span className={'h-card-date'}>{dayjs(article?.createdAt).format('MMM DD, YYYY')}</span>
 				</div>
 			</Box>
 		</Link>
