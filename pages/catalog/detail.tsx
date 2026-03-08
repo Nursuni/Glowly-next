@@ -12,7 +12,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { Direction } from '../../libs/enums/common.enum';
 import { ProductCard } from '../../libs/components/mypage/ProductCard';
-
+import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
 		...(await serverSideTranslations(locale, ['common'])),
@@ -93,6 +93,14 @@ const ProductList: NextPage = ({ initialInput, ...props }: any) => {
 				<div className="container">
 					<Box component={'div'} className={'right'}>
 						<span>Sort by</span>
+						<FavoriteBorderRoundedIcon
+							sx={{
+								color: '#e8a0b8',
+								fontSize: '20px',
+								cursor: 'pointer',
+								'&:hover': { color: '#d4789a' },
+							}}
+						/>
 						<div>
 							<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
 								{filterSortName}

@@ -30,7 +30,7 @@ export enum PaymentMethod {
 	CASH = 'CASH',
 	COD = 'COD', // Cash on Delivery
 	POINTS = 'POINTS', // Loyalty points
-	GIFT_CARD = 'GIFT_CARD',
+	GIFT_CARD = 'GIFT CARD',
 }
 
 export enum PaymentStatus {

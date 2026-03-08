@@ -6,7 +6,7 @@ export enum ProductType {
 	FRAGRANCE = 'FRAGRANCE',
 	TOOLS = 'TOOLS',
 	WELLNESS = 'WELLNESS',
-	GIFT_CARD = 'GIFT_CARD',
+	GIFT_CARD = 'GIFT CARD',
 
 	BABYCARE = 'BABYCARE',
 }

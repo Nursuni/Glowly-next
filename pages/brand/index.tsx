@@ -96,7 +96,7 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 					<Box component={'div'} className={'left'}>
 						<input
 							type="text"
-							placeholder={'Search for a brand or product'}
+							placeholder={'Search for a brand'}
 							value={searchText}
 							onChange={(e: any) => setSearchText(e.target.value)}
 							onKeyDown={(event: any) => {

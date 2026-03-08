@@ -2,7 +2,7 @@ import type { AppProps } from 'next/app';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import React, { useState } from 'react';
-import { light } from '../scss/MaterialTheme';
+
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,9 +14,14 @@ import { CurrencyProvider } from '../libs/context/CurrencyContext';
 import { ApolloProvider } from '@apollo/client';
 import { appWithTranslation } from 'next-i18next';
 
+const light = {
+	palette: {
+		mode: 'light' as const,
+	},
+};
+
 const App = ({ Component, pageProps }: AppProps) => {
-	// @ts-ignore
-	const [theme] = useState(createTheme(light));
+	const theme = createTheme(light);
 	const client = useApollo(pageProps.initialApolloState);
 
 	return (
