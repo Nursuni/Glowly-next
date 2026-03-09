@@ -111,30 +111,6 @@ const Footer = () => {
 	/* ─── DESKTOP ─── */
 	return (
 		<Stack className={'footer-container'} ref={containerRef as any}>
-			{/* MARQUEE */}
-			<div className={'gf-marquee-wrap gf-fade'}>
-				<div className={'gf-marquee'}>
-					<span>
-						Glow with <em>Confidence</em> &nbsp;·&nbsp;
-					</span>
-					<span>
-						Beauty for <em>Every</em> Skin &nbsp;·&nbsp;
-					</span>
-					<span>
-						Your Radiance <em>Starts Here</em> &nbsp;·&nbsp;
-					</span>
-					<span>
-						Glow with <em>Confidence</em> &nbsp;·&nbsp;
-					</span>
-					<span>
-						Beauty for <em>Every</em> Skin &nbsp;·&nbsp;
-					</span>
-					<span>
-						Your Radiance <em>Starts Here</em> &nbsp;·&nbsp;
-					</span>
-				</div>
-			</div>
-
 			<Stack className={'main'}>
 				{/* LEFT */}
 				<Stack className={'left gf-fade'}>

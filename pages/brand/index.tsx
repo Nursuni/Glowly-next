@@ -11,6 +11,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Member } from '../../libs/types/member/member';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
+import Toolbar from '../../libs/components/common/Toolbar';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -112,67 +113,19 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 				</Stack>
 
 				{/* ── Filter bar ── */}
-				<Stack className={'filter'}>
-					<Box component={'div'} className={'left'}>
-						<div className="toolbar-right">
-							<input
-								type="text"
-								placeholder="Search"
-								value={searchText}
-								onChange={(e) => setSearchText(e.target.value)}
-								onKeyDown={handleSearchKeyDown}
-								className="search-input"
-							/>
-							<SearchRoundedIcon className="search-icon" onClick={handleSearchSubmit} />
-						</div>
-					</Box>
-
-					<Box component={'div'} className={'right'}>
-						<span className={'sort-label'}>Sort by</span>
-						<div className={'sort-btn-wrap'}>
-							<Button onClick={sortingClickHandler} disableRipple className="sort-btn">
-								<FavoriteBorderRoundedIcon />
-							</Button>
-
-							<Menu
-								anchorEl={anchorEl}
-								open={sortingOpen}
-								onClose={sortingCloseHandler}
-								PaperProps={{
-									sx: {
-										mt: '6px',
-										boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-										borderRadius: '10px',
-										minWidth: '150px',
-									},
-								}}
-							>
-								{[
-									{ id: 'new', label: 'New' },
-									{ id: 'lowest', label: 'Lowest Price' },
-									{ id: 'highest', label: 'Highest Price' },
-								].map((item) => (
-									<MenuItem
-										key={item.id}
-										onClick={sortingHandler}
-										id={item.id}
-										disableRipple
-										sx={{
-											fontSize: '13px',
-											color: filterSortName === item.label ? '#d4789a' : '#555',
-											fontWeight: filterSortName === item.label ? 600 : 400,
-											py: '10px',
-											px: '16px',
-											'&:hover': { color: '#d4789a', bgcolor: '#fdf5f8' },
-										}}
-									>
-										{item.label}
-									</MenuItem>
-								))}
-							</Menu>
-						</div>
-					</Box>
-				</Stack>
+				<Toolbar
+					searchText={searchText}
+					setSearchText={setSearchText}
+					onSearchSubmit={handleSearchSubmit}
+					onSearchKeyDown={handleSearchKeyDown}
+					sortingClickHandler={sortingClickHandler}
+					sortingHandler={sortingHandler}
+					sortingCloseHandler={sortingCloseHandler}
+					anchorEl={anchorEl}
+					sortingOpen={sortingOpen}
+					filterSortName={filterSortName}
+					sortOptions={SORT_OPTIONS}
+				/>
 
 				{/* ── Cards ── */}
 				<Stack className={'card-wrap'}>

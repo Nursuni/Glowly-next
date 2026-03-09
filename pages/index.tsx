@@ -12,6 +12,7 @@ import ShopByCategories from '../libs/components/homepage/ShopByCategories';
 import AIChat from '../libs/components/AIChat';
 import TopBrandsCarousel from '@/libs/components/homepage/TopBrandsCarousel';
 import TrendProductCard from '@/libs/components/homepage/TrendProducts';
+import Hero from '@/libs/components/Hero';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {

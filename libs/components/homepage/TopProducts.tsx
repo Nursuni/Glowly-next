@@ -1,20 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Stack, Box } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import WestIcon from '@mui/icons-material/West';
-import EastIcon from '@mui/icons-material/East';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper';
 import TopProductCard from './TopProductCard';
 import { dummyProducts } from '@/libs/dummyProducts';
-
-export enum SkinType {
-	NORMAL = 'NORMAL',
-	DRY = 'DRY',
-	OILY = 'OILY',
-	COMBINATION = 'COMBINATION',
-	SENSITIVE = 'SENSITIVE',
-}
+import { SkinType } from '@/libs/enums/product.enum';
 
 const SKIN_TYPE_LABELS: Record<SkinType, string> = {
 	[SkinType.NORMAL]: 'Normal',
@@ -24,12 +15,14 @@ const SKIN_TYPE_LABELS: Record<SkinType, string> = {
 	[SkinType.SENSITIVE]: 'Sensitive',
 };
 
-const SORT_OPTIONS = ['Relevant', 'Newest', 'Price: Low', 'Price: High'];
-
 const TopProducts = () => {
 	const device = useDeviceDetect();
 	const [activeFilter, setActiveFilter] = useState<SkinType>(SkinType.NORMAL);
-	const [sortValue, setSortValue] = useState<string>('Relevant');
+
+	const filteredProducts = useMemo(() => {
+		const filtered = dummyProducts.filter((p) => Array.isArray(p.skinType) && p.skinType.includes(activeFilter));
+		return filtered.length > 0 ? filtered : dummyProducts;
+	}, [activeFilter]);
 
 	/** ─── Mobile ─────────────────────────────── */
 	if (device === 'mobile') {
@@ -48,7 +41,7 @@ const TopProducts = () => {
 							spaceBetween={15}
 							modules={[Autoplay]}
 						>
-							{dummyProducts.map((product) => (
+							{filteredProducts.map((product) => (
 								<SwiperSlide key={product._id} className={'top-product-slide'}>
 									<TopProductCard product={product} />
 								</SwiperSlide>
@@ -64,11 +57,8 @@ const TopProducts = () => {
 	return (
 		<Stack className={'top-products'}>
 			<Stack className={'container'}>
-				{/* ── Section header ── */}
 				<Stack className={'info-box'}>
-					{/* Left: title */}
 					<Box component="div" className="header-center">
-						{/* Most Popular Product with icon and gradient */}
 						<span className="eyebrow">
 							<span className="icon-wrapper">
 								<svg width="20" height="20" viewBox="0 0 24 24" fill="white">
@@ -78,10 +68,8 @@ const TopProducts = () => {
 							Most Popular Product
 						</span>
 
-						{/* Headline */}
 						<p className="headline">Our Skincare Solutions</p>
 
-						{/* Filters */}
 						<Box component="div" className="filter-box">
 							<span className="filter-label">I'd like to browse for</span>
 							<Box component="div" className="filter-pills">
@@ -97,11 +85,8 @@ const TopProducts = () => {
 							</Box>
 						</Box>
 					</Box>
-
-					{/* Center: skin-type filter pills */}
 				</Stack>
 
-				{/* ── Card swiper ── */}
 				<Stack className={'card-box'}>
 					<Swiper
 						className={'top-product-swiper'}
@@ -117,7 +102,7 @@ const TopProducts = () => {
 							clickable: true,
 						}}
 					>
-						{dummyProducts.map((product) => (
+						{filteredProducts.map((product) => (
 							<SwiperSlide key={product._id} className={'top-product-slide'}>
 								<TopProductCard product={product} />
 							</SwiperSlide>

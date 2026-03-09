@@ -7,7 +7,7 @@ export interface ProductInput {
 	productTitle: string;
 	productPrice: number;
 
-	productyImages: string[];
+	productImages: string[];
 	productDesc?: string;
 
 	memberId?: string;
@@ -17,8 +17,7 @@ interface PISearch {
 	productTypeList: any[];
 	memberId?: string;
 
-	typeList?: ProductType[];
-	skinTypeList?: SkinType[];
+	skinType?: SkinType[];
 	options?: string[];
 
 	pricesRange?: Range;

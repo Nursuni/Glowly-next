@@ -115,24 +115,9 @@
 			}
 		}
 
-		// ===================================================
-		// TREND PRODUCTS — Glowly Design System
-		// Matches: Cormorant Garamond serif, Jost sans,
-		// #f564a9 pink, #c08a5e warm gold, #1a1714 dark
-		// ===================================================
-
 		@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
 
-		$pink: #f564a9;
-		$gold: #c08a5e;
-		$dark: #1a1714;
-		$warm-off: #f5f0ea;
-		$muted: #7a7067;
-		$border: rgba(255, 255, 255, 0.08);
-		$font-serif: 'Cormorant Garamond', serif;
-		$font-sans: 'Jost', sans-serif;
-
-		// ─── SECTION WRAPPER ───────────────────────────────
+		// ─── TREND PRODUCTS ────────────────────────────────
 		.trend-products {
 			width: 100%;
 			padding: 72px 0 80px;
@@ -140,7 +125,6 @@
 			position: relative;
 			overflow: hidden;
 
-			// Subtle ambient glow in corners
 			&::before {
 				content: '';
 				position: absolute;
@@ -161,7 +145,6 @@
 			}
 		}
 
-		// ─── SECTION HEADER ────────────────────────────────
 		.info-box {
 			display: flex;
 			flex-direction: row;
@@ -247,7 +230,6 @@
 						gap: 5px;
 						align-items: center;
 
-						// Swiper pagination bullets
 						:global {
 							.swiper-pagination-bullet {
 								width: 5px;
@@ -268,7 +250,6 @@
 			}
 		}
 
-		// ─── CARD BOX / SWIPER ─────────────────────────────
 		.card-box {
 			width: 100%;
 
@@ -282,7 +263,6 @@
 			}
 		}
 
-		// ─── EMPTY STATE ───────────────────────────────────
 		.empty-list {
 			display: flex;
 			flex-direction: column;
@@ -309,7 +289,6 @@
 			}
 		}
 
-		// ─── PRODUCT CARD ──────────────────────────────────
 		.trend-card-box {
 			width: 260px;
 			background: #fff;
@@ -343,7 +322,6 @@
 				}
 			}
 
-			// ── Image wrapper
 			.card-img-wrap {
 				position: relative;
 				width: 100%;
@@ -361,7 +339,6 @@
 				position: relative;
 			}
 
-			// Darken-on-hover overlay
 			.card-overlay {
 				position: absolute;
 				inset: 0;
@@ -371,7 +348,6 @@
 				pointer-events: none;
 			}
 
-			// Category badge top-left
 			.card-category {
 				position: absolute;
 				top: 12px;
@@ -388,7 +364,6 @@
 				backdrop-filter: blur(4px);
 			}
 
-			// Price badge bottom-left
 			.card-price {
 				position: absolute;
 				bottom: 12px;
@@ -402,7 +377,6 @@
 				text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 			}
 
-			// "View Details" hover CTA bottom-right
 			.card-quick-view {
 				position: absolute;
 				bottom: 12px;
@@ -426,7 +400,6 @@
 				}
 			}
 
-			// ── Info area
 			.card-info {
 				padding: 16px 16px 14px;
 				display: flex;
@@ -470,7 +443,6 @@
 				overflow: hidden;
 			}
 
-			// Meta row (stock · status)
 			.card-meta {
 				display: flex;
 				align-items: center;
@@ -520,13 +492,11 @@
 				}
 			}
 
-			// Divider
 			.card-divider {
 				border-color: #f0ebe4 !important;
 				margin: 10px 0 8px !important;
 			}
 
-			// Bottom row: stats + arrow
 			.card-bottom {
 				display: flex;
 				align-items: center;
@@ -586,7 +556,6 @@
 			}
 		}
 
-		// ─── KEYFRAMES (reused from global) ────────────────
 		@keyframes nb-twinkle {
 			0%,
 			100% {
@@ -603,7 +572,6 @@
 			}
 		}
 
-		// ─── RESPONSIVE ────────────────────────────────────
 		@media (max-width: 768px) {
 			.trend-products {
 				padding: 48px 0 56px;
@@ -638,6 +606,8 @@
 				}
 			}
 		}
+
+		// ─── POPULAR PRODUCTS ──────────────────────────────
 		.popular-products {
 			padding: 132px 0px 94px;
 			width: 100%;
@@ -841,28 +811,28 @@
 			}
 		}
 
+		// ─── TOP BRANDS ────────────────────────────────────
 		.top-brands {
 			position: relative;
-			padding: 52px 0px 52px; // tighter top/bottom
+			padding: 52px 0px 52px;
 			width: 100%;
 			height: auto;
 			display: flex;
 			flex-direction: row;
-			background: #fdf5f7; // very soft blush — not full pink, just a warm hint
+			background: #fdf5f7;
 
 			.container {
 				position: relative;
 				flex-direction: column;
 				align-items: center;
 
-				// ── Header row ──────────────────────────────────
 				.info-box {
 					width: 100%;
 					display: flex;
 					flex-direction: row;
 					justify-content: space-between;
 					align-items: flex-end;
-					margin-bottom: 28px; // reduced — was 48px, too much space
+					margin-bottom: 28px;
 
 					.left {
 						display: flex;
@@ -903,7 +873,6 @@
 					}
 				}
 
-				// ── Switch nav buttons ───────────────────────────
 				.switch-btn {
 					width: 40px;
 					height: 40px;
@@ -938,7 +907,6 @@
 					}
 				}
 
-				// ── Carousel wrapper ────────────────────────────
 				.wrapper {
 					width: 100%;
 					display: flex;
@@ -947,7 +915,7 @@
 
 					.card-wrapper {
 						width: 100%;
-						height: 220px; // reduced — cards are smaller now
+						height: 220px;
 
 						.top-brands-swiper {
 							width: 100%;
@@ -965,12 +933,892 @@
 				}
 			}
 		}
+
+		// ─── EVENTS ────────────────────────────────────────
+		.events {
+			position: relative;
+			padding: 100px 0px 92px;
+			width: 100%;
+			height: 810px;
+			display: flex;
+			flex-direction: row;
+			background: #181a20;
+			.container {
+				flex-direction: column;
+				align-items: center;
+				.card-wrapper {
+					position: relative;
+					margin-top: 48px;
+					width: 100%;
+					height: auto;
+					display: flex;
+					flex-direction: row;
+					justify-content: space-between;
+					.event-card {
+						position: relative;
+						width: 300px;
+						height: 420px;
+						border-radius: 12px;
+						opacity: 0.9;
+						cursor: pointer;
+						transition: opacity 0.4s;
+						&:hover {
+							opacity: 1;
+							scale: 1.05;
+							transition: 0.3s;
+							.more {
+								opacity: 1;
+							}
+						}
+						.info {
+							position: absolute;
+							display: flex;
+							flex-direction: column;
+							top: 35px;
+							left: 10px;
+							right: 10px;
+							strong {
+								color: #f64747;
+								font-family: $font;
+								font-size: 25px;
+								font-style: normal;
+								font-weight: 600;
+								line-height: normal;
+								text-transform: capitalize;
+							}
+							span {
+								color: #f66767;
+								font-family: $font;
+								font-size: 20px;
+								font-style: normal;
+								font-weight: 500;
+								line-height: 28px;
+								text-transform: capitalize;
+							}
+						}
+						.more {
+							position: absolute;
+							left: 10px;
+							right: 10px;
+							bottom: 41px;
+							display: flex;
+							flex-direction: row;
+							align-items: center;
+							opacity: 0;
+							span {
+								padding: 0px 5px;
+								border-radius: 5px;
+								background: #fffdfdc4;
+								color: #9c67f6;
+								font-family: $font;
+								font-size: 16px;
+								font-style: normal;
+								font-weight: 400;
+								line-height: 26px;
+								text-align: justify;
+								cursor: pointer;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// ─── COMMUNITY BOARD ───────────────────────────────
+		.community-board {
+			position: relative;
+			width: 100%;
+			padding: 30px 0px 20px;
+			display: flex;
+			flex-direction: row;
+			background: #ffffff;
+			overflow: hidden;
+
+			.container {
+				flex-direction: column;
+			}
+
+			.board-header,
+			.community-left,
+			.community-right {
+				opacity: 0;
+				transform: translateY(36px);
+				transition: opacity 0.65s ease, transform 0.65s ease;
+			}
+
+			.community-left {
+				transition-delay: 0.1s;
+			}
+			.community-right {
+				transition-delay: 0.25s;
+			}
+
+			&.is-visible {
+				.board-header,
+				.community-left,
+				.community-right {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			.board-header {
+				margin-bottom: 20px;
+
+				.board-eyebrow {
+					display: inline-block;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 600;
+					letter-spacing: 2px;
+					text-transform: uppercase;
+					color: #c47a8a;
+					margin-bottom: 12px;
+				}
+
+				.board-title {
+					font-family: $font;
+					font-size: 38px;
+					font-weight: 400;
+					line-height: 1.25;
+					color: #181a20;
+					margin: 0;
+
+					em {
+						font-style: italic;
+						font-weight: 300;
+						color: #9b8ea0;
+					}
+				}
+			}
+
+			.community-main {
+				width: 100%;
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				gap: 48px;
+			}
+
+			.center-divider {
+				width: 1px;
+				background: #f0e8ea;
+				align-self: stretch;
+				flex-shrink: 0;
+			}
+
+			.content-top {
+				margin-bottom: 24px;
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+
+				a span {
+					font-family: $font;
+					font-size: 16px;
+					font-weight: 600;
+					color: #181a20;
+					cursor: pointer;
+					transition: color 0.2s;
+
+					&:hover {
+						color: #c47a8a;
+					}
+				}
+
+				img {
+					width: 12px;
+					height: 12px;
+					opacity: 0.5;
+				}
+			}
+
+			.community-left {
+				flex: 1;
+
+				.card-wrap {
+					display: flex;
+					flex-direction: row;
+					flex-wrap: wrap;
+					gap: 8px;
+				}
+			}
+
+			.community-right {
+				width: 360px;
+				flex-shrink: 0;
+
+				.card-wrap {
+					display: flex;
+					flex-direction: column;
+					gap: 0;
+				}
+			}
+
+			.vertical-card {
+				width: 190px;
+				display: flex;
+				flex-direction: column;
+				cursor: pointer;
+				transition: transform 0.25s;
+
+				&:hover {
+					transform: translateY(-4px);
+
+					.community-img {
+						box-shadow: 0 8px 20px rgba(155, 142, 160, 0.18);
+					}
+
+					strong {
+						color: #c47a8a;
+					}
+				}
+
+				.community-img {
+					width: 100%;
+					height: 130px;
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
+					border-radius: 10px;
+					transition: box-shadow 0.25s;
+					overflow: hidden;
+
+					div {
+						width: 28px;
+						height: 28px;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						background: #c47a8a;
+						border-radius: 10px 0px;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 600;
+						color: #ffffff;
+					}
+				}
+
+				strong {
+					margin-top: 10px;
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 600;
+					line-height: 1.45;
+					color: #181a20;
+					transition: color 0.2s;
+					display: -webkit-box;
+					-webkit-line-clamp: 2;
+					line-clamp: 2;
+					-webkit-box-orient: vertical;
+					overflow: hidden;
+				}
+
+				.article-category {
+					margin-top: 4px;
+					font-family: $font;
+					font-size: 11px;
+					font-weight: 400;
+					color: #bbb;
+					text-transform: capitalize;
+				}
+			}
+
+			.horizontal-card {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 16px;
+				padding: 16px 0;
+				border-bottom: 1px solid #f5f0f1;
+				cursor: pointer;
+				transition: background 0.2s;
+
+				&:last-child {
+					border-bottom: none;
+				}
+
+				&:hover {
+					.h-card-img-wrap img {
+						transform: scale(1.06);
+					}
+
+					.h-card-body strong {
+						color: #c47a8a;
+					}
+				}
+
+				.h-card-img-wrap {
+					width: 100px;
+					height: 72px;
+					border-radius: 8px;
+					overflow: hidden;
+					flex-shrink: 0;
+
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+						border-radius: 8px;
+						transition: transform 0.35s ease;
+					}
+				}
+
+				.h-card-body {
+					display: flex;
+					flex-direction: column;
+					gap: 6px;
+
+					strong {
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 500;
+						line-height: 1.4;
+						color: #181a20;
+						transition: color 0.2s;
+						display: -webkit-box;
+						-webkit-line-clamp: 2;
+						line-clamp: 2;
+						-webkit-box-orient: vertical;
+						overflow: hidden;
+					}
+
+					.h-card-date {
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 400;
+						color: #c47a8a;
+					}
+				}
+			}
+		}
+
+		// ─── SHOP BY CATEGORIES ────────────────────────────
+		.shop-by-categories {
+			width: 100%;
+			padding: 80px 0px 80px;
+			display: flex;
+			flex-direction: row;
+			background: #ffffff;
+
+			.container {
+				flex-direction: column;
+				max-width: 1300px;
+				min-width: 1100px;
+				margin: 0 auto;
+
+				.section-header {
+					width: 100%;
+					display: flex;
+					flex-direction: row;
+					justify-content: space-between;
+					align-items: flex-end;
+					margin-bottom: 40px;
+
+					.header-text {
+						display: flex;
+						flex-direction: column;
+						gap: 6px;
+
+						.section-title {
+							font-family: $font;
+							font-size: 36px;
+							font-style: italic;
+							font-weight: 400;
+							line-height: 1.3;
+							letter-spacing: -0.5px;
+							color: #181a20;
+						}
+
+						.section-sub {
+							font-family: $font;
+							font-size: 14px;
+							font-style: normal;
+							font-weight: 400;
+							line-height: 24px;
+							color: #717171;
+						}
+					}
+
+					.view-all-link {
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 500;
+						color: #181a20;
+						text-decoration: none;
+						border-bottom: 1px solid #dddddd;
+						padding-bottom: 2px;
+						transition: border-color 0.2s, color 0.2s;
+						white-space: nowrap;
+						margin-bottom: 4px;
+
+						&:hover {
+							color: #c47a8a;
+							border-color: #c47a8a;
+						}
+					}
+				}
+
+				.category-card {
+					border-radius: 14px;
+					overflow: hidden;
+					position: relative;
+					box-shadow: none;
+					transition: transform 0.4s, box-shadow 0.4s;
+
+					&:hover,
+					&.hovered {
+						transform: scale(1.04);
+						box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+					}
+
+					.image-wrapper {
+						position: relative;
+						width: 100%;
+						aspect-ratio: 4 / 3;
+
+						.image {
+							object-fit: cover;
+						}
+
+						.glow {
+							position: absolute;
+							inset: 0;
+							opacity: 0;
+							transition: opacity 0.4s;
+							pointer-events: none;
+						}
+
+						.category-card.hovered & .glow {
+							opacity: 0.25;
+						}
+
+						.label {
+							position: absolute;
+							bottom: 0;
+							left: 0;
+							width: 100%;
+							padding: 14px 12px 12px;
+							background: linear-gradient(to top, rgba(0, 0, 0, 0.62), transparent);
+							display: flex;
+							justify-content: center;
+
+							.MuiTypography-root {
+								font-family: $font !important;
+								font-size: 15px;
+								font-weight: 600;
+								letter-spacing: 0.2px;
+								text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// ─── TOP PRODUCTS ──────────────────────────────────
+		.top-products {
+			padding: 60px 0px 60px; // ✅ reduced — was 100px top / 50px bottom
+			width: 100%;
+			height: auto;
+			min-height: unset; // ✅ removed 697px fixed height causing bottom gap
+			display: flex;
+			flex-direction: row;
+
+			.container {
+				flex-direction: column;
+
+				// Header — fully centered, no jumping
+				.info-box {
+					width: 100%;
+					display: flex;
+					flex-direction: row;
+					justify-content: center; // ✅ centered
+					align-items: center;
+					flex-wrap: nowrap; // ✅ no wrap reflow
+					gap: 0;
+
+					.header-center {
+						width: 100%;
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						gap: 16px;
+						text-align: center;
+
+						// Gray badge — no more purple
+						.eyebrow {
+							display: inline-flex;
+							align-items: center;
+							gap: 8px;
+							padding: 6px 18px;
+							border-radius: 24px;
+							background: linear-gradient(90deg, #555555, #888888); // ✅ gray
+							color: #fff;
+							font-weight: 600;
+							font-size: 12px;
+							white-space: nowrap; // ✅ no text wrap shift
+							flex-shrink: 0;
+
+							.icon-wrapper {
+								display: flex;
+								align-items: center;
+								justify-content: center;
+							}
+						}
+
+						.headline {
+							font-weight: 700;
+							font-size: 34px;
+							color: #181a20;
+							margin: 0;
+							white-space: nowrap; // ✅ locked width
+						}
+
+						// Filter row — fixed height to prevent vertical jump
+						.filter-box {
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							gap: 12px;
+							flex-wrap: nowrap; // ✅ one line always
+							min-height: 44px; // ✅ locked height
+
+							.filter-label {
+								font-weight: 600;
+								font-size: 14px;
+								color: #181a20;
+								white-space: nowrap;
+								flex-shrink: 0;
+							}
+
+							.filter-pills {
+								display: flex;
+								gap: 8px;
+								flex-wrap: nowrap; // ✅ pills stay on one line
+								justify-content: center;
+							}
+
+							.filter-pill {
+								padding: 7px 16px;
+								border-radius: 100px;
+								border: 1.5px solid #dddddd;
+								background: transparent;
+								color: #717171;
+								font-family: $font;
+								font-size: 13px;
+								font-weight: 500;
+								cursor: pointer;
+								white-space: nowrap;
+								// Use min-width to prevent active state from shifting widths
+								min-width: 80px;
+								text-align: center;
+								transition: border-color 0.2s, color 0.2s, background 0.2s;
+
+								&:hover {
+									border-color: #181a20;
+									color: #181a20;
+								}
+
+								&--active {
+									background: #181a20;
+									color: #fff;
+									border-color: #181a20;
+									font-weight: 600;
+								}
+							}
+						}
+					}
+				}
+
+				// Card swiper — locked min-height so fewer cards don't collapse layout
+				.card-box {
+					position: relative;
+					margin-top: 32px;
+					display: flex;
+					flex-direction: row;
+					min-height: 400px; // matches swiper height exactly — no extra gap
+
+					.top-product-swiper {
+						width: 100%;
+						height: 400px;
+						display: flex;
+						flex-direction: row;
+
+						.top-product-slide {
+							width: auto;
+							height: auto;
+							display: flex;
+							margin: 10px 0 0 10px;
+						}
+					}
+
+					// ─── TOP PRODUCT CARD ─────────────────────────────
+					// Mirrors trend-card-box: serif/sans system,
+					// $pink/$dark palette, aspect-ratio image
+					.top-card-box {
+						width: 260px;
+						background: #fff;
+						border: 1px solid #f0ebe4;
+						border-radius: 4px;
+						overflow: hidden;
+						cursor: pointer;
+						transition: box-shadow 0.28s ease, transform 0.28s ease;
+						display: flex;
+						flex-direction: column;
+
+						&:hover {
+							box-shadow: 0 12px 40px rgba(42, 42, 42, 0.1);
+							transform: translateY(-4px);
+
+							.top-card-overlay {
+								opacity: 1;
+							}
+
+							.top-card-cta {
+								opacity: 1;
+								transform: translateY(0);
+							}
+
+							.top-card-img {
+								transform: scale(1.04);
+							}
+
+							.top-card-arrow {
+								color: $pink;
+								transform: translateX(4px);
+							}
+						}
+
+						// ── Image wrap
+						.top-card-img-wrap {
+							position: relative;
+							width: 100%;
+							aspect-ratio: 3 / 4;
+							overflow: hidden;
+							background: #f5f0ea;
+						}
+
+						.top-card-img {
+							width: 100%;
+							height: 100%;
+							background-size: cover;
+							background-position: center;
+							transition: transform 0.4s ease;
+							position: relative;
+						}
+
+						.top-card-overlay {
+							position: absolute;
+							inset: 0;
+							background: linear-gradient(180deg, transparent 40%, rgba(26, 23, 20, 0.52) 100%);
+							opacity: 0;
+							transition: opacity 0.3s ease;
+							pointer-events: none;
+						}
+
+						// Category badge — top left ($pink)
+						.top-card-category {
+							position: absolute;
+							top: 12px;
+							left: 12px;
+							font-family: $font-sans;
+							font-size: 8.5px;
+							letter-spacing: 0.22em;
+							text-transform: uppercase;
+							color: #fff;
+							background: rgba(245, 100, 169, 0.85);
+							padding: 4px 9px;
+							border-radius: 1px;
+							font-weight: 500;
+							backdrop-filter: blur(4px);
+							z-index: 2;
+						}
+
+						// Price — bottom left, serif
+						.top-card-price {
+							position: absolute;
+							bottom: 12px;
+							left: 12px;
+							font-family: $font-serif;
+							font-size: 22px;
+							font-weight: 300;
+							color: #fff;
+							letter-spacing: 0.02em;
+							z-index: 2;
+							text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+						}
+
+						// "Shop Now" — bottom right, slides up
+						.top-card-cta {
+							position: absolute;
+							bottom: 12px;
+							right: 12px;
+							opacity: 0;
+							transform: translateY(6px);
+							transition: opacity 0.25s ease, transform 0.25s ease;
+							z-index: 2;
+
+							span {
+								font-family: $font-sans;
+								font-size: 9px;
+								letter-spacing: 0.16em;
+								text-transform: uppercase;
+								color: #fff;
+								background: $pink;
+								padding: 6px 12px;
+								border-radius: 1px;
+								font-weight: 500;
+								display: block;
+							}
+						}
+
+						// ── Info panel
+						.top-card-info {
+							padding: 16px 16px 14px;
+							display: flex;
+							flex-direction: column;
+							gap: 5px;
+						}
+
+						// Brand + skin-type row
+						.top-card-meta-row {
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+						}
+
+						.top-card-brand {
+							font-family: $font-sans;
+							font-size: 8.5px;
+							letter-spacing: 0.22em;
+							text-transform: uppercase;
+							color: $pink;
+							font-weight: 500;
+						}
+
+						.top-card-skin-tags {
+							display: flex;
+							gap: 4px;
+						}
+
+						.top-card-skin-tag {
+							font-family: $font-sans;
+							font-size: 8px;
+							letter-spacing: 0.1em;
+							text-transform: capitalize;
+							color: $muted;
+							border: 1px solid #e8e0d8;
+							border-radius: 100px;
+							padding: 2px 7px;
+							font-weight: 400;
+						}
+
+						// Title — serif, matches trend-card
+						.top-card-title {
+							font-family: $font-serif;
+							font-size: 18px;
+							font-weight: 400;
+							color: $dark;
+							line-height: 1.25;
+							display: -webkit-box;
+							-webkit-line-clamp: 2;
+							line-clamp: 2;
+							-webkit-box-orient: vertical;
+							overflow: hidden;
+						}
+
+						// Desc — light sans
+						.top-card-desc {
+							font-family: $font-sans;
+							font-size: 11.5px;
+							font-weight: 300;
+							color: $muted;
+							line-height: 1.6;
+							margin: 3px 0 0;
+							display: -webkit-box;
+							-webkit-line-clamp: 2;
+							line-clamp: 2;
+							-webkit-box-orient: vertical;
+							overflow: hidden;
+						}
+
+						// Divider
+						.top-card-divider {
+							height: 1px;
+							background: #f0ebe4;
+							margin: 8px 0;
+						}
+
+						// Bottom: stats + arrow
+						.top-card-bottom {
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+						}
+
+						.top-card-stats {
+							display: flex;
+							align-items: center;
+							gap: 12px;
+						}
+
+						.top-stat-item {
+							display: flex;
+							align-items: center;
+							gap: 4px;
+
+							.top-stat-icon {
+								font-size: 14px !important;
+								color: #b0a89e;
+							}
+
+							.top-stat-count {
+								font-family: $font-sans;
+								font-size: 11px;
+								color: $muted;
+								font-weight: 400;
+							}
+						}
+
+						.top-like-btn {
+							padding: 3px !important;
+							background: none !important;
+
+							.top-like-icon {
+								font-size: 15px !important;
+								color: #c9bdb5;
+								transition: color 0.2s ease, transform 0.2s ease;
+
+								&.active {
+									color: $pink;
+								}
+							}
+
+							&:hover .top-like-icon:not(.active) {
+								color: $pink;
+								transform: scale(1.15);
+							}
+						}
+
+						.top-card-arrow {
+							font-family: $font-sans;
+							font-size: 14px;
+							color: #c9bdb5;
+							transition: color 0.22s ease, transform 0.22s ease;
+							line-height: 1;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
-// ── TopBrandCard ──────────────────────────────────────────
+// ─── TOP BRAND CARD ────────────────────────────────────────
 .top-brand-card {
-	width: 148px; // smaller — was 205px, more elegant for cosmetics
+	width: 148px;
 	height: 210px;
 	display: flex;
 	flex-direction: column;
@@ -986,9 +1834,8 @@
 		}
 	}
 
-	// Logo circle — smaller and more refined
 	.brand-logo-wrap {
-		width: 110px; // reduced from 180px
+		width: 110px;
 		height: 110px;
 		border-radius: 50%;
 		overflow: hidden;
@@ -1009,7 +1856,6 @@
 		}
 	}
 
-	// Brand name
 	.brand-name {
 		margin-top: 12px;
 		color: #181a20;
@@ -1026,7 +1872,6 @@
 		max-width: 100%;
 	}
 
-	// Item count
 	.brand-products {
 		color: #c47a8a;
 		text-align: center;
@@ -1037,7 +1882,6 @@
 		line-height: 20px;
 	}
 
-	// Views & likes row
 	.brand-stats {
 		flex-direction: row !important;
 		align-items: center;
@@ -1065,894 +1909,6 @@
 
 			&:last-child:hover svg {
 				color: #eb6753;
-			}
-		}
-	}
-}
-.events {
-	position: relative;
-	padding: 100px 0px 92px;
-	width: 100%;
-	height: 810px;
-	display: flex;
-	flex-direction: row;
-	background: #181a20;
-	.container {
-		flex-direction: column;
-		align-items: center;
-		.card-wrapper {
-			position: relative;
-			margin-top: 48px;
-			width: 100%;
-			height: auto;
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-			.event-card {
-				position: relative;
-				width: 300px;
-				height: 420px;
-				border-radius: 12px;
-				opacity: 0.9;
-				cursor: pointer;
-				transition: opacity 0.4s;
-				&:hover {
-					opacity: 1;
-					scale: 1.05;
-					transition: 0.3s;
-					.more {
-						opacity: 1;
-					}
-				}
-				.info {
-					position: absolute;
-					display: flex;
-					flex-direction: column;
-					top: 35px;
-					left: 10px;
-					right: 10px;
-					strong {
-						color: #f64747;
-						font-family: $font;
-						font-size: 25px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-						text-transform: capitalize;
-					}
-					span {
-						color: #f66767;
-						font-family: $font;
-						font-size: 20px;
-						font-style: normal;
-						font-weight: 500;
-						line-height: 28px;
-						text-transform: capitalize;
-					}
-				}
-				.more {
-					position: absolute;
-					left: 10px;
-					right: 10px;
-					bottom: 41px;
-					display: flex;
-					flex-direction: row;
-					align-items: center;
-					opacity: 0;
-					span {
-						padding: 0px 5px;
-						border-radius: 5px;
-						background: #fffdfdc4;
-						color: #9c67f6;
-						font-family: $font;
-						font-size: 16px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
-						text-align: justify;
-						cursor: pointer;
-					}
-				}
-			}
-		}
-	}
-}
-.community-board {
-	position: relative;
-	width: 100%;
-	padding: 30px 0px 20px;
-	display: flex;
-	flex-direction: row;
-	background: #ffffff;
-	overflow: hidden;
-
-	.container {
-		flex-direction: column;
-	}
-
-	// ── Scroll-in base state ─────────────────────────
-	.board-header,
-	.community-left,
-	.community-right {
-		opacity: 0;
-		transform: translateY(36px);
-		transition: opacity 0.65s ease, transform 0.65s ease;
-	}
-
-	.community-left {
-		transition-delay: 0.1s;
-	}
-	.community-right {
-		transition-delay: 0.25s;
-	}
-
-	// ── Triggered when .is-visible is added ──────────
-	&.is-visible {
-		.board-header,
-		.community-left,
-		.community-right {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-
-	// ── Header ───────────────────────────────────────
-	.board-header {
-		margin-bottom: 20px;
-
-		.board-eyebrow {
-			display: inline-block;
-			font-family: $font;
-			font-size: 12px;
-			font-weight: 600;
-			letter-spacing: 2px;
-			text-transform: uppercase;
-			color: #c47a8a;
-			margin-bottom: 12px;
-		}
-
-		.board-title {
-			font-family: $font;
-			font-size: 38px;
-			font-weight: 400;
-			line-height: 1.25;
-			color: #181a20;
-			margin: 0;
-
-			em {
-				font-style: italic;
-				font-weight: 300;
-				color: #9b8ea0;
-			}
-		}
-	}
-
-	// ── Main two-column layout ────────────────────────
-	.community-main {
-		width: 100%;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		gap: 48px;
-	}
-
-	// ── Divider ───────────────────────────────────────
-	.center-divider {
-		width: 1px;
-		background: #f0e8ea;
-		align-self: stretch;
-		flex-shrink: 0;
-	}
-
-	// ── Shared content-top ────────────────────────────
-	.content-top {
-		margin-bottom: 24px;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-
-		a span {
-			font-family: $font;
-			font-size: 16px;
-			font-weight: 600;
-			color: #181a20;
-			cursor: pointer;
-			transition: color 0.2s;
-
-			&:hover {
-				color: #c47a8a;
-			}
-		}
-
-		img {
-			width: 12px;
-			height: 12px;
-			opacity: 0.5;
-		}
-	}
-
-	// ── Left column ───────────────────────────────────
-	.community-left {
-		flex: 1;
-
-		.card-wrap {
-			display: flex;
-			flex-direction: row;
-			flex-wrap: wrap;
-			gap: 8 px;
-		}
-	}
-
-	// ── Right column ──────────────────────────────────
-	.community-right {
-		width: 360px;
-		flex-shrink: 0;
-
-		.card-wrap {
-			display: flex;
-			flex-direction: column;
-			gap: 0;
-		}
-	}
-
-	// ── Vertical card (news grid) ─────────────────────
-	.vertical-card {
-		width: 190px;
-		display: flex;
-		flex-direction: column;
-		cursor: pointer;
-		transition: transform 0.25s;
-
-		&:hover {
-			transform: translateY(-4px);
-
-			.community-img {
-				box-shadow: 0 8px 20px rgba(155, 142, 160, 0.18);
-			}
-
-			strong {
-				color: #c47a8a;
-			}
-		}
-
-		.community-img {
-			width: 100%;
-			height: 130px;
-			background-size: cover;
-			background-position: center;
-			background-repeat: no-repeat;
-			border-radius: 10px;
-			transition: box-shadow 0.25s;
-			overflow: hidden;
-
-			div {
-				width: 28px;
-				height: 28px;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				background: #c47a8a;
-				border-radius: 10px 0px;
-				font-family: $font;
-				font-size: 13px;
-				font-weight: 600;
-				color: #ffffff;
-			}
-		}
-
-		strong {
-			margin-top: 10px;
-			font-family: $font;
-			font-size: 13px;
-			font-weight: 600;
-			line-height: 1.45;
-			color: #181a20;
-			transition: color 0.2s;
-			display: -webkit-box;
-			-webkit-line-clamp: 2;
-			line-clamp: 2;
-			-webkit-box-orient: vertical;
-			overflow: hidden;
-		}
-
-		.article-category {
-			margin-top: 4px;
-			font-family: $font;
-			font-size: 11px;
-			font-weight: 400;
-			color: #bbb;
-			text-transform: capitalize;
-		}
-	}
-
-	// ── Horizontal card (tips list) ───────────────────
-	.horizontal-card {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		gap: 16px;
-		padding: 16px 0;
-		border-bottom: 1px solid #f5f0f1;
-		cursor: pointer;
-		transition: background 0.2s;
-
-		&:last-child {
-			border-bottom: none;
-		}
-
-		&:hover {
-			.h-card-img-wrap img {
-				transform: scale(1.06);
-			}
-
-			.h-card-body strong {
-				color: #c47a8a;
-			}
-		}
-
-		.h-card-img-wrap {
-			width: 100px;
-			height: 72px;
-			border-radius: 8px;
-			overflow: hidden;
-			flex-shrink: 0;
-
-			img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				border-radius: 8px;
-				transition: transform 0.35s ease;
-			}
-		}
-
-		.h-card-body {
-			display: flex;
-			flex-direction: column;
-			gap: 6px;
-
-			strong {
-				font-family: $font;
-				font-size: 14px;
-				font-weight: 500;
-				line-height: 1.4;
-				color: #181a20;
-				transition: color 0.2s;
-				display: -webkit-box;
-				-webkit-line-clamp: 2;
-				line-clamp: 2;
-				-webkit-box-orient: vertical;
-				overflow: hidden;
-			}
-
-			.h-card-date {
-				font-family: $font;
-				font-size: 12px;
-				font-weight: 400;
-				color: #c47a8a;
-			}
-		}
-	}
-}
-
-.shop-by-categories {
-	width: 100%;
-	padding: 80px 0px 80px;
-	display: flex;
-	flex-direction: row;
-	background: #ffffff;
-
-	.container {
-		flex-direction: column;
-		max-width: 1300px;
-		min-width: 1100px;
-		margin: 0 auto;
-
-		// ── Section header ──────────────────────────────
-		.section-header {
-			width: 100%;
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-			align-items: flex-end;
-			margin-bottom: 40px;
-
-			.header-text {
-				display: flex;
-				flex-direction: column;
-				gap: 6px;
-
-				// Main italic title
-				.section-title {
-					font-family: $font;
-					font-size: 36px;
-					font-style: italic; // ← italic
-					font-weight: 400; // ← light weight — elegant
-					line-height: 1.3;
-					letter-spacing: -0.5px;
-					color: #181a20;
-				}
-
-				// Subtitle below
-				.section-sub {
-					font-family: $font;
-					font-size: 14px;
-					font-style: normal;
-					font-weight: 400;
-					line-height: 24px;
-					color: #717171;
-				}
-			}
-
-			// "View All" link
-			.view-all-link {
-				font-family: $font;
-				font-size: 14px;
-				font-weight: 500;
-				color: #181a20;
-				text-decoration: none;
-				border-bottom: 1px solid #dddddd;
-				padding-bottom: 2px;
-				transition: border-color 0.2s, color 0.2s;
-				white-space: nowrap;
-				margin-bottom: 4px; // align with baseline of subtitle
-
-				&:hover {
-					color: #c47a8a;
-					border-color: #c47a8a;
-				}
-			}
-		}
-
-		// ── Category cards ──────────────────────────────
-		.category-card {
-			border-radius: 14px;
-			overflow: hidden;
-			position: relative;
-			box-shadow: none;
-			transition: transform 0.4s, box-shadow 0.4s;
-
-			&:hover,
-			&.hovered {
-				transform: scale(1.04);
-				box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
-			}
-
-			.image-wrapper {
-				position: relative;
-				width: 100%;
-				aspect-ratio: 4 / 3;
-
-				.image {
-					object-fit: cover;
-				}
-
-				// Colour tint on hover
-				.glow {
-					position: absolute;
-					inset: 0;
-					opacity: 0;
-					transition: opacity 0.4s;
-					pointer-events: none;
-				}
-
-				.category-card.hovered & .glow {
-					opacity: 0.25;
-				}
-
-				// Label overlay
-				.label {
-					position: absolute;
-					bottom: 0;
-					left: 0;
-					width: 100%;
-					padding: 14px 12px 12px;
-					background: linear-gradient(to top, rgba(0, 0, 0, 0.62), transparent);
-					display: flex;
-					justify-content: center;
-
-					.MuiTypography-root {
-						font-family: $font !important;
-						font-size: 15px;
-						font-weight: 600;
-						letter-spacing: 0.2px;
-						text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-					}
-				}
-			}
-		}
-	}
-}
-
-.top-products {
-	padding: 100px 0px 50px;
-	width: 100%;
-	height: auto;
-	min-height: 697px;
-	display: flex;
-	flex-direction: row;
-
-	.container {
-		flex-direction: column;
-
-		// ── Header / info-box ─────────────────────────────
-		.info-box {
-			width: 100%;
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-			align-items: flex-start;
-			flex-wrap: wrap;
-			gap: 16px;
-
-			.header-center {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				gap: 16px;
-				text-align: center;
-
-				.eyebrow {
-					display: inline-flex;
-					align-items: center;
-					gap: 8px;
-					padding: 6px 18px;
-					border-radius: 24px;
-					background: linear-gradient(90deg, #b37feb, #7c6fa0);
-					color: #fff;
-					font-weight: 600;
-					font-size: 12px;
-
-					.icon-wrapper {
-						display: flex;
-						align-items: center;
-						justify-content: center;
-					}
-				}
-
-				.headline {
-					font-weight: 700;
-					font-size: 34px;
-					color: #181a20;
-				}
-
-				.filter-box {
-					display: flex;
-					align-items: center;
-					gap: 12px;
-					flex-wrap: wrap;
-
-					.filter-label {
-						font-weight: 600; // bold
-						font-size: 14px;
-						color: #181a20;
-						white-space: nowrap;
-					}
-
-					.filter-pills {
-						display: flex;
-						gap: 8px;
-						flex-wrap: wrap;
-					}
-
-					.filter-pill {
-						padding: 7px 16px;
-						border-radius: 100px;
-						border: 1.5px solid #dddddd;
-						background: transparent;
-						color: #717171;
-						font-weight: 500;
-						cursor: pointer;
-						transition: all 0.2s;
-
-						&:hover {
-							border-color: #181a20;
-							color: #181a20;
-						}
-
-						&--active {
-							background: #181a20;
-							color: #fff;
-							border-color: #181a20;
-							font-weight: 600;
-						}
-					}
-				}
-			}
-
-			// Center: skin-type filter pills
-			.filter-box {
-				display: flex;
-				flex-direction: row;
-				align-items: center;
-				gap: 10px;
-				flex-wrap: wrap;
-
-				.filter-label {
-					color: #717171;
-					font-family: $font;
-					font-size: 13px;
-					font-style: normal;
-					font-weight: 400;
-					line-height: normal;
-					white-space: nowrap;
-				}
-
-				.filter-pills {
-					display: flex;
-					flex-direction: row;
-					gap: 8px;
-					flex-wrap: wrap;
-				}
-			}
-		}
-
-		// ── Filter pill button ────────────────────────────
-		.filter-pill {
-			padding: 7px 18px;
-			border-radius: 100px;
-			border: 1.5px solid #dddddd;
-			background: transparent;
-			cursor: pointer;
-			color: #717171;
-			font-family: $font;
-			font-size: 13px;
-			font-style: normal;
-			font-weight: 400;
-			line-height: normal;
-			transition: border-color 0.2s, color 0.2s, background 0.2s;
-			white-space: nowrap;
-
-			&:hover {
-				border-color: #181a20;
-				color: #181a20;
-			}
-
-			&--active {
-				background: #181a20;
-				color: #ffffff;
-				border-color: #181a20;
-				font-weight: 600;
-			}
-		}
-
-		// ── Card swiper ───────────────────────────────────
-		.card-box {
-			position: relative;
-			margin-top: 64px;
-			display: flex;
-			flex-direction: row;
-
-			.top-product-swiper {
-				width: 100%;
-				height: 400px;
-				display: flex;
-				flex-direction: row;
-
-				.top-product-slide {
-					width: auto;
-					height: auto;
-					display: flex;
-					margin: 10px 0 0 10px;
-				}
-			}
-
-			// ── Product card ──────────────────────────────
-			.top-card-box {
-				position: relative;
-				width: 300px;
-				height: 375px;
-				display: flex;
-				flex-direction: column;
-				transition: transform 0.3s;
-
-				&:hover {
-					opacity: 1;
-					transform: scale(1.05);
-
-					.cart-bar {
-						transform: translateY(0);
-					}
-				}
-
-				.card-img {
-					position: relative;
-					width: 100%;
-					height: 203px;
-					border-radius: 12px 12px 0 0;
-					background-size: cover;
-					background-position: center;
-					cursor: pointer;
-
-					// NEW badge (circular, top-right)
-					.badge {
-						position: absolute;
-						top: 12px;
-						right: 12px;
-						width: 52px;
-						height: 52px;
-						border-radius: 50%;
-						background: #9b8ea0;
-						display: flex;
-						align-items: center;
-						justify-content: center;
-						text-align: center;
-
-						span {
-							color: #fff;
-							font-size: 8px;
-							font-weight: 600;
-							line-height: 1.3;
-							text-transform: uppercase;
-						}
-					}
-
-					// Price chip (bottom-left, matches existing pattern)
-					div.price {
-						position: absolute;
-						left: 12px;
-						bottom: 12px;
-						padding: 8px 12px;
-						border-radius: 6px;
-						background: #fff;
-						font-weight: 600;
-					}
-				}
-
-				// Slide-up add-to-cart bar
-				.cart-bar {
-					position: absolute;
-					bottom: 172px;
-					left: 0;
-					right: 0;
-					display: flex;
-					justify-content: space-between;
-					padding: 12px 16px;
-					background: rgba(255, 255, 255, 0.96);
-					backdrop-filter: blur(6px);
-					transform: translateY(100%);
-					transition: transform 0.3s ease;
-
-					.cart-text {
-						display: inline-flex;
-						align-items: center;
-						gap: 7px;
-						background: transparent;
-						border: none;
-						color: #181a20;
-						font-family: $font;
-						font-size: 13px;
-						font-weight: 500;
-						line-height: normal;
-						cursor: pointer;
-					}
-
-					.cart-price {
-						background: #7c6fa0;
-						color: #ffffff;
-						border: none;
-						border-radius: 100px;
-						padding: 7px 16px;
-						font-family: $font;
-						font-size: 13px;
-						font-weight: 600;
-						line-height: normal;
-						cursor: pointer;
-						transition: background 0.2s;
-
-						&:hover {
-							background: darken(#7c6fa0, 8%);
-						}
-					}
-				}
-
-				// Info panel — identical to existing .top-card-box .info
-				.info {
-					padding: 20px 22px 17px;
-					display: flex;
-					flex-direction: column;
-					box-sizing: border-box;
-					border-radius: 0px 0px 12px 12px;
-					border: 1px solid rgba(196, 196, 196, 0.71);
-					border-top: none;
-					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-
-					.title {
-						overflow: hidden;
-						color: #181a20;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-						font-family: $font;
-						font-size: 15px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-						text-transform: capitalize;
-						cursor: pointer;
-					}
-
-					.desc {
-						margin-top: 5px;
-						overflow: hidden;
-						color: #717171;
-						font-family: $font;
-						font-size: 13px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: normal;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-					}
-
-					.bott {
-						margin-top: 12px;
-						display: flex;
-						flex-direction: row;
-						justify-content: space-between;
-						align-items: center;
-
-						p {
-							color: #181a20;
-							font-family: $font;
-							font-size: 13px;
-							font-style: normal;
-							font-weight: 400;
-							line-height: normal;
-							text-transform: capitalize;
-						}
-
-						.view-like-box {
-							display: flex;
-							flex-direction: row;
-							gap: 7px;
-							align-items: center;
-
-							button {
-								margin-left: 7px;
-								width: 16px;
-								height: 16px;
-								box-sizing: border-box;
-							}
-
-							.view-cnt {
-								color: #717171;
-								font-family: $font;
-								font-size: 13px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: normal;
-								text-overflow: ellipsis;
-							}
-						}
-					}
-
-					// Rating row (new, below .bott)
-					.rating-row {
-						margin-top: 6px;
-						display: flex;
-						flex-direction: row;
-						align-items: center;
-						gap: 5px;
-
-						.rating-value {
-							color: #181a20;
-							font-family: $font;
-							font-size: 12px;
-							font-weight: 500;
-							line-height: normal;
-						}
-
-						.rating-count {
-							color: #717171;
-							font-family: $font;
-							font-size: 11px;
-							font-weight: 400;
-							line-height: normal;
-						}
-					}
-				}
 			}
 		}
 	}

@@ -9,6 +9,7 @@ import { Product } from '../../types/product/product';
 import { ProductsInquiry } from '../../types/product/product.input';
 import TrendProductCard from './TrendProductCard';
 import { ProductCard } from '../mypage/ProductCard';
+import { dummyProducts } from '@/libs/dummyProducts';
 
 interface TrendProductsProps {
 	initialInput: ProductsInquiry;
@@ -19,10 +20,10 @@ const TrendProducts = (props: TrendProductsProps) => {
 	const device = useDeviceDetect();
 	const [trendProducts, setTrendProducts] = useState<Product[]>([]);
 
-	// TODO: fetch products using initialInput via Apollo/GraphQL
-	// useEffect(() => { ... fetch logic ... }, [initialInput]);
-
-	if (!trendProducts) return null;
+	useEffect(() => {
+		// TODO: replace with real Apollo/GraphQL fetch using initialInput
+		setTrendProducts(dummyProducts);
+	}, [initialInput]);
 
 	if (device === 'mobile') {
 		return (
@@ -61,9 +62,7 @@ const TrendProducts = (props: TrendProductsProps) => {
 				{/* ── Section Header ── */}
 				<Stack className="info-box">
 					<Box className="left">
-						{/* Eyebrow label */}
 						<span className="section-eyebrow">★ curated for you</span>
-						{/* Main heading */}
 						<h2 className="section-title">
 							Trending <em>Now</em>
 						</h2>

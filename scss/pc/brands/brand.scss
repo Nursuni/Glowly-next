@@ -54,94 +54,6 @@
 					animation: fadeIn 0.6s ease 0.35s forwards;
 				}
 			}
-
-			// ── Filter bar ─────────────────────────────────────
-			.filter {
-				display: flex;
-				flex-direction: row;
-				justify-content: space-between;
-				align-items: center;
-
-				.left {
-					display: flex;
-					align-items: center;
-
-					// Search input with icon
-					.toolbar-right {
-						display: flex;
-						align-items: center;
-						gap: 6px;
-						border-bottom: 1.5px solid #e8d8e0;
-						padding-bottom: 3px;
-
-						&:focus-within {
-							border-bottom-color: #d4789a;
-						}
-
-						.search-input {
-							font-size: 13px;
-							width: 200px;
-							border: none;
-							outline: none;
-							background: transparent;
-
-							&::placeholder {
-								color: #bbb;
-							}
-						}
-
-						.search-icon {
-							font-size: 18px;
-							color: #bbb;
-							cursor: pointer;
-
-							&:hover {
-								color: #d4789a;
-							}
-						}
-					}
-				}
-
-				.right {
-					display: flex;
-					align-items: center;
-					gap: 10px;
-					.sort-label {
-						font-size: 13px;
-						color: #999;
-						letter-spacing: 0.04em;
-					}
-
-					.sort-btn-wrap {
-						position: relative;
-
-						// MUI Button override
-						.sort-btn {
-							min-width: unset;
-							padding: 3px 6px;
-							background: transparent !important;
-							box-shadow: none !important;
-							&:hover {
-								background: #f6f6f6;
-								border-color: #181a20;
-							}
-							svg {
-								font-size: 20px;
-								color: #d4789a;
-							}
-
-							.MuiButton-endIcon {
-								margin-left: 4px;
-								transition: transform 0.2s;
-							}
-
-							&[aria-expanded='true'] .MuiButton-endIcon {
-								transform: rotate(180deg);
-							}
-						}
-					}
-				}
-			}
 		}
 	}
 
@@ -162,7 +74,7 @@
 		.MuiMenuItem-root {
 			border-radius: 8px;
 			color: #717171;
-			font-family: $font;
+			font-family: $font-body;
 			font-size: 14px;
 			font-style: normal;
 			font-weight: 400;

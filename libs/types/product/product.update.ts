@@ -1,4 +1,4 @@
-import { ProductType } from '../../enums/product.enum';
+import { ProductType, SkinType } from '../../enums/product.enum';
 
 export interface ProductUpdate {
 	_id: string;
@@ -7,6 +7,7 @@ export interface ProductUpdate {
 	productTitle?: string;
 	productPrice?: number;
 
+	skinType?: SkinType[];
 	productImages?: string[];
 	productDesc?: string;
 
