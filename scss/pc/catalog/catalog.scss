@@ -70,8 +70,7 @@
 				.toolbar-left {
 					display: flex;
 					align-items: center;
-					gap: 6px;
-
+					justify-content: space-around;
 					.sort-label {
 						font-size: 13px;
 						color: #999;
@@ -85,7 +84,7 @@
 						box-shadow: none !important;
 
 						svg {
-							font-size: 18px;
+							font-size: 40px;
 							color: #d4789a;
 						}
 					}

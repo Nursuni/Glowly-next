@@ -114,12 +114,12 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 				{/* ── Filter bar ── */}
 				<Stack className={'filter'}>
 					<Box component={'div'} className={'left'}>
-						<div className={'search-wrap'}>
+						<div className="toolbar-right">
 							<input
 								type="text"
-								placeholder={'Search for a brand…'}
+								placeholder="Search"
 								value={searchText}
-								onChange={(e: any) => setSearchText(e.target.value)}
+								onChange={(e) => setSearchText(e.target.value)}
 								onKeyDown={handleSearchKeyDown}
 								className="search-input"
 							/>
