@@ -9,6 +9,8 @@ import BrandCard from '../../libs/components/common/BrandCard';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Member } from '../../libs/types/member/member';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -37,6 +39,18 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [searchText, setSearchText] = useState<string>('');
 
+	const handleSearchSubmit = async () => {
+		const updatedFilter = { ...searchFilter, page: 1, search: { ...searchFilter.search, text: searchText } };
+		setSearchFilter(updatedFilter);
+		setCurrentPage(1);
+		await router.push({ pathname: '/catalog', query: { input: JSON.stringify(updatedFilter) } }, undefined, {
+			scroll: false,
+		});
+	};
+
+	const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === 'Enter') handleSearchSubmit();
+	};
 	/** LIFECYCLE **/
 	useEffect(() => {
 		if (router.query.input) {
@@ -101,47 +115,58 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 				<Stack className={'filter'}>
 					<Box component={'div'} className={'left'}>
 						<div className={'search-wrap'}>
-							<SearchIcon className={'search-icon'} />
 							<input
 								type="text"
 								placeholder={'Search for a brand…'}
 								value={searchText}
 								onChange={(e: any) => setSearchText(e.target.value)}
-								onKeyDown={(event: any) => {
-									if (event.key === 'Enter') {
-										setSearchFilter({
-											...searchFilter,
-											search: { ...searchFilter.search, text: searchText },
-										});
-									}
-								}}
+								onKeyDown={handleSearchKeyDown}
+								className="search-input"
 							/>
+							<SearchRoundedIcon className="search-icon" onClick={handleSearchSubmit} />
 						</div>
 					</Box>
 
 					<Box component={'div'} className={'right'}>
 						<span className={'sort-label'}>Sort by</span>
 						<div className={'sort-btn-wrap'}>
-							<Button className={'sort-btn'} onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
-								{filterSortName}
+							<Button onClick={sortingClickHandler} disableRipple className="sort-btn">
+								<FavoriteBorderRoundedIcon />
 							</Button>
+
 							<Menu
 								anchorEl={anchorEl}
 								open={sortingOpen}
 								onClose={sortingCloseHandler}
-								className={'sort-menu'}
-								transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-								anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+								PaperProps={{
+									sx: {
+										mt: '6px',
+										boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+										borderRadius: '10px',
+										minWidth: '150px',
+									},
+								}}
 							>
-								{SORT_OPTIONS.map((opt) => (
+								{[
+									{ id: 'new', label: 'New' },
+									{ id: 'lowest', label: 'Lowest Price' },
+									{ id: 'highest', label: 'Highest Price' },
+								].map((item) => (
 									<MenuItem
-										key={opt.id}
+										key={item.id}
 										onClick={sortingHandler}
-										id={opt.id}
+										id={item.id}
 										disableRipple
-										className={filterSortName === opt.label ? 'active' : ''}
+										sx={{
+											fontSize: '13px',
+											color: filterSortName === item.label ? '#d4789a' : '#555',
+											fontWeight: filterSortName === item.label ? 600 : 400,
+											py: '10px',
+											px: '16px',
+											'&:hover': { color: '#d4789a', bgcolor: '#fdf5f8' },
+										}}
 									>
-										{opt.label}
+										{item.label}
 									</MenuItem>
 								))}
 							</Menu>
@@ -153,9 +178,9 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 				<Stack className={'card-wrap'}>
 					{brands?.length === 0 ? (
 						<div className={'no-data'}>
-							<img src="/img/icons/icoAlert.svg" alt="" />
+							<span className="no-data-icon">✦</span>
 							<p>We couldn't find any brands matching your search.</p>
-							<span>Try adjusting your filters or search with a different keyword.</span>
+							<span className="no-data-cta">Try adjusting your filters or search with a different keyword.</span>
 						</div>
 					) : (
 						brands.map((brand: Member) => <BrandCard brand={brand} key={brand._id} likeMemberHandler={undefined} />)

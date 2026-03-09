@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Stack, Tab, Typography, Button, Pagination } from '@mui/material';
+import { Stack, Typography, Button, Pagination } from '@mui/material';
 import CommunityCard from '../../libs/components/common/CommunityCard';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
@@ -66,7 +65,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 	}, [boardArticles]);
 
 	/** HANDLERS **/
-	const tabChangeHandler = async (e: T, value: string) => {
+	const tabChangeHandler = async (value: string) => {
 		setSearchCommunity({ ...searchCommunity, page: 1, search: { articleCategory: value as BoardArticleCategory } });
 		await router.push({ pathname: '/blog', query: { articleCategory: value } }, router.pathname, { shallow: true });
 	};
@@ -95,7 +94,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 						<button
 							key={tab.value}
 							className={`mobile-tab-pill ${currentTab === tab.value ? 'active' : ''}`}
-							onClick={(e) => tabChangeHandler(e, tab.value)}
+							onClick={() => tabChangeHandler(tab.value)}
 						>
 							<span className="pill-icon">{tab.icon}</span>
 							{tab.label}
@@ -154,107 +153,103 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 	return (
 		<div id="community-list-page">
 			<div className="container">
-				<TabContext value={searchCommunity.search.articleCategory}>
-					<Stack className="main-box">
-						{/* ── Sidebar ── */}
-						<Stack className="left-config scroll-reveal">
-							<Stack className="image-info">
-								<img src={'/img/logo/logoText.svg'} alt="Glowly" />
-								<Stack className="community-name">
-									<span className="name-eyebrow">✦ Community</span>
-									<Typography className="name">Glowly</Typography>
-									<Typography className="name-sub">Where beauty finds its voice.</Typography>
-								</Stack>
-							</Stack>
+				{/* ── Page Hero (top) ── */}
+				<Stack className="community-hero scroll-reveal">
+					<div className="hero-inner">
+						<span className="hero-eyebrow">✦ Glowly Community</span>
+						<Typography className="hero-title">Open Forum</Typography>
+						<Typography className="hero-sub">A space to speak freely — no topic is too big or too small.</Typography>
+					</div>
+					<div className="hero-deco" aria-hidden="true">
+						<span>✦</span>
+						<span>♡</span>
+						<span>◎</span>
+						<span>✿</span>
+					</div>
+				</Stack>
 
-							<TabList
-								orientation="vertical"
-								aria-label="Community categories"
-								TabIndicatorProps={{ style: { display: 'none' } }}
-								onChange={tabChangeHandler}
-							>
-								{tabs.map((tab) => (
-									<Tab
-										key={tab.value}
-										value={tab.value}
-										label={
-											<span className="tab-label-inner">
-												<span className="tab-icon">{tab.icon}</span>
-												{tab.label}
-											</span>
-										}
-										className={`tab-button ${currentTab === tab.value ? 'active' : ''}`}
-									/>
-								))}
-							</TabList>
+				{/* ── Two-panel card ── */}
+				<Stack className="community-card scroll-reveal">
+					{/* LEFT: tab sidebar */}
+					<Stack className="card-sidebar">
+						<div className="sidebar-brand">
+							<img src={'/img/logo/logoText.svg'} alt="Glowly" />
+							<span className="brand-label">Community</span>
+						</div>
 
+						<nav className="sidebar-tabs">
+							{tabs.map((tab) => (
+								<button
+									key={tab.value}
+									className={`sidebar-tab-btn ${currentTab === tab.value ? 'active' : ''}`}
+									onClick={() => tabChangeHandler(tab.value)}
+								>
+									<span className="tab-icon">{tab.icon}</span>
+									<span className="tab-label">{tab.label}</span>
+									{currentTab === tab.value && <span className="tab-active-bar" />}
+								</button>
+							))}
+						</nav>
+
+						<div className="sidebar-footer">
 							<div className="sidebar-divider" />
 							<Typography className="sidebar-note">Respectful conversation is always welcome here.</Typography>
-						</Stack>
+						</div>
+					</Stack>
 
-						{/* ── Main content ── */}
-						<Stack className="right-config">
-							<Stack className="panel-config">
-								<Stack className="title-box scroll-reveal">
-									<Stack className="left">
-										<span className="title-eyebrow">{currentTab} BOARD</span>
-										<Typography className="title">{meta.title}</Typography>
-										<Typography className="sub-title">{meta.sub}</Typography>
-									</Stack>
-									<Button
-										className="write-btn"
-										onClick={() => router.push({ pathname: '/mypage', query: { category: 'writeArticle' } })}
-									>
-										✦ Compose
-									</Button>
-								</Stack>
-
-								{tabs.map((tab) => (
-									<TabPanel key={tab.value} value={tab.value}>
-										<Stack className="list-box">
-											{totalCount ? (
-												boardArticles?.map((boardArticle: BoardArticle, i: number) => (
-													<div
-														className="scroll-reveal"
-														key={boardArticle?._id}
-														style={{ animationDelay: `${i * 70}ms` }}
-													>
-														<CommunityCard boardArticle={boardArticle} likeArticleHandler={undefined} />
-													</div>
-												))
-											) : (
-												<Stack className="no-data scroll-reveal">
-													<span className="no-data-icon">✦</span>
-													<p>Nothing here just yet.</p>
-													<span className="no-data-cta">Be the first to share something with the community.</span>
-												</Stack>
-											)}
-										</Stack>
-									</TabPanel>
-								))}
+					{/* RIGHT: article feed */}
+					<Stack className="card-content">
+						{/* Content header with Compose button on top-left */}
+						<Stack className="content-header">
+							<Stack className="content-header-left">
+								<div className="content-header-meta">
+									<Typography className="content-tab-eyebrow">{currentTab} BOARD</Typography>
+									<Typography className="content-tab-title">{meta.title}</Typography>
+									<Typography className="content-tab-sub">{meta.sub}</Typography>
+								</div>
+								<Button
+									className="compose-btn"
+									onClick={() => router.push({ pathname: '/mypage', query: { category: 'writeArticle' } })}
+								>
+									✦ Compose
+								</Button>
 							</Stack>
 						</Stack>
-					</Stack>
-				</TabContext>
 
-				{totalCount > 0 && (
-					<Stack className="pagination-config scroll-reveal">
-						<Stack className="pagination-box">
-							<Pagination
-								count={Math.ceil(totalCount / searchCommunity.limit)}
-								page={searchCommunity.page}
-								shape="circular"
-								color="primary"
-								onChange={paginationHandler}
-							/>
+						{/* Article grid */}
+						<Stack className="articles-grid">
+							{totalCount ? (
+								boardArticles?.map((boardArticle: BoardArticle, i: number) => (
+									<div className="scroll-reveal" key={boardArticle?._id} style={{ animationDelay: `${i * 70}ms` }}>
+										<CommunityCard boardArticle={boardArticle} likeArticleHandler={undefined} />
+									</div>
+								))
+							) : (
+								<Stack className="no-data scroll-reveal">
+									<span className="no-data-icon">✦</span>
+									<p>Nothing here just yet.</p>
+									<span className="no-data-cta">{meta.sub}</span>
+								</Stack>
+							)}
 						</Stack>
-						<Stack className="total-result">
-							<Typography>
-								{totalCount} article{totalCount !== 1 ? 's' : ''} in this collection
-							</Typography>
-						</Stack>
+
+						{/* Pagination inside card */}
+						{totalCount > 0 && (
+							<Stack className="card-pagination scroll-reveal">
+								<Pagination
+									count={Math.ceil(totalCount / searchCommunity.limit)}
+									page={searchCommunity.page}
+									shape="circular"
+									color="primary"
+									onChange={paginationHandler}
+								/>
+								<Typography className="total-count">
+									{totalCount} article{totalCount !== 1 ? 's' : ''} in this collection
+								</Typography>
+							</Stack>
+						)}
 					</Stack>
-				)}
+				</Stack>
 			</div>
 		</div>
 	);

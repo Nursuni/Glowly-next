@@ -212,7 +212,7 @@ const Faq = () => {
 	}
 
 	return (
-		<Stack className={`faq-content ${visible ? 'faq-visible' : ''}`}>
+		<Stack className={`faq-content ${visible ? 'faq-visible' : ''}`} sx={{ pt: 3 }}>
 			<Box className={'faq-categories'} component={'div'}>
 				{categories.map(({ key, label }) => (
 					<button

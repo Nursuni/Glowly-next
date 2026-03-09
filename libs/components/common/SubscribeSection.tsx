@@ -1,5 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { toast } from 'react-toastify';
+import { Box, Stack, Typography, TextField, Button } from '@mui/material';
 
 const API_URL = process.env.NEXT_PUBLIC_API_GRAPHQL_URL;
 
@@ -57,24 +58,49 @@ export default function SubscribeSection() {
 	};
 
 	return (
-		<section className="py-10 text-center">
-			<h2 className="text-2xl font-semibold mb-2">Get 10% off your first order</h2>
-			<p className="mb-4 text-gray-600">Join our email list for exclusive offers and the latest news.</p>
+		<Box sx={{ py: 8, textAlign: 'center' }}>
+			<Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
+				Get 10% off your first order
+			</Typography>
 
-			<form onSubmit={handleSubmit} className="flex justify-center gap-2 max-w-md mx-auto">
-				<input
+			<Typography sx={{ mb: 3, color: 'text.secondary' }}>
+				Join our email list for exclusive offers and the latest news.
+			</Typography>
+
+			<Box
+				component="form"
+				onSubmit={handleSubmit}
+				sx={{
+					display: 'flex',
+					justifyContent: 'center',
+					gap: 2,
+					maxWidth: 420,
+					mx: 'auto',
+				}}
+			>
+				<TextField
 					type="email"
 					placeholder="Email"
 					value={email}
 					onChange={handleChange}
 					required
-					className="border px-3 py-2 w-full rounded"
+					fullWidth
+					size="small"
 				/>
 
-				<button type="submit" disabled={loading} className="bg-black text-white px-4 py-2 rounded disabled:opacity-50">
+				<Button
+					type="submit"
+					variant="contained"
+					disabled={loading}
+					sx={{
+						whiteSpace: 'nowrap',
+						backgroundColor: '#000',
+						'&:hover': { backgroundColor: '#333' },
+					}}
+				>
 					{loading ? 'Submitting...' : 'Subscribe'}
-				</button>
-			</form>
-		</section>
+				</Button>
+			</Box>
+		</Box>
 	);
 }

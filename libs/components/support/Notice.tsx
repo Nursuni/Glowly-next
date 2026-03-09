@@ -28,7 +28,7 @@ const Notice = () => {
 	}
 
 	return (
-		<Stack className={`notice-content ${visible ? 'notice-visible' : ''}`}>
+		<Stack className={`notice-content ${visible ? 'notice-visible' : ''}`} sx={{ pt: 3 }}>
 			<Box className={'notice-header'}>
 				<Typography className={'notice-title-text'}>Announcements</Typography>
 				<Typography className={'notice-subtitle'}>Stay informed with the latest updates</Typography>

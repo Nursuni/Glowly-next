@@ -1,26 +1,3 @@
-// ============================================================
-//  Support Page — PC  (blush light theme · #F564A9)
-// ============================================================
-
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
-
-// ── Tokens ───────────────────────────────────────────────────
-$bg: #fdf7f9;
-$bg-hero: #fceef4;
-$surface: #ffffff;
-$surface-2: #fdf0f5;
-$border: rgba(245, 100, 169, 0.14);
-$border-soft: #f0e0ea;
-$pink: #f564a9;
-$pink-light: #f888bf;
-$pink-dim: rgba(245, 100, 169, 0.07);
-$text-primary: #1e1218;
-$text-secondary: #5c4556;
-$text-muted: #a08898;
-$text-dim: #cdb8c6;
-$font-display: 'Cormorant Garamond', Georgia, serif;
-$font-body: 'DM Sans', sans-serif;
-
 // ── Keyframes ─────────────────────────────────────────────────
 @keyframes fadeUp {
 	from {
@@ -56,7 +33,7 @@ $font-body: 'DM Sans', sans-serif;
 	.support-page {
 		position: relative;
 		min-height: 100vh;
-		background: $bg;
+
 		padding: 0 0 100px;
 		font-family: $font-body;
 
@@ -83,10 +60,10 @@ $font-body: 'DM Sans', sans-serif;
 		flex-direction: column;
 		align-items: center;
 		text-align: center;
-		background: $bg-hero;
+
 		width: 100%;
 		padding: 72px 40px 60px;
-		border-bottom: 1px solid $border-soft;
+
 		position: relative;
 		overflow: hidden;
 		animation: fadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -139,11 +116,13 @@ $font-body: 'DM Sans', sans-serif;
 			}
 
 			.support-sub {
-				font-size: 15px;
+				margin: 0;
+				color: #717171;
+				font-family: $font;
+				font-size: 14px;
+				font-style: normal;
 				font-weight: 300;
-				color: $text-secondary;
-				max-width: 380px;
-				line-height: 1.65;
+				line-height: 26px;
 				opacity: 0;
 				animation: fadeIn 0.6s ease 0.35s forwards;
 			}

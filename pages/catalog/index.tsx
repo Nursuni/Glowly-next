@@ -135,7 +135,7 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 					<Stack spacing={2} sx={{ px: 2 }}>
 						{products?.length === 0 ? (
 							<Box textAlign="center" py={5}>
-								<img src="/img/icons/icoAlert.svg" alt="" />
+								<span className="no-data-icon">✦</span>
 								<Typography>No products available for now</Typography>
 							</Box>
 						) : (
@@ -165,129 +165,110 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 	/* ── DESKTOP ── */
 	return (
 		<div id="product-list-page">
+			<Box className="info">
+				{/* HERO / TOP SECTION */}
+				<Box className="product-main-info">
+					<span className="product-eyebrow">Our catalog</span>
+					<h1 className="product-heading">
+						Discover our <em>products</em>
+					</h1>
+
+					<p className="product-sub">Browse our latest cosmetics and beauty products</p>
+				</Box>
+				{/* SORT + SEARCH INSIDE HERO */}
+				<div className="toolbar">
+					<div className="toolbar-right">
+						<InputBase
+							placeholder="Search"
+							value={searchText}
+							onChange={(e) => setSearchText(e.target.value)}
+							onKeyDown={handleSearchKeyDown}
+							className="search-input"
+						/>
+						<SearchRoundedIcon className="search-icon" onClick={handleSearchSubmit} />
+					</div>
+					<div className="toolbar-left">
+						<span className="sort-label">Sort by</span>
+
+						<Button onClick={sortingClickHandler} disableRipple className="sort-btn">
+							<FavoriteBorderRoundedIcon />
+						</Button>
+
+						<Menu
+							anchorEl={anchorEl}
+							open={sortingOpen}
+							onClose={sortingCloseHandler}
+							PaperProps={{
+								sx: {
+									mt: '6px',
+									boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+									borderRadius: '10px',
+									minWidth: '150px',
+								},
+							}}
+						>
+							{[
+								{ id: 'new', label: 'New' },
+								{ id: 'lowest', label: 'Lowest Price' },
+								{ id: 'highest', label: 'Highest Price' },
+							].map((item) => (
+								<MenuItem
+									key={item.id}
+									onClick={sortingHandler}
+									id={item.id}
+									disableRipple
+									sx={{
+										fontSize: '13px',
+										color: filterSortName === item.label ? '#d4789a' : '#555',
+										fontWeight: filterSortName === item.label ? 600 : 400,
+										py: '10px',
+										px: '16px',
+										'&:hover': { color: '#d4789a', bgcolor: '#fdf5f8' },
+									}}
+								>
+									{item.label}
+								</MenuItem>
+							))}
+						</Menu>
+					</div>
+				</div>{' '}
+			</Box>
+
+			{/* MAIN PRODUCT AREA */}
 			<div className="container">
 				<div className="product-page">
-					{/* ── LEFT: Filter sidebar ── */}
+					{/* LEFT FILTER */}
 					<div className="filter-config">
 						<Filter searchFilter={searchFilter} setSearchFilter={setSearchFilter} initialInput={initialInput} />
 					</div>
 
-					{/* ── RIGHT: toolbar + grid ── */}
-					<div className="main-config">
-						{/* Toolbar: Sort LEFT — Search RIGHT */}
-						<div className="toolbar">
-							{/* Sort by — LEFT (near filter) */}
-							<div className="toolbar-left">
-								<span className="sort-label">Sort by</span>
-								<Button onClick={sortingClickHandler} disableRipple className="sort-btn">
-									<FavoriteBorderRoundedIcon />
-								</Button>
-								<Menu
-									anchorEl={anchorEl}
-									open={sortingOpen}
-									onClose={sortingCloseHandler}
-									PaperProps={{
-										sx: {
-											mt: '6px',
-											boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-											borderRadius: '10px',
-											minWidth: '150px',
-										},
-									}}
-								>
-									{[
-										{ id: 'new', label: 'New' },
-										{ id: 'lowest', label: 'Lowest Price' },
-										{ id: 'highest', label: 'Highest Price' },
-									].map((item) => (
-										<MenuItem
-											key={item.id}
-											onClick={sortingHandler}
-											id={item.id}
-											disableRipple
-											sx={{
-												fontSize: '13px',
-												color: filterSortName === item.label ? '#d4789a' : '#555',
-												fontWeight: filterSortName === item.label ? 600 : 400,
-												py: '10px',
-												px: '16px',
-												'&:hover': { color: '#d4789a', bgcolor: '#fdf5f8' },
-											}}
-										>
-											{item.label}
-										</MenuItem>
-									))}
-								</Menu>
+					{/* PRODUCT GRID */}
+					<div className="list-config">
+						{products?.length === 0 ? (
+							<div className="no-data">
+								<span className="no-data-icon">✦</span>
+								<p>No products available for now</p>
 							</div>
-
-							{/* Search — RIGHT, triggers on Enter or icon click */}
-							<div className="toolbar-right">
-								<InputBase
-									placeholder="Search"
-									value={searchText}
-									onChange={(e) => setSearchText(e.target.value)}
-									onKeyDown={handleSearchKeyDown}
-									className="search-input"
-								/>
-								<SearchRoundedIcon className="search-icon" onClick={handleSearchSubmit} />
-							</div>
-						</div>
-
-						{/* Product grid */}
-						<div className="list-config">
-							{products?.length === 0 ? (
-								<div className="no-data">
-									<img src="/img/icons/icoAlert.svg" alt="" />
-									<p>No products available for now 🌸</p>
-									<span>Try adjusting your filters or check back later.</span>
-								</div>
-							) : (
-								products.map((product: Product) => <ProductCard product={product} key={product._id} />)
-							)}
-						</div>
-
-						{/* Pagination */}
-						{products.length !== 0 && (
-							<Stack className="pagination-config">
-								<Stack className="pagination-box">
-									<Pagination
-										page={currentPage}
-										count={Math.ceil(total / (searchFilter.limit ?? 9))}
-										onChange={handlePaginationChange}
-										shape="circular"
-										color="primary"
-										sx={{
-											'& .MuiPaginationItem-root': {
-												color: '#888',
-												'&.Mui-selected': { bgcolor: '#d4789a', color: '#fff' },
-												'&:hover': { bgcolor: '#fdf5f8' },
-											},
-										}}
-									/>
-								</Stack>
-								<Stack className="total-result">
-									<Typography sx={{ fontSize: '13px', color: '#aaa' }}>
-										Total {total} product{total > 1 ? 's' : ''} available
-									</Typography>
-								</Stack>
-							</Stack>
+						) : (
+							products.map((product: Product) => <ProductCard product={product} key={product._id} />)
 						)}
 					</div>
 				</div>
 			</div>
+
 			<SubscribeSection />
 		</div>
 	);
-};
 
-ProductList.defaultProps = {
-	initialInput: {
-		page: 1,
-		limit: 9,
-		sort: 'createdAt',
-		direction: Direction.DESC,
-		search: {},
-	},
+	ProductList.defaultProps = {
+		initialInput: {
+			page: 1,
+			limit: 9,
+			sort: 'createdAt',
+			direction: Direction.DESC,
+			search: {},
+		},
+	};
 };
 
 export default withLayoutBasic(ProductList);

@@ -3,12 +3,15 @@
 @import '/scss/pc/general.scss';
 
 @import '/scss/pc/homepage/homepage';
-@import '/scss/pc/about/about';
-@import '/scss/mobile/about/about';
-@import '/scss/pc/catalog/catalog';
+@import '/scss/pc/about/about.scss';
+@import '/scss/mobile/about/about.scss';
+@import '/scss/pc/catalog/catalog.scss';
 @import '/scss/pc/catalog/detail.scss';
 
-@import '/scss/pc/brands/brand';
+@import '/scss/pc/order/basket.scss';
+@import '/scss/mobile/order/basket.scss';
+
+@import '/scss/pc/brands/brand.scss';
 @import '/scss/pc/brands/detail.scss';
 @import '/scss/pc/mypage/mypage.scss';
 @import '/scss/pc/mypage/addNewProduct.scss';
