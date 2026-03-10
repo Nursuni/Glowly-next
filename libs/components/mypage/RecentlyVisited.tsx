@@ -38,13 +38,13 @@ const RecentlyVisited: NextPage = () => {
 	};
 
 	if (device === 'mobile') {
-		return <div>glowly MY FAVORITES MOBILE</div>;
+		return <div>glowly Saved Favorites MOBILE</div>;
 	} else {
 		return (
 			<div id="my-favorites-page">
 				<Stack className="main-title-box">
 					<Stack className="right-box">
-						<Typography className="main-title">Recently Visited</Typography>
+						<Typography className="main-title">Recently Viewed</Typography>
 						<Typography className="sub-title">We are glad to see you again!</Typography>
 					</Stack>
 				</Stack>
@@ -56,7 +56,7 @@ const RecentlyVisited: NextPage = () => {
 					) : (
 						<div className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Recently Visited product found!</p>
+							<p>No Recently Viewedproduct found!</p>
 						</div>
 					)}
 				</Stack>
@@ -73,7 +73,7 @@ const RecentlyVisited: NextPage = () => {
 						</Stack>
 						<Stack className="total-result">
 							<Typography>
-								Total {total} recently visited product{total > 1 ? 'ies' : 'y'}
+								Total {total} recently viewed product{total > 1 ? 'ies' : 'y'}
 							</Typography>
 						</Stack>
 					</Stack>

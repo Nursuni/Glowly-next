@@ -118,7 +118,7 @@ const withAdminLayout = (Component: ComponentType) => {
 									<Box component={'div'} sx={{ p: 1, py: '6px' }} onClick={logoutHandler}>
 										<MenuItem sx={{ px: '16px', py: '6px' }}>
 											<Typography variant={'subtitle1'} component={'span'}>
-												Logout
+												Sign Out
 											</Typography>
 										</MenuItem>
 									</Box>
@@ -166,7 +166,7 @@ const withAdminLayout = (Component: ComponentType) => {
 							</Stack>
 						</Toolbar>
 						<Divider />
-						/** ========================= /* TODO: MenuList */  
+						/** ========================= /* TODO: MenuList */
 					</Drawer>
 
 					<Box component={'div'} id="bunker" sx={{ flexGrow: 1 }}>

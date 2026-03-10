@@ -21,7 +21,7 @@ const MyMenu = () => {
 	/** HANDLERS **/
 	const logoutHandler = async () => {
 		try {
-			if (await toastInfo('Do you want to logout?')) logOut();
+			if (await toastInfo('Do you want to sign out?')) logOut();
 		} catch (err: any) {
 			console.log('ERROR, logoutHandler:', err.message);
 		}
@@ -61,7 +61,7 @@ const MyMenu = () => {
 
 			{/* SECTIONS */}
 			<Stack className={'sections'}>
-				{/* MANAGE LISTINGS */}
+				{/* MANAGE ACCOUNT */}
 				<Stack
 					className={'section'}
 					style={{
@@ -69,7 +69,7 @@ const MyMenu = () => {
 					}}
 				>
 					<Typography className="title" variant="h5">
-						MANAGE LISTINGS
+						MANAGE ACCOUNT
 					</Typography>
 
 					<List className={'sub-section'}>
@@ -92,7 +92,7 @@ const MyMenu = () => {
 											)}
 
 											<Typography className={'sub-title'} variant="subtitle1">
-												Add Product
+												Add New Product
 											</Typography>
 
 											<IconButton sx={{ ml: '40px' }}>
@@ -153,7 +153,7 @@ const MyMenu = () => {
 							</Link>
 						</ListItem>
 
-						{/* RECENTLY VISITED */}
+						{/* Recently Viewed */}
 						<ListItem className={pathname === 'recentlyVisited' ? 'focus' : ''}>
 							<Link
 								href={{
@@ -169,13 +169,13 @@ const MyMenu = () => {
 										<img className={'com-icon'} src="/img/icons/search.svg" alt="icon" />
 									)}
 									<Typography className={'sub-title'} variant="subtitle1">
-										Recently Visited
+										Recently Viewed
 									</Typography>
 								</div>
 							</Link>
 						</ListItem>
 
-						{/* MY ORDERS */}
+						{/* My Purchases */}
 						<ListItem className={pathname === 'myOrder' ? 'focus' : ''}>
 							<Link
 								href={{
@@ -192,7 +192,7 @@ const MyMenu = () => {
 									)}
 
 									<Typography className={'sub-title'} variant="subtitle1">
-										My Orders
+										My Purchases
 									</Typography>
 								</div>
 							</Link>
@@ -209,7 +209,7 @@ const MyMenu = () => {
 							>
 								<div className={'flex-box'}>
 									<Typography className={'sub-title'} variant="subtitle1">
-										My Followers
+										Followers
 									</Typography>
 								</div>
 							</Link>
@@ -226,7 +226,7 @@ const MyMenu = () => {
 							>
 								<div className={'flex-box'}>
 									<Typography className={'sub-title'} variant="subtitle1">
-										My Followings
+										Following
 									</Typography>
 								</div>
 							</Link>
@@ -251,7 +251,7 @@ const MyMenu = () => {
 							>
 								<div className={'flex-box'}>
 									<Typography className={'sub-title'} variant="subtitle1">
-										My Profile
+										Profile Settings
 									</Typography>
 								</div>
 							</Link>
@@ -260,7 +260,7 @@ const MyMenu = () => {
 						<ListItem onClick={logoutHandler}>
 							<div className={'flex-box'}>
 								<Typography className={'sub-title'} variant="subtitle1">
-									Logout
+									Sign Out
 								</Typography>
 							</div>
 						</ListItem>

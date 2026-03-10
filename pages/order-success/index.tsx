@@ -41,7 +41,7 @@ const OrderSuccessPage: NextPage = () => {
 					</Button>
 
 					<Button variant="outlined" onClick={() => router.push('/orders')}>
-						View My Orders
+						View My Purchases
 					</Button>
 				</Box>
 

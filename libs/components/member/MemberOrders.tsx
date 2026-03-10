@@ -20,7 +20,7 @@ const MyOrders = () => {
 	return (
 		<Stack>
 			<Typography variant="h5" mb={3}>
-				My Orders
+				My Purchases
 			</Typography>
 
 			{orders.length === 0 ? (

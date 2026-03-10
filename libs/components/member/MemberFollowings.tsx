@@ -77,12 +77,12 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 					<Stack className="listing-title-box">
 						<Typography className="title-text">Name</Typography>
 						<Typography className="title-text">Details</Typography>
-						<Typography className="title-text">Subscription</Typography>
+						<Typography className="title-text">Connection</Typography>
 					</Stack>
 					{memberFollowings?.length === 0 && (
 						<div className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Followings yet!</p>
+							<p>You're not following anyone yet.</p>
 						</div>
 					)}
 					{memberFollowings.map((follower: Following) => {
@@ -117,7 +117,7 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 										<span>({follower?.followingData?.memberFollowers})</span>
 									</Box>
 									<Box className={'info-box'} component={'div'}>
-										<p>Followings</p>
+										<p>Following</p>
 										<span>({follower?.followingData?.memberFollowings})</span>
 									</Box>
 									<Box className={'info-box'} component={'div'}>
@@ -178,7 +178,7 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 							/>
 						</Stack>
 						<Stack className="total-result">
-							<Typography>{total} followings</Typography>
+							<Typography>{total} following</Typography>
 						</Stack>
 					</Stack>
 				)}

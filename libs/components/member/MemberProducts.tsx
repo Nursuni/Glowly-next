@@ -66,7 +66,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 					<Stack className="list-box">
 						{brandProducts?.length > 0 && (
 							<Stack className="listing-title-box">
-								<Typography className="title-text">Listing title</Typography>
+								<Typography className="title-text">Product title</Typography>
 								<Typography className="title-text">Date Published</Typography>
 								<Typography className="title-text">Status</Typography>
 								<Typography className="title-text">View</Typography>
@@ -75,7 +75,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 						{brandProducts?.length === 0 && (
 							<div className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No Product found!</p>
+								<p>You haven’t added any beauty products yet.</p>
 							</div>
 						)}
 						{brandProducts?.map((product: Product) => {
@@ -94,7 +94,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 									/>
 								</Stack>
 								<Stack className="total-result">
-									<Typography>{total} product available</Typography>
+									<Typography>{total} products available</Typography>
 								</Stack>
 							</Stack>
 						)}

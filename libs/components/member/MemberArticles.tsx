@@ -65,7 +65,7 @@ const MemberArticles: NextPage = ({ initialInput, ...props }: any) => {
 			});
 
 			await boardArticlesRefetch({ input: searchFilter });
-			await toastSuccess('success');
+			await toastSuccess('Article liked successfully!');
 		} catch (err: any) {
 			console.log('ERROR, likeProductHandler:', err.message);
 			toastError(err.message);
@@ -86,7 +86,7 @@ const MemberArticles: NextPage = ({ initialInput, ...props }: any) => {
 					{memberBoArticles?.length === 0 && (
 						<div className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Articles found!</p>
+							<p>No beauty articles available yet.</p>
 						</div>
 					)}
 					{memberBoArticles?.map((boardArticle: BoardArticle) => {
@@ -112,7 +112,7 @@ const MemberArticles: NextPage = ({ initialInput, ...props }: any) => {
 							/>
 						</Stack>
 						<Stack className="total-result">
-							<Typography>{total} product available</Typography>
+							<Typography>{total} articles available</Typography>
 						</Stack>
 					</Stack>
 				)}
