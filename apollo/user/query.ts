@@ -621,3 +621,24 @@ export const GET_MEMBER_FOLLOWINGS = gql`
 		}
 	}
 `;
+
+export const GET_MY_ORDERS = gql`
+	query GetMyOrders($input: OrdersInquiry!) {
+		getMyOrders(input: $input) {
+			_id
+			orderStatus
+			totalPrice
+			createdAt
+			orderItems {
+				_id
+				quantity
+				price
+				product {
+					_id
+					name
+					productImages
+				}
+			}
+		}
+	}
+`;

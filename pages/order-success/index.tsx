@@ -22,14 +22,16 @@ const OrderSuccessPage: NextPage = () => {
 				<CheckCircleOutlineIcon sx={{ fontSize: 80, color: 'green', mb: 2 }} />
 
 				<Typography variant="h4" fontWeight={600} mb={2}>
-					Order Successful!
+					Thank You for Your Order!
 				</Typography>
 
-				<Typography mb={3}>Thank you for your purchase. Your order has been placed successfully.</Typography>
+				<Typography mb={3}>
+					We sincerely appreciate your purchase. Your order has been placed successfully and is being processed.
+				</Typography>
 
 				{orderId && (
 					<Typography mb={3} color="text.secondary">
-						Order ID: <b>{orderId}</b>
+						Your Order ID: <b>{orderId}</b>
 					</Typography>
 				)}
 
@@ -42,6 +44,10 @@ const OrderSuccessPage: NextPage = () => {
 						View My Orders
 					</Button>
 				</Box>
+
+				<Typography mt={3} color="text.secondary">
+					If you have any questions or need assistance, please feel free to contact us.
+				</Typography>
 			</Paper>
 		</Box>
 	);

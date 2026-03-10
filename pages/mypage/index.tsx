@@ -21,6 +21,7 @@ import MyArticles from '../../libs/components/mypage/MyArticles';
 import MyProfile from '../../libs/components/mypage/MyProfile';
 import MemberFollowers from '../../libs/components/member/MemberFollowers';
 import MemberFollowings from '../../libs/components/member/MemberFollowings';
+import MyOrders from '@/libs/components/member/MemberOrders';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -40,9 +41,9 @@ const MyPage: NextPage = () => {
 	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER); //
 
 	/** LIFECYCLES **/
-	useEffect(() => {
+	/** useEffect(() => {
 		if (!user._id) router.push('/').then();
-	}, [user]);
+	}, [user]); **/
 
 	/** HANDLERS **/
 	const subscribeHandler = async (id: string, refetch: any, query: any) => {
@@ -98,7 +99,7 @@ const MyPage: NextPage = () => {
 			toastError(err.message);
 		}
 	};
-
+	/**
 	const redirectToMemberPageHandler = async (memberId: string) => {
 		try {
 			if (memberId === user?._id) await router.push(`/mypage?memberId=${memberId}`);
@@ -106,7 +107,7 @@ const MyPage: NextPage = () => {
 		} catch (error) {
 			await toastError(error);
 		}
-	};
+	}; */
 
 	if (device === 'mobile') {
 		return <div>MY PAGE</div>;
@@ -123,6 +124,7 @@ const MyPage: NextPage = () => {
 								<Stack className={'list-config'}>
 									{category === 'addProduct' && <AddProduct />}
 									{category === 'myProducts' && <MyProducts />}
+									{category === 'myOrder' && <MyOrders />}
 									{category === 'myFavorites' && <MyFavorites />}
 									{category === 'recentlyVisited' && <RecentlyVisited />}
 									{category === 'myArticles' && <MyArticles />}
@@ -132,7 +134,7 @@ const MyPage: NextPage = () => {
 										<MemberFollowers
 											subscribeHandler={subscribeHandler}
 											unsubscribeHandler={unsubscribeHandler}
-											redirectToMemberPageHandler={redirectToMemberPageHandler}
+											/**	redirectToMemberPageHandler={redirectToMemberPageHandler} */
 											likeMemberHandler={likeMemberHandler}
 										/>
 									)}
@@ -140,7 +142,7 @@ const MyPage: NextPage = () => {
 										<MemberFollowings
 											subscribeHandler={subscribeHandler}
 											unsubscribeHandler={unsubscribeHandler}
-											redirectToMemberPageHandler={redirectToMemberPageHandler}
+											/** 	redirectToMemberPageHandler={redirectToMemberPageHandler} */
 											likeMemberHandler={likeMemberHandler}
 										/>
 									)}
