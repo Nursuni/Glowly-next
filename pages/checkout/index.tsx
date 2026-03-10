@@ -1,14 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
-import { TextField, Button, Stack, Typography, Box, Divider } from '@mui/material';
+
+import { TextField, Button, Stack, Typography, Box, Divider, Paper } from '@mui/material';
+
 import withLayoutBasic from '@/libs/components/layout/LayoutBasic';
 
 const CheckoutPage: NextPage = () => {
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
+
+	const [form, setForm] = useState({
+		name: '',
+		email: '',
+		phone: '',
+		address: '',
+		city: '',
+		postal: '',
+		country: '',
+	});
 
 	useEffect(() => {
 		if (!router.isReady) return;
@@ -26,44 +38,55 @@ const CheckoutPage: NextPage = () => {
 	const shipping = subtotal > 50 ? 0 : 5;
 	const total = subtotal + shipping;
 
+	const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+		setForm({ ...form, [field]: e.target.value });
+	};
+
+	const handleOrder = () => {
+		const fakeOrderId = 'ORD-' + Date.now();
+
+		router.push(`/order-success?orderId=${fakeOrderId}`);
+	};
 	return (
-		<Box sx={{ maxWidth: 1200, margin: '0 auto', padding: '60px 20px' }}>
+		<Box sx={{ maxWidth: 1200, mx: 'auto', py: 6, px: 2 }}>
 			<Typography variant="h4" mb={4}>
 				Checkout
 			</Typography>
 
-			<Box sx={{ display: 'flex', gap: 6 }}>
-				{/* LEFT SIDE — CUSTOMER FORM */}
-				<Box sx={{ flex: 2 }}>
+			<Box sx={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+				{/* FORM */}
+				<Box sx={{ flex: 2, minWidth: 320 }}>
 					<Typography variant="h6" mb={2}>
 						Shipping Information
 					</Typography>
 
 					<Stack spacing={2}>
-						<TextField label="Full Name" fullWidth />
-						<TextField label="Email" fullWidth />
-						<TextField label="Phone Number" fullWidth />
-						<TextField label="Address" fullWidth />
-						<TextField label="City" fullWidth />
+						<TextField label="Full Name" fullWidth onChange={handleChange('name')} />
+						<TextField label="Email" fullWidth onChange={handleChange('email')} />
+						<TextField label="Phone Number" fullWidth onChange={handleChange('phone')} />
+						<TextField label="Address" fullWidth onChange={handleChange('address')} />
+						<TextField label="City" fullWidth onChange={handleChange('city')} />
 
 						<Stack direction="row" spacing={2}>
-							<TextField label="Postal Code" fullWidth />
-							<TextField label="Country" fullWidth />
+							<TextField label="Postal Code" fullWidth onChange={handleChange('postal')} />
+							<TextField label="Country" fullWidth onChange={handleChange('country')} />
 						</Stack>
 
-						<Button variant="contained" size="large">
+						<Button variant="contained" size="large" onClick={handleOrder}>
 							Place Order
 						</Button>
 					</Stack>
 				</Box>
 
-				{/* RIGHT SIDE — ORDER SUMMARY */}
-				<Box
+				{/* SUMMARY */}
+				<Paper
+					elevation={0}
 					sx={{
 						flex: 1,
-						background: '#fafafa',
-						padding: '25px',
-						borderRadius: '12px',
+						minWidth: 280,
+						bgcolor: '#fafafa',
+						p: 3,
+						borderRadius: 3,
 					}}
 				>
 					<Typography variant="h6">Order Summary</Typography>
@@ -97,7 +120,7 @@ const CheckoutPage: NextPage = () => {
 						<span>Total</span>
 						<span>${total}</span>
 					</Box>
-				</Box>
+				</Paper>
 			</Box>
 		</Box>
 	);

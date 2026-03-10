@@ -14,6 +14,7 @@ export interface ProductInput {
 }
 
 interface PISearch {
+	typeList: any[];
 	productTypeList: any[];
 	memberId?: string;
 

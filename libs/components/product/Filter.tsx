@@ -156,7 +156,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 	const skinTypeHandler = async (e: any) => {
 		const value = e.target.value;
 		const checked = e.target.checked;
-		let updatedSkinTypes = searchFilter?.search?.skinTypeList || [];
+		let updatedSkinTypes = searchFilter?.search?.typeList || [];
 		if (value === 'ALL') {
 			updatedSkinTypes = [];
 		} else {
@@ -235,8 +235,8 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 							value={type}
 							checked={
 								type === 'ALL'
-									? (searchFilter?.search?.skinTypeList || []).length === 0
-									: (searchFilter?.search?.skinTypeList || []).includes(type as SkinType)
+									? (searchFilter?.search?.typeList || []).length === 0
+									: (searchFilter?.search?.typeList || []).includes(type as SkinType)
 							}
 							onChange={skinTypeHandler}
 						/>

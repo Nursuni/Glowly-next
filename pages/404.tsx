@@ -2,7 +2,8 @@ import { NextPage } from 'next';
 import { Stack, Typography, Button, Box } from '@mui/material';
 import Link from 'next/link';
 import Head from 'next/head';
-import Top from '@/libs/components/Top';
+
+import withLayoutBasic from '@/libs/components/layout/LayoutBasic';
 
 const imgs = {
 	eyeshadow: '/img/cosmetics/eyeshadow.png',
@@ -64,9 +65,7 @@ const Custom404: NextPage = () => {
 				sx={{ bgcolor: '#ffffff', overflow: 'hidden', position: 'relative', flexDirection: 'column' }}
 			>
 				{/* ── Nav ── */}
-				<Box sx={{ position: 'relative', zIndex: 20 }}>
-					<Top />
-				</Box>
+				<Box sx={{ position: 'relative', zIndex: 20 }}></Box>
 
 				{/* ── 404 text + subtitle + button ── */}
 				<Stack
@@ -151,4 +150,4 @@ const Custom404: NextPage = () => {
 	);
 };
 
-export default Custom404;
+export default withLayoutBasic(Custom404);
