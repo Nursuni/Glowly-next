@@ -12,7 +12,7 @@ import ShopByCategories from '../libs/components/homepage/ShopByCategories';
 import AIChat from '../libs/components/AIChat';
 import TopBrandsCarousel from '@/libs/components/homepage/TopBrandsCarousel';
 import TrendProductCard from '@/libs/components/homepage/TrendProducts';
-import Hero from '@/libs/components/Hero';
+import Hero from '@/libs/components/homepage/Hero';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -28,6 +28,7 @@ const Home: NextPage = () => {
 	} else {
 		return (
 			<Stack className={'home-page'}>
+				<Hero />
 				<TopProducts />
 				<TopBrandsCarousel />
 				<ShopByCategories />

@@ -31,40 +31,22 @@ const withLayoutBasic = (Component: any) => {
 
 			switch (router.pathname) {
 				case '/catalog':
-					title = 'Home/Catalog';
-					desc = 'Skincare & Cosmetics Collection';
-					bgImage = '/img/banner/banner_products.jpg';
 					break;
 
 				case '/blog':
-					title = 'Home/Blog';
-					desc = 'Tips, Trends & Skincare Knowledge';
-					bgImage = '/img/banner/journal.jpg';
 					break;
 
 				case '/about':
-					title = 'Home/Our Story';
-					desc = 'Clean Beauty Philosophy';
-					bgImage = '/img/banner/aboutus.webp';
 					break;
 
 				case '/account/login':
-					title = 'Login / Signup';
-					desc = 'Access Your Beauty Profile';
-					bgImage = '/img/banner/auth.jpg';
 					setAuthHeader(true);
 					break;
 
 				case '/mypage':
-					title = 'Home/My Beauty';
-					desc = 'Your Orders & Favorites';
-					bgImage = '/img/banner/profile.jpg';
 					break;
 
 				default:
-					title = 'Home/Beauty Redefined';
-					desc = 'Glow Naturally';
-					bgImage = '/img/banner/main.jpg';
 			}
 
 			return { title, desc, bgImage };

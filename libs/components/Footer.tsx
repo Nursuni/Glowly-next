@@ -45,7 +45,7 @@ const Footer = () => {
 				<Stack className={'main'}>
 					<Stack className={'left gf-fade'}>
 						<Box className={'footer-box logo-box'}>
-							<img src="/img/logo/Glowly.svg" alt="Glowly" className={'logo'} />
+							<img src="/img/logo/glowly.svg" alt="Glowly" className={'logo'} />
 						</Box>
 						<p className={'tagline'}>Curated beauty from the world's finest brands — crafted for the skin you're in.</p>
 						<Box className={'footer-box'}>
@@ -115,7 +115,7 @@ const Footer = () => {
 				{/* LEFT */}
 				<Stack className={'left gf-fade'}>
 					<Box className={'footer-box logo-box'}>
-						<img src="/img/logo/Glowly.svg" alt="Glowly" className={'logo'} />
+						<img src="/img/logo/glowly.svg" alt="Glowly" className={'logo'} />
 					</Box>
 					<p className={'tagline'}>
 						Curated beauty from the world's finest brands —<br />

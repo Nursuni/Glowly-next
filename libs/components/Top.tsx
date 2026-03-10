@@ -72,7 +72,7 @@ const Top = () => {
 	const userDropRef = useRef<HTMLDivElement>(null);
 
 	const catalogTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-	const avatar = user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/defaultUser.svg';
+	const avatar = user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/user.svg';
 	useEffect(() => {
 		setNavReady(false);
 		const id = setTimeout(() => setNavReady(true), 30);
@@ -165,7 +165,7 @@ const Top = () => {
 						{/* LOGO */}
 						<div className="logo-box nb-item">
 							<Link href="/">
-								<Image src="/logo.svg" alt="Glowly" width={120} height={40} />
+								<Image src="/img/logo/glowly.svg" alt="Glowly" width={120} height={40} />
 							</Link>
 						</div>
 
@@ -232,9 +232,7 @@ const Top = () => {
 												<div className="ud-header">
 													<img
 														src={
-															user.memberImage
-																? `${REACT_APP_API_URL}/${user.memberImage}`
-																: '/img/profile/defaultUser.svg'
+															user.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/user.svg'
 														}
 														className="ud-avatar"
 														alt="avatar"
