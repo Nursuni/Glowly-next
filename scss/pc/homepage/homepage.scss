@@ -602,7 +602,7 @@
 			width: 260px;
 			background: #fff;
 			border: 1px solid #f0ebe4;
-			border-radius: 4px;
+
 			overflow: hidden;
 			cursor: pointer;
 			transition: box-shadow 0.28s ease, transform 0.28s ease;
@@ -1342,7 +1342,7 @@
 			flex-direction: row;
 			background: #ffffff;
 			overflow: hidden;
-
+			margin-bottom: 20px;
 			.container {
 				flex-direction: column;
 			}

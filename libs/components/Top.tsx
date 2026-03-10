@@ -22,6 +22,7 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { REACT_APP_API_URL } from '../config';
 import Image from 'next/image';
+import BasketModal from './basket/BasketModal';
 
 const StyledMenu = styled((props: MenuProps) => (
 	<Menu
@@ -59,6 +60,11 @@ const Top = () => {
 	const user = useReactiveVar(userVar);
 	const { t } = useTranslation('common');
 	const router = useRouter();
+
+	const [basketOpen, setBasketOpen] = useState(false);
+	useEffect(() => {
+		document.body.style.overflow = basketOpen ? 'hidden' : 'auto';
+	}, [basketOpen]);
 
 	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
 	const [lang, setLang] = useState<string>(router.locale || 'en');
@@ -125,8 +131,6 @@ const Top = () => {
 		if (path === '/') return router.pathname === '/';
 		return router.pathname.startsWith(path);
 	};
-
-	const goToBasket = useCallback(() => router.push('/basket'), [router]);
 
 	/* ─── MOBILE ─── */
 	if (device === 'mobile') {
@@ -199,10 +203,11 @@ const Top = () => {
 						{/* Basket */}
 						<div className="navbar-right-icons" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
 							{/* Basket */}
-							<button className="icon-btn basket-btn" onClick={goToBasket} aria-label="Basket">
+							<button className="icon-btn basket-btn" onClick={() => setBasketOpen(true)} aria-label="Basket">
 								<ShoppingBagOutlinedIcon />
-								<span className="cart-count">2</span>
+								<span className="cart-count">{2}</span>
 							</button>
+							<BasketModal open={basketOpen} onClose={() => setBasketOpen(false)} />
 
 							{/* Notifications */}
 							<button className="icon-btn notification-btn" aria-label="Notifications">
