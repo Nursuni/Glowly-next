@@ -1,7 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Box } from '@mui/material';
 import dayjs from 'dayjs';
 import { BoardArticle } from '../../types/board-article/board-article';
 
@@ -12,41 +10,30 @@ interface BlogCardProps {
 }
 
 const BlogCard = ({ vertical, article, index }: BlogCardProps) => {
-	const device = useDeviceDetect();
+	const image = article?.articleImage ? `${process.env.NEXT_PUBLIC_API_URL}/${article.articleImage}` : '/img/event.svg';
 
-	const articleImage = article?.articleImage
-		? `${process.env.NEXT_PUBLIC_API_URL}/${article.articleImage}`
-		: '/img/event.svg';
+	const href = `/blog/detail?articleCategory=${article?.articleCategory}&id=${article?._id}`;
 
-	const linkHref = `/blog/detail?articleCategory=${article?.articleCategory}&id=${article?._id}`;
-
-	if (device === 'mobile') return <div>BLOG CARD (MOBILE)</div>;
-
+	// ── Vertical card (News grid — left column) ──────────────
 	if (vertical) {
 		return (
-			<Link href={linkHref} style={{ animationDelay: `${index * 80}ms` }}>
-				<Box className="vertical-card">
-					<div className="community-img" style={{ backgroundImage: `url(${articleImage})` }}>
-						<div>{index + 1}</div>
-					</div>
-					<strong>{article?.articleTitle}</strong>
-					<span className={'article-category'}>{article?.articleCategory}</span>
-				</Box>
+			<Link href={href} className="blog-v-card" style={{ animationDelay: `${index * 70}ms` }}>
+				<div className="blog-v-img" style={{ backgroundImage: `url(${image})` }} />
+				<p className="blog-v-title">{article?.articleTitle}</p>
 			</Link>
 		);
 	}
 
+	// ── Horizontal card (Tips list — right column) ───────────
 	return (
-		<Link href={linkHref} style={{ animationDelay: `${index * 100}ms` }}>
-			<Box className="horizontal-card">
-				<div className={'h-card-img-wrap'}>
-					<img src={articleImage} alt={article?.articleTitle} />
-				</div>
-				<div className={'h-card-body'}>
-					<strong>{article?.articleTitle}</strong>
-					<span className={'h-card-date'}>{dayjs(article?.createdAt).format('MMM DD, YYYY')}</span>
-				</div>
-			</Box>
+		<Link href={href} className="blog-h-card" style={{ animationDelay: `${index * 90}ms` }}>
+			<div className="blog-h-img-wrap">
+				<img src={image} alt={article?.articleTitle} />
+			</div>
+			<div className="blog-h-body">
+				<p className="blog-h-title">{article?.articleTitle}</p>
+				<span className="blog-h-date">{dayjs(article?.createdAt).format('MMM D, YYYY')}</span>
+			</div>
 		</Link>
 	);
 };

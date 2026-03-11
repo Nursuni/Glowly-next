@@ -1,15 +1,11 @@
-'use client';
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Stack } from '@mui/material';
 import { BoardArticle } from '../../types/board-article/board-article';
 import { BoardArticleCategory, BoardArticleStatus } from '../../enums/board-article.enum';
 import BlogCard from './BlogCard';
 
-// ─── Hardcoded dummy news articles (6) ─────────────────────
-const dummyNewsArticles: BoardArticle[] = [
+const dummyNews: BoardArticle[] = [
 	{
 		_id: 'n1',
 		articleTitle: 'K-Beauty Trends Taking Over 2025',
@@ -96,8 +92,7 @@ const dummyNewsArticles: BoardArticle[] = [
 	},
 ];
 
-// ─── Hardcoded dummy free/tips articles (3) ────────────────
-const dummyFreeArticles: BoardArticle[] = [
+const dummyTips: BoardArticle[] = [
 	{
 		_id: 'f1',
 		articleTitle: 'Build Your 5-Step Routine for Sensitive Skin',
@@ -142,84 +137,79 @@ const dummyFreeArticles: BoardArticle[] = [
 	},
 ];
 
-// ───────────────────────────────────────────────────────────
-
 const BlogBoards = () => {
 	const device = useDeviceDetect();
-	const sectionRef = useRef<HTMLDivElement>(null);
+	const ref = useRef<HTMLElement>(null);
 	const [visible, setVisible] = useState(false);
 
-	// Scroll-in observer
 	useEffect(() => {
-		const el = sectionRef.current;
+		const el = ref.current;
 		if (!el) return;
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (entry.isIntersecting) {
+		const obs = new IntersectionObserver(
+			([e]) => {
+				if (e.isIntersecting) {
 					setVisible(true);
-					observer.disconnect();
+					obs.disconnect();
 				}
 			},
-			{ threshold: 0.12 },
+			{ threshold: 0.1 },
 		);
-		observer.observe(el);
-		return () => observer.disconnect();
+		obs.observe(el);
+		return () => obs.disconnect();
 	}, []);
 
-	// TODO: swap with real Apollo queries when backend is ready
-	const newsArticles: BoardArticle[] = dummyNewsArticles;
-	const freeArticles: BoardArticle[] = dummyFreeArticles;
-
-	if (device === 'mobile') return <div>COMMUNITY BOARDS (MOBILE)</div>;
+	if (device === 'mobile') return null;
 
 	return (
-		<Stack ref={sectionRef} className={`community-board ${visible ? 'is-visible' : ''}`}>
-			<Stack className={'container'}>
+		<section ref={ref} className={`blog-section${visible ? ' in-view' : ''}`}>
+			<div className="blog-inner">
 				{/* ── Header ── */}
-				<div className={'board-header'}>
-					<span className={'board-eyebrow'}>From Our Journal</span>
-					<h2 className={'board-title'}>
-						Expert advice for
+				<div className="blog-header">
+					<span className="blog-eyebrow">Journal</span>
+					<h2 className="blog-heading">
+						Skin wisdom,
 						<br />
-						<em>healthy, glowing skin</em>
+						<em>beautifully told</em>
 					</h2>
 				</div>
 
-				<Stack className="community-main">
-					{/* ── Left: News ── */}
-					<Stack className={'community-left'}>
-						<Stack className={'content-top'}>
-							<Link href={'/blog?articleCategory=NEWS'}>
-								<span>Latest News</span>
+				{/* ── Two columns ── */}
+				<div className="blog-columns">
+					{/* Left — News grid */}
+					<div className="blog-col blog-col--news">
+						<div className="blog-col-header">
+							<span>Latest News</span>
+							<Link href="/blog?articleCategory=NEWS" className="blog-see-all">
+								See all →
 							</Link>
-							<img src="/img/icons/arrowBig.svg" alt="" />
-						</Stack>
-						<Stack className={'card-wrap'}>
-							{newsArticles.map((article, index) => (
-								<BlogCard vertical article={article} index={index} key={article._id} />
+						</div>
+						<div className="blog-news-grid">
+							{dummyNews.map((a, i) => (
+								<BlogCard vertical article={a} index={i} key={a._id} />
 							))}
-						</Stack>
-					</Stack>
+						</div>
+					</div>
 
-					<div className={'center-divider'} />
+					{/* Divider */}
+					<div className="blog-divider" />
 
-					{/* ── Right: Free ── */}
-					<Stack className={'community-right'}>
-						<Stack className={'content-top'}>
-							<Link href={'/blog?articleCategory=FREE'}>
-								<span>Beauty Tips</span>
+					{/* Right — Tips list */}
+					<div className="blog-col blog-col--tips">
+						<div className="blog-col-header">
+							<span>Beauty Tips</span>
+							<Link href="/blog?articleCategory=FREE" className="blog-see-all">
+								See all →
 							</Link>
-							<img src="/img/icons/arrowBig.svg" alt="" />
-						</Stack>
-						<Stack className={'card-wrap vertical'}>
-							{freeArticles.map((article, index) => (
-								<BlogCard vertical={false} article={article} index={index} key={article._id} />
+						</div>
+						<div className="blog-tips-list">
+							{dummyTips.map((a, i) => (
+								<BlogCard vertical={false} article={a} index={i} key={a._id} />
 							))}
-						</Stack>
-					</Stack>
-				</Stack>
-			</Stack>
-		</Stack>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 	);
 };
 

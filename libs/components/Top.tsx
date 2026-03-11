@@ -23,6 +23,7 @@ import { userVar } from '../../apollo/store';
 import { REACT_APP_API_URL } from '../config';
 import Image from 'next/image';
 import BasketModal from './basket/BasketModal';
+import AnnouncementBar from './AnnouncementBar';
 
 const StyledMenu = styled((props: MenuProps) => (
 	<Menu
@@ -161,8 +162,7 @@ const Top = () => {
 	/* ─── DESKTOP ─── */
 	return (
 		<>
-			<div className={`announcement-bar${navReady ? ' nb-ready' : ''}`}>Free shipping on orders over $50</div>
-
+			<AnnouncementBar navReady={navReady} />
 			<div className={`navbar${navReady ? ' nb-ready' : ''}`}>
 				<div className={`navbar-main${bgColor ? ' transparent' : ''}${scrolled ? ' scrolled' : ''}`}>
 					<div className="container">
@@ -201,10 +201,10 @@ const Top = () => {
 						</div>
 
 						{/* Basket */}
-						<div className="navbar-right-icons" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+						<div className="user-box">
 							{/* Basket */}
 							<button className="icon-btn basket-btn" onClick={() => setBasketOpen(true)} aria-label="Basket">
-								<ShoppingBagOutlinedIcon />
+								<img src="/img/icons/basket.svg" />
 								<span className="cart-count">{2}</span>
 							</button>
 							<BasketModal open={basketOpen} onClose={() => setBasketOpen(false)} />

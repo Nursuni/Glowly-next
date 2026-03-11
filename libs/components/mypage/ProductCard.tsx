@@ -38,7 +38,7 @@ export const ProductCard = (props: ProductCardProps) => {
 	const pushProductDetail = async (id: string) => {
 		if (memberPage)
 			await router.push({
-				pathname: '/product/detail',
+				pathname: '/catalog/detail',
 				query: { id: id },
 			});
 		else return;

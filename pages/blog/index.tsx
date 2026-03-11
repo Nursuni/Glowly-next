@@ -81,7 +81,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 				{/* Mobile Hero */}
 				<div className="mobile-hero scroll-reveal">
 					<div className="mobile-hero-glow" />
-					<img src={'/img/logo/logoText.svg'} className="mobile-logo" alt="Glowly" />
+					<img src={'/img/logo/glowly.svg'} className="mobile-logo" alt="Glowly" />
 					<Typography className="mobile-community-title">Community</Typography>
 					<Typography className="mobile-community-sub">
 						Where beauty enthusiasts connect, share, and inspire.
@@ -173,7 +173,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 					{/* LEFT: tab sidebar */}
 					<Stack className="card-sidebar">
 						<div className="sidebar-brand">
-							<img src={'/img/logo/logoText.svg'} alt="Glowly" />
+							<img src={'/img/logo/glowly.svg'} alt="Glowly" />
 							<span className="brand-label">Community</span>
 						</div>
 

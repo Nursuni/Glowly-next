@@ -273,7 +273,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 					{/* ── Sidebar ── */}
 					<Stack className="left-config scroll-reveal">
 						<Stack className="image-info">
-							<img src={'/img/logo/logoText.svg'} alt="Glowly" />
+							<img src={'/img/logo/glowly.svg'} alt="Glowly" />
 							<Stack className="community-name">
 								<span className="name-eyebrow">✦ Community</span>
 								<Typography className="name">Article</Typography>

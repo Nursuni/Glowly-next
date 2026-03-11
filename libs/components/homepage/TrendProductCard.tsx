@@ -22,7 +22,7 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 	const user = useReactiveVar(userVar);
 
 	const redirectHandler = (e: React.MouseEvent) => {
-		router.push(`/product/detail?productId=${product._id}`);
+		router.push(`/catalog/detail?productId=${product._id}`);
 	};
 
 	const likeHandler = (e: React.MouseEvent) => {

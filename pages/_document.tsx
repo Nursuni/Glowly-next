@@ -5,7 +5,7 @@ export default function Document() {
 		<Html lang="en">
 			<Head>
 				<meta name="robots" content="index,follow" />
-				<link rel="icon" type="image/png" href="/img/logo/favicon.svg" />
+				<link rel="icon" type="image/png" href="/img/logo/glowly.svg" />
 
 				{/* SEO */}
 				<meta
@@ -25,7 +25,7 @@ export default function Document() {
 				<meta property="og:title" content="Glowly – Premium Cosmetics & Skincare" />
 				<meta property="og:description" content="Shop high-quality skincare and makeup products for radiant beauty." />
 				<meta property="og:type" content="website" />
-				<meta property="og:image" content="/img/logo/Glowly.svg" />
+				<meta property="og:image" content="/img/logo/glowly.svg" />
 			</Head>
 			<body>
 				<Main />

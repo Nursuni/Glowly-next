@@ -9,7 +9,7 @@
 			min-height: calc(100vh - 87px); // ← subtract navbar height
 			display: grid;
 			grid-template-columns: 1fr 1fr;
-			padding-top: 0; // ← no extra top gap
+			padding: 0 32px;
 			overflow: hidden;
 			background: #ffffff;
 			max-width: 1300px; // ← constrain to 1300px
@@ -1334,275 +1334,237 @@
 		}
 
 		// ─── COMMUNITY BOARD ───────────────────────────────
-		.community-board {
-			position: relative;
+		// ─── BLOG SECTION — Minimal ────────────────────────────────
+		// Paste inside .home-page { } in homepage.scss
+
+		.blog-section {
 			width: 100%;
-			padding: 30px 0px 20px;
-			display: flex;
-			flex-direction: row;
-			background: #ffffff;
-			overflow: hidden;
-			margin-bottom: 20px;
-			.container {
-				flex-direction: column;
+			padding: 80px 0 72px;
+			background: #fff;
+
+			.blog-inner {
+				max-width: 1300px;
+				margin: 0 auto;
+				padding: 0 32px;
 			}
 
-			.board-header,
-			.community-left,
-			.community-right {
+			// ── Header ───────────────────────────────────────────────
+			.blog-header {
+				margin-bottom: 48px;
 				opacity: 0;
-				transform: translateY(36px);
-				transition: opacity 0.65s ease, transform 0.65s ease;
+				transform: translateY(20px);
+				transition: opacity 0.55s ease, transform 0.55s ease;
 			}
 
-			.community-left {
-				transition-delay: 0.1s;
-			}
-			.community-right {
-				transition-delay: 0.25s;
+			&.in-view .blog-header {
+				opacity: 1;
+				transform: translateY(0);
 			}
 
-			&.is-visible {
-				.board-header,
-				.community-left,
-				.community-right {
-					opacity: 1;
-					transform: translateY(0);
+			.blog-eyebrow {
+				display: block;
+				font-family: $font-sans;
+				font-size: 9px;
+				letter-spacing: 0.3em;
+				text-transform: uppercase;
+				color: $pink;
+				font-weight: 500;
+				margin-bottom: 10px;
+			}
+
+			.blog-heading {
+				font-family: $font-serif;
+				font-size: clamp(32px, 4vw, 52px);
+				font-weight: 300;
+				color: $dark;
+				line-height: 1.1;
+				margin: 0;
+
+				em {
+					font-style: italic;
+					color: $muted;
 				}
 			}
 
-			.board-header {
-				margin-bottom: 20px;
-
-				.board-eyebrow {
-					display: inline-block;
-					font-family: $font;
-					font-size: 12px;
-					font-weight: 600;
-					letter-spacing: 2px;
-					text-transform: uppercase;
-					color: #c47a8a;
-					margin-bottom: 12px;
-				}
-
-				.board-title {
-					font-family: $font;
-					font-size: 38px;
-					font-weight: 400;
-					line-height: 1.25;
-					color: #181a20;
-					margin: 0;
-
-					em {
-						font-style: italic;
-						font-weight: 300;
-						color: #9b8ea0;
-					}
-				}
+			// ── Two columns ──────────────────────────────────────────
+			.blog-columns {
+				display: grid;
+				grid-template-columns: 1fr 1px 380px;
+				gap: 0 48px;
+				align-items: flex-start;
 			}
 
-			.community-main {
-				width: 100%;
-				display: flex;
-				flex-direction: row;
-				justify-content: space-between;
-				gap: 48px;
-			}
-
-			.center-divider {
-				width: 1px;
-				background: #f0e8ea;
+			.blog-divider {
+				background: #f0ebe4;
 				align-self: stretch;
-				flex-shrink: 0;
 			}
 
-			.content-top {
-				margin-bottom: 24px;
+			// Column header row
+			.blog-col-header {
 				display: flex;
-				flex-direction: row;
-				justify-content: space-between;
 				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 24px;
+				opacity: 0;
+				transform: translateY(16px);
+				transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
 
-				a span {
-					font-family: $font;
-					font-size: 16px;
+				span {
+					font-family: $font-sans;
+					font-size: 11px;
+					letter-spacing: 0.18em;
+					text-transform: uppercase;
+					color: $dark;
 					font-weight: 600;
-					color: #181a20;
-					cursor: pointer;
-					transition: color 0.2s;
-
-					&:hover {
-						color: #c47a8a;
-					}
-				}
-
-				img {
-					width: 12px;
-					height: 12px;
-					opacity: 0.5;
 				}
 			}
 
-			.community-left {
-				flex: 1;
-
-				.card-wrap {
-					display: flex;
-					flex-direction: row;
-					flex-wrap: wrap;
-					gap: 8px;
-				}
-			}
-
-			.community-right {
-				width: 360px;
-				flex-shrink: 0;
-
-				.card-wrap {
-					display: flex;
-					flex-direction: column;
-					gap: 0;
-				}
-			}
-
-			.vertical-card {
-				width: 190px;
-				display: flex;
-				flex-direction: column;
-				cursor: pointer;
-				transition: transform 0.25s;
+			.blog-see-all {
+				font-family: $font-sans;
+				font-size: 11px;
+				color: $muted;
+				text-decoration: none;
+				letter-spacing: 0.04em;
+				transition: color 0.2s;
 
 				&:hover {
-					transform: translateY(-4px);
-
-					.community-img {
-						box-shadow: 0 8px 20px rgba(155, 142, 160, 0.18);
-					}
-
-					strong {
-						color: #c47a8a;
-					}
-				}
-
-				.community-img {
-					width: 100%;
-					height: 130px;
-					background-size: cover;
-					background-position: center;
-					background-repeat: no-repeat;
-					border-radius: 10px;
-					transition: box-shadow 0.25s;
-					overflow: hidden;
-
-					div {
-						width: 28px;
-						height: 28px;
-						display: flex;
-						justify-content: center;
-						align-items: center;
-						background: #c47a8a;
-						border-radius: 10px 0px;
-						font-family: $font;
-						font-size: 13px;
-						font-weight: 600;
-						color: #ffffff;
-					}
-				}
-
-				strong {
-					margin-top: 10px;
-					font-family: $font;
-					font-size: 13px;
-					font-weight: 600;
-					line-height: 1.45;
-					color: #181a20;
-					transition: color 0.2s;
-					display: -webkit-box;
-					-webkit-line-clamp: 2;
-					line-clamp: 2;
-					-webkit-box-orient: vertical;
-					overflow: hidden;
-				}
-
-				.article-category {
-					margin-top: 4px;
-					font-family: $font;
-					font-size: 11px;
-					font-weight: 400;
-					color: #bbb;
-					text-transform: capitalize;
+					color: $pink;
 				}
 			}
 
-			.horizontal-card {
+			&.in-view .blog-col-header {
+				opacity: 1;
+				transform: translateY(0);
+			}
+
+			// ── News grid (left) — 3×2 ──────────────────────────────
+			.blog-news-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 20px 16px;
+			}
+
+			.blog-v-card {
 				display: flex;
-				flex-direction: row;
+				flex-direction: column;
+				gap: 10px;
+				text-decoration: none;
+				opacity: 0;
+				transform: translateY(14px);
+				transition: opacity 0.45s ease, transform 0.45s ease;
+
+				&:hover .blog-v-img {
+					transform: scale(1.04);
+				}
+				&:hover .blog-v-title {
+					color: $pink;
+				}
+			}
+
+			&.in-view .blog-v-card {
+				opacity: 1;
+				transform: translateY(0);
+			}
+
+			.blog-v-img {
+				width: 100%;
+				aspect-ratio: 4 / 3;
+				background-size: cover;
+				background-position: center;
+				border-radius: 6px;
+				transition: transform 0.4s ease;
+				background-color: #f5f0ea;
+			}
+
+			.blog-v-title {
+				font-family: $font-serif;
+				font-size: 15px;
+				font-weight: 400;
+				color: $dark;
+				line-height: 1.35;
+				margin: 0;
+				transition: color 0.2s;
+				display: -webkit-box;
+
+				overflow: hidden;
+			}
+
+			// ── Tips list (right) ────────────────────────────────────
+			.blog-tips-list {
+				display: flex;
+				flex-direction: column;
+			}
+
+			.blog-h-card {
+				display: flex;
 				align-items: center;
-				gap: 16px;
+				gap: 14px;
 				padding: 16px 0;
 				border-bottom: 1px solid #f5f0f1;
-				cursor: pointer;
-				transition: background 0.2s;
+				text-decoration: none;
+				opacity: 0;
+				transform: translateY(12px);
+				transition: opacity 0.45s ease, transform 0.45s ease;
 
 				&:last-child {
 					border-bottom: none;
 				}
 
-				&:hover {
-					.h-card-img-wrap img {
-						transform: scale(1.06);
-					}
-
-					.h-card-body strong {
-						color: #c47a8a;
-					}
+				&:hover .blog-h-img-wrap img {
+					transform: scale(1.06);
 				}
-
-				.h-card-img-wrap {
-					width: 100px;
-					height: 72px;
-					border-radius: 8px;
-					overflow: hidden;
-					flex-shrink: 0;
-
-					img {
-						width: 100%;
-						height: 100%;
-						object-fit: cover;
-						border-radius: 8px;
-						transition: transform 0.35s ease;
-					}
-				}
-
-				.h-card-body {
-					display: flex;
-					flex-direction: column;
-					gap: 6px;
-
-					strong {
-						font-family: $font;
-						font-size: 14px;
-						font-weight: 500;
-						line-height: 1.4;
-						color: #181a20;
-						transition: color 0.2s;
-						display: -webkit-box;
-						-webkit-line-clamp: 2;
-						line-clamp: 2;
-						-webkit-box-orient: vertical;
-						overflow: hidden;
-					}
-
-					.h-card-date {
-						font-family: $font;
-						font-size: 12px;
-						font-weight: 400;
-						color: #c47a8a;
-					}
+				&:hover .blog-h-title {
+					color: $pink;
 				}
 			}
-		}
 
+			&.in-view .blog-h-card {
+				opacity: 1;
+				transform: translateY(0);
+			}
+
+			.blog-h-img-wrap {
+				width: 80px;
+				height: 60px;
+				border-radius: 5px;
+				overflow: hidden;
+				flex-shrink: 0;
+				background: #f5f0ea;
+
+				img {
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+					transition: transform 0.35s ease;
+				}
+			}
+
+			.blog-h-body {
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
+			}
+
+			.blog-h-title {
+				font-family: $font-serif;
+				font-size: 16px;
+				font-weight: 400;
+				color: $dark;
+				line-height: 1.3;
+				margin: 0;
+				transition: color 0.2s;
+				display: -webkit-box;
+
+				overflow: hidden;
+			}
+
+			.blog-h-date {
+				font-family: $font-sans;
+				font-size: 10.5px;
+				color: $muted;
+				letter-spacing: 0.04em;
+			}
+		}
 		// ─── SHOP BY CATEGORIES ────────────────────────────
 		.shop-by-categories {
 			width: 100%;
@@ -1612,11 +1574,10 @@
 			background: #ffffff;
 
 			.container {
-				flex-direction: column;
 				max-width: 1300px;
-				min-width: 1100px;
+				min-width: unset;
 				margin: 0 auto;
-
+				padding: 0 32px;
 				.section-header {
 					width: 100%;
 					display: flex;
@@ -1728,7 +1689,7 @@
 
 		// ─── TOP PRODUCTS ──────────────────────────────────
 		.top-products {
-			padding: 60px 0px 60px; // ✅ reduced — was 100px top / 50px bottom
+			padding: 50px 0px 50px; // ✅ reduced — was 100px top / 50px bottom
 			width: 100%;
 			height: auto;
 			min-height: unset; // ✅ removed 697px fixed height causing bottom gap
@@ -1866,47 +1827,47 @@
 					// ─── TOP PRODUCT CARD ─────────────────────────────
 					// Mirrors trend-card-box: serif/sans system,
 					// $pink/$dark palette, aspect-ratio image
+
 					.top-card-box {
-						width: 260px;
+						width: 240px;
 						background: #fff;
+						border-radius: 16px; // ← rounder corners
 						border: 1px solid #f0ebe4;
-						border-radius: 4px;
 						overflow: hidden;
 						cursor: pointer;
-						transition: box-shadow 0.28s ease, transform 0.28s ease;
+						transition: box-shadow 0.3s ease, transform 0.3s ease;
 						display: flex;
 						flex-direction: column;
+						box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 
 						&:hover {
-							box-shadow: 0 12px 40px rgba(42, 42, 42, 0.1);
-							transform: translateY(-4px);
+							box-shadow: 0 16px 48px rgba(42, 42, 42, 0.12);
+							transform: translateY(-6px);
 
 							.top-card-overlay {
 								opacity: 1;
 							}
-
 							.top-card-cta {
 								opacity: 1;
 								transform: translateY(0);
 							}
-
 							.top-card-img {
-								transform: scale(1.04);
+								transform: scale(1.05);
 							}
-
 							.top-card-arrow {
 								color: $pink;
-								transform: translateX(4px);
+								transform: translateX(5px);
 							}
 						}
 
-						// ── Image wrap
+						// ── Image wrap — taller, more portrait ──────────────────
 						.top-card-img-wrap {
 							position: relative;
 							width: 100%;
-							aspect-ratio: 3 / 4;
+							aspect-ratio: 2 / 3; // ← taller than before (was 3/4)
 							overflow: hidden;
 							background: #f5f0ea;
+							border-radius: 16px 16px 0 0; // ← top corners match card
 						}
 
 						.top-card-img {
@@ -1914,84 +1875,87 @@
 							height: 100%;
 							background-size: cover;
 							background-position: center;
-							transition: transform 0.4s ease;
-							position: relative;
+							transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 						}
 
+						// Soft bottom gradient — always visible (not just on hover)
 						.top-card-overlay {
 							position: absolute;
 							inset: 0;
-							background: linear-gradient(180deg, transparent 40%, rgba(26, 23, 20, 0.52) 100%);
-							opacity: 0;
+							background: linear-gradient(180deg, transparent 45%, rgba(20, 16, 14, 0.55) 100%);
+							opacity: 0.6; // ← partially visible by default
 							transition: opacity 0.3s ease;
 							pointer-events: none;
 						}
 
-						// Category badge — top left ($pink)
+						// Category badge — top left
 						.top-card-category {
 							position: absolute;
-							top: 12px;
-							left: 12px;
+							top: 14px;
+							left: 14px;
 							font-family: $font-sans;
-							font-size: 8.5px;
-							letter-spacing: 0.22em;
+							font-size: 8px;
+							letter-spacing: 0.24em;
 							text-transform: uppercase;
 							color: #fff;
-							background: rgba(245, 100, 169, 0.85);
-							padding: 4px 9px;
-							border-radius: 1px;
-							font-weight: 500;
-							backdrop-filter: blur(4px);
+							background: rgba(245, 100, 169, 0.9);
+							padding: 4px 10px;
+							border-radius: 100px; // ← pill shape (was 1px sharp)
+							font-weight: 600;
+							backdrop-filter: blur(6px);
 							z-index: 2;
 						}
 
-						// Price — bottom left, serif
+						// Price — bottom left, larger serif
 						.top-card-price {
 							position: absolute;
-							bottom: 12px;
-							left: 12px;
+							bottom: 14px;
+							left: 14px;
 							font-family: $font-serif;
-							font-size: 22px;
+							font-size: 26px;
 							font-weight: 300;
 							color: #fff;
-							letter-spacing: 0.02em;
+							letter-spacing: 0.01em;
 							z-index: 2;
-							text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+							text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+							line-height: 1;
 						}
 
-						// "Shop Now" — bottom right, slides up
+						// "Shop Now →" — slides up on hover
 						.top-card-cta {
 							position: absolute;
-							bottom: 12px;
-							right: 12px;
+							bottom: 14px;
+							right: 14px;
 							opacity: 0;
-							transform: translateY(6px);
+							transform: translateY(8px);
 							transition: opacity 0.25s ease, transform 0.25s ease;
 							z-index: 2;
 
 							span {
 								font-family: $font-sans;
 								font-size: 9px;
-								letter-spacing: 0.16em;
+								letter-spacing: 0.14em;
 								text-transform: uppercase;
 								color: #fff;
 								background: $pink;
-								padding: 6px 12px;
-								border-radius: 1px;
-								font-weight: 500;
+								padding: 7px 14px;
+								border-radius: 100px; // ← pill shape
+								font-weight: 600;
 								display: block;
+								white-space: nowrap;
 							}
 						}
 
-						// ── Info panel
+						// ── Info panel ──────────────────────────────────────────
 						.top-card-info {
 							padding: 16px 16px 14px;
 							display: flex;
 							flex-direction: column;
-							gap: 5px;
+							gap: 6px;
+							flex: 1;
 						}
 
-						// Brand + skin-type row
+						// Brand + skin tags
 						.top-card-meta-row {
 							display: flex;
 							align-items: center;
@@ -2000,11 +1964,11 @@
 
 						.top-card-brand {
 							font-family: $font-sans;
-							font-size: 8.5px;
-							letter-spacing: 0.22em;
+							font-size: 8px;
+							letter-spacing: 0.24em;
 							text-transform: uppercase;
 							color: $pink;
-							font-weight: 500;
+							font-weight: 600;
 						}
 
 						.top-card-skin-tags {
@@ -2015,37 +1979,39 @@
 						.top-card-skin-tag {
 							font-family: $font-sans;
 							font-size: 8px;
-							letter-spacing: 0.1em;
+							letter-spacing: 0.08em;
 							text-transform: capitalize;
 							color: $muted;
 							border: 1px solid #e8e0d8;
 							border-radius: 100px;
-							padding: 2px 7px;
+							padding: 2px 8px;
 							font-weight: 400;
+							background: #faf8f5;
 						}
 
-						// Title — serif, matches trend-card
+						// Title — bigger serif for more elegance
 						.top-card-title {
 							font-family: $font-serif;
-							font-size: 18px;
+							font-size: 19px;
 							font-weight: 400;
 							color: $dark;
-							line-height: 1.25;
+							line-height: 1.2;
 							display: -webkit-box;
 							-webkit-line-clamp: 2;
 							line-clamp: 2;
 							-webkit-box-orient: vertical;
 							overflow: hidden;
+							margin-top: 2px;
 						}
 
-						// Desc — light sans
+						// Desc — subtle, 2-line
 						.top-card-desc {
 							font-family: $font-sans;
-							font-size: 11.5px;
+							font-size: 11px;
 							font-weight: 300;
 							color: $muted;
-							line-height: 1.6;
-							margin: 3px 0 0;
+							line-height: 1.65;
+							margin: 0;
 							display: -webkit-box;
 							-webkit-line-clamp: 2;
 							line-clamp: 2;
@@ -2057,10 +2023,10 @@
 						.top-card-divider {
 							height: 1px;
 							background: #f0ebe4;
-							margin: 8px 0;
+							margin: 4px 0;
 						}
 
-						// Bottom: stats + arrow
+						// Bottom row
 						.top-card-bottom {
 							display: flex;
 							align-items: center;
@@ -2070,7 +2036,7 @@
 						.top-card-stats {
 							display: flex;
 							align-items: center;
-							gap: 12px;
+							gap: 10px;
 						}
 
 						.top-stat-item {
@@ -2079,8 +2045,8 @@
 							gap: 4px;
 
 							.top-stat-icon {
-								font-size: 14px !important;
-								color: #b0a89e;
+								font-size: 13px !important;
+								color: #c0b8b0;
 							}
 
 							.top-stat-count {
@@ -2092,11 +2058,11 @@
 						}
 
 						.top-like-btn {
-							padding: 3px !important;
+							padding: 2px !important;
 							background: none !important;
 
 							.top-like-icon {
-								font-size: 15px !important;
+								font-size: 14px !important;
 								color: #c9bdb5;
 								transition: color 0.2s ease, transform 0.2s ease;
 
@@ -2107,17 +2073,37 @@
 
 							&:hover .top-like-icon:not(.active) {
 								color: $pink;
-								transform: scale(1.15);
+								transform: scale(1.2);
 							}
 						}
 
 						.top-card-arrow {
-							font-family: $font-sans;
-							font-size: 14px;
-							color: #c9bdb5;
+							font-size: 16px;
+							color: #d0c8c0;
 							transition: color 0.22s ease, transform 0.22s ease;
 							line-height: 1;
+							font-family: $font-sans;
 						}
+					}
+
+					// ─── Loading / Empty / Error states ───────────────────────
+					.top-products-loading,
+					.top-products-empty,
+					.top-products-error {
+						width: 100%;
+						min-height: 300px;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						font-family: $font-serif;
+						font-size: 18px;
+						font-weight: 300;
+						font-style: italic;
+						color: $muted;
+					}
+
+					.top-products-error {
+						color: #c0473a;
 					}
 				}
 			}

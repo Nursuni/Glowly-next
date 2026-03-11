@@ -1,5 +1,5 @@
 // dummyProducts.ts
-import { Product, MeLiked } from './types/product/product';
+import { Product } from './types/product/product';
 import { ProductStatus, ProductType, SkinType } from './enums/product.enum';
 
 export const dummyProducts: Product[] = [
@@ -41,7 +41,7 @@ export const dummyProducts: Product[] = [
 		createdAt: new Date(),
 		updatedAt: new Date(),
 		meLiked: [{ memberId: 'user1', likeRefId: '2', myFavorite: false }],
-		skinType: [SkinType.DRY, SkinType.SENSITIVE],
+		skinType: [SkinType.OILY, SkinType.COMBINATION],
 	},
 	{
 		_id: '3',
@@ -61,7 +61,7 @@ export const dummyProducts: Product[] = [
 		createdAt: new Date(),
 		updatedAt: new Date(),
 		meLiked: [{ memberId: 'user1', likeRefId: '3', myFavorite: false }],
-		skinType: [SkinType.DRY, SkinType.SENSITIVE],
+		skinType: [SkinType.NORMAL, SkinType.OILY],
 	},
 	{
 		_id: '4',
@@ -81,7 +81,7 @@ export const dummyProducts: Product[] = [
 		createdAt: new Date(),
 		updatedAt: new Date(),
 		meLiked: [{ memberId: 'user1', likeRefId: '4', myFavorite: false }],
-		skinType: [SkinType.DRY, SkinType.SENSITIVE],
+		skinType: [SkinType.SENSITIVE, SkinType.NORMAL],
 	},
 	{
 		_id: '5',
@@ -101,7 +101,7 @@ export const dummyProducts: Product[] = [
 		createdAt: new Date(),
 		updatedAt: new Date(),
 		meLiked: [{ memberId: 'user1', likeRefId: '5', myFavorite: false }],
-		skinType: [SkinType.DRY, SkinType.SENSITIVE],
+		skinType: [SkinType.OILY, SkinType.COMBINATION],
 	},
 	{
 		_id: '6',
@@ -121,7 +121,7 @@ export const dummyProducts: Product[] = [
 		createdAt: new Date(),
 		updatedAt: new Date(),
 		meLiked: [{ memberId: 'user1', likeRefId: '6', myFavorite: false }],
-		skinType: [SkinType.DRY, SkinType.SENSITIVE],
+		skinType: [SkinType.DRY, SkinType.NORMAL],
 	},
 	{
 		_id: '7',
@@ -141,6 +141,6 @@ export const dummyProducts: Product[] = [
 		createdAt: new Date(),
 		updatedAt: new Date(),
 		meLiked: [{ memberId: 'user1', likeRefId: '7', myFavorite: false }],
-		skinType: [SkinType.DRY, SkinType.SENSITIVE],
+		skinType: [SkinType.COMBINATION, SkinType.SENSITIVE],
 	},
 ];

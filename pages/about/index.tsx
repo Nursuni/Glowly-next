@@ -51,7 +51,7 @@ const About: NextPage = () => {
 				<Stack className={'statistics'}>
 					<Stack className={'container'}>
 						<Stack className={'banner'}>
-							<img src="/img/banner/header1.svg" alt="" />
+							<img src="/img/banner/aboutus.webp" alt="" />
 						</Stack>
 						<Stack className={'info'}>
 							<Box component={'div'}>
@@ -79,7 +79,7 @@ const About: NextPage = () => {
 						<Stack className={'boxes'}>
 							<div className={'box'}>
 								<div>
-									<img src="/img/icons/crueltyfree.svg" alt="" />
+									<img src="/img/fiber/cruelty_free.png" alt="" />
 								</div>
 								<span>Cruelty-Free</span>
 								<p>We never test on animals. Compassion is part of our philosophy.</p>
@@ -87,7 +87,7 @@ const About: NextPage = () => {
 
 							<div className={'box'}>
 								<div>
-									<img src="/img/icons/leaf.svg" alt="" />
+									<img src="/img/fiber/ingredients.png" alt="" />
 								</div>
 								<span>Conscious Ingredients</span>
 								<p>Skin-loving ingredients selected for purity, safety, and performance.</p>
@@ -95,7 +95,7 @@ const About: NextPage = () => {
 
 							<div className={'box'}>
 								<div>
-									<img src="/img/icons/package.svg" alt="" />
+									<img src="/img/fiber/package.png" alt="" />
 								</div>
 								<span>Responsible Packaging</span>
 								<p>Designed with elegance while minimizing environmental impact.</p>
@@ -103,10 +103,10 @@ const About: NextPage = () => {
 
 							<div className={'box'}>
 								<div>
-									<img src="/img/icons/luxury.svg" alt="" />
+									<img src="/img/fiber/dermo_tested.png" alt="Dermatologist tested" />
 								</div>
-								<span>Clean Performance</span>
-								<p>High-efficacy formulas without unnecessary additives.</p>
+								<span>Dermatologist Tested</span>
+								<p>Developed and tested to ensure safety and effectiveness for all skin types.</p>
 							</div>
 						</Stack>
 					</Stack>

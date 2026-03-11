@@ -12,10 +12,10 @@ import { REACT_APP_API_URL } from '../../config';
 
 interface TopProductCardProps {
 	product: Product;
+	onLike?: (productId: string) => void;
 }
 
-const TopProductCard = (props: TopProductCardProps) => {
-	const { product } = props;
+const TopProductCard = ({ product, onLike }: TopProductCardProps) => {
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 
@@ -23,41 +23,40 @@ const TopProductCard = (props: TopProductCardProps) => {
 
 	const firstImage = product?.productImages?.[0] ?? '';
 	const isLiked = product?.meLiked?.[0]?.myFavorite ?? false;
-	const formattedPrice = product?.productPrice ? `$${Number(product.productPrice).toFixed(2)}` : '';
+	const price = product?.productPrice ? `$${Number(product.productPrice).toFixed(0)}` : '';
 
 	const redirectHandler = () => {
-		router.push(`/product/detail?productId=${product._id}`);
+		router.push(`/catalog/detail?productId=${product._id}`);
 	};
 
 	const likeHandler = (e: React.MouseEvent) => {
 		e.stopPropagation();
-		// like handler logic
+		if (!user?._id) return;
+		onLike?.(product._id);
 	};
 
 	return (
 		<Stack className="top-card-box" onClick={redirectHandler}>
-			{/* ── Image wrap ── */}
+			{/* ── Image ── */}
 			<Box className="top-card-img-wrap">
-				<Box className="top-card-img" style={{ backgroundImage: `url(${REACT_APP_API_URL}/${firstImage})` }}>
-					{/* Gradient overlay on hover */}
-					<Box className="top-card-overlay" />
+				<Box className="top-card-img" style={{ backgroundImage: `url(${REACT_APP_API_URL}/${firstImage})` }} />
+				<Box className="top-card-overlay" />
 
-					{/* Category badge — top left, now $pink */}
-					{product.productCategory && <span className="top-card-category">{product.productCategory}</span>}
+				{/* Category pill — top left */}
+				{product.productCategory && <span className="top-card-category">{product.productCategory}</span>}
 
-					{/* Price — bottom left, serif white */}
-					{formattedPrice && <span className="top-card-price">{formattedPrice}</span>}
+				{/* Price chip — bottom left */}
+				{price && <span className="top-card-price">{price}</span>}
 
-					{/* "Shop Now" pill — slides up on hover */}
-					<Box className="top-card-cta">
-						<span>Shop Now</span>
-					</Box>
+				{/* CTA — slides up on hover */}
+				<Box className="top-card-cta">
+					<span>Shop Now →</span>
 				</Box>
 			</Box>
 
-			{/* ── Info panel ── */}
+			{/* ── Info ── */}
 			<Box className="top-card-info">
-				{/* Brand label + skin-type tags */}
+				{/* Brand + skin tags row */}
 				<Box className="top-card-meta-row">
 					{product.productType && <span className="top-card-brand">{product.productType}</span>}
 					{product.skinType && product.skinType.length > 0 && (
@@ -71,25 +70,23 @@ const TopProductCard = (props: TopProductCardProps) => {
 					)}
 				</Box>
 
-				{/* Title — serif */}
+				{/* Title */}
 				<strong className="top-card-title">{product.productTitle ?? 'Product Name'}</strong>
 
-				{/* Description — light sans, 2-line clamp */}
-				<p className="top-card-desc">{product.productDesc ?? ''}</p>
+				{/* Desc */}
+				{product.productDesc && <p className="top-card-desc">{product.productDesc}</p>}
 
 				{/* Divider */}
 				<Box className="top-card-divider" />
 
-				{/* Bottom: stats + arrow */}
+				{/* Bottom stats */}
 				<Box className="top-card-bottom">
 					<Box className="top-card-stats">
-						{/* Views */}
 						<Box className="top-stat-item">
 							<RemoveRedEyeIcon className="top-stat-icon" />
 							<span className="top-stat-count">{product?.productViews ?? 0}</span>
 						</Box>
 
-						{/* Likes */}
 						<Box className="top-stat-item">
 							<IconButton className="top-like-btn" onClick={likeHandler} disableRipple>
 								{isLiked ? (

@@ -1,19 +1,35 @@
-/** IMPORTS **/
+// VARIABLES & GENERAL
 @import '/scss/variables.scss';
 @import '/scss/pc/general.scss';
 
+// PAGES
 @import '/scss/pc/homepage/homepage';
 @import '/scss/pc/about/about.scss';
-@import '/scss/mobile/about/about.scss';
 @import '/scss/pc/catalog/catalog.scss';
 @import '/scss/pc/catalog/detail.scss';
-
 @import '/scss/pc/order/basket.scss';
-@import '/scss/components/toolbar.scss';
-@import '/scss/mobile/order/basket.scss';
 
+// MOBILE PAGES
+@import '/scss/mobile/about/about.scss';
+@import '/scss/mobile/order/basket.scss';
+@import '/scss/mobile/blog/blog.scss';
+@import '/scss/mobile/blog/detail.scss';
+@import '/scss/mobile/blog/write.scss';
+
+// BRAND & BLOG
 @import '/scss/pc/brands/brand.scss';
 @import '/scss/pc/brands/detail.scss';
+@import '/scss/pc/blog/blog.scss';
+@import '/scss/pc/blog/detail.scss';
+@import '/scss/pc/blog/write.scss';
+
+// SUPPORT & ADMIN
+@import '/scss/pc/support/support.scss';
+@import '/scss/mobile/support/support.scss';
+@import '/scss/pc/account/join.scss';
+@import '/scss/pc/admin/admin.scss';
+
+// MYPAGE
 @import '/scss/pc/mypage/mypage.scss';
 @import '/scss/pc/mypage/addNewProduct.scss';
 @import '/scss/pc/mypage/myProducts.scss';
@@ -23,25 +39,11 @@
 @import '/scss/pc/mypage/myArticles.scss';
 @import '/scss/pc/mypage/writeArticle.scss';
 
-@import '/scss/pc/blog/blog.scss';
-@import '/scss/pc/blog/detail.scss';
-@import '/scss/pc/blog/write.scss';
-
-@import '/scss/mobile/blog/blog.scss';
-@import '/scss/mobile/blog/detail.scss';
-@import '/scss/mobile/blog/write.scss';
-
-@import '/scss/pc/support/support.scss';
-
-@import '/scss/pc/about/about.scss';
-@import '/scss/pc/account/join.scss';
-@import '/scss/pc/admin/admin.scss';
-
+// MEMBER
 @import '/scss/pc/member/memberPage.scss';
 @import '/scss/pc/member/memberFollows.scss';
 @import '/scss/pc/member/memberArticles.scss';
 @import '/scss/pc/member/memberProducts.scss';
-@import '/scss/mobile/support/support.scss';
 
 body {
 	padding-top: 58px;
@@ -61,7 +63,7 @@ body::-webkit-scrollbar {
 #pc-wrap {
 	#top {
 		.navbar {
-			top: 33px;
+			top: 31px;
 			.navbar-main {
 				background: #ffffff;
 				position: fixed;
@@ -84,9 +86,8 @@ body::-webkit-scrollbar {
 				}
 
 				.container {
-					max-width: 1300px;
+					width: 1300px;
 					margin: 0 auto;
-					width: 100%;
 					padding: 0 32px;
 					box-sizing: border-box;
 					display: flex;
@@ -98,6 +99,7 @@ body::-webkit-scrollbar {
 
 					/* ── LOGO — only definition needed ── */
 					.logo-box {
+						margin-left: -18px;
 						flex-shrink: 0;
 						display: flex;
 						align-items: center;
@@ -115,7 +117,7 @@ body::-webkit-scrollbar {
 					}
 
 					.router-box {
-						flex: 0 0 auto;
+						flex: 1;
 						display: flex;
 						align-items: center;
 						justify-content: center;
@@ -124,9 +126,11 @@ body::-webkit-scrollbar {
 
 					/* old .user-box kept for legacy compat */
 					.user-box {
+						flex-shrink: 0; // ← add this so it doesn't compress
 						display: flex;
 						align-items: center;
 						gap: 8px;
+						margin-left: auto;
 					}
 
 					.lan-box {
@@ -162,30 +166,22 @@ body::-webkit-scrollbar {
 	#footer {
 		position: relative;
 		width: 100%;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
+
 		padding: 0;
 		background: #1a1714;
 	}
 }
 
-/* =====================================
-   FOOTER
-===================================== */
-
 .footer-container {
 	position: relative;
-	width: 100%;
-	max-width: 100%;
+	width: 1300px;
 	margin: 0 auto;
-	padding: 0 calc((100% - 1100px) / 2);
+	padding: 0 32px;
 	font-family: 'Jost', sans-serif;
 	display: flex;
 	flex-direction: column;
 	box-sizing: border-box;
 	color: #f5f0ea;
-	overflow: hidden;
 
 	&::after {
 		content: '';
@@ -205,8 +201,8 @@ body::-webkit-scrollbar {
 	.gf-marquee-wrap {
 		overflow: hidden;
 		padding: 28px 0 30px;
-		margin-left: calc(-1 * ((100vw - 1100px) / 2));
-		margin-right: calc(-1 * ((100vw - 1100px) / 2));
+		margin-left: -32px;
+		margin-right: -32px;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 
 		.gf-marquee {
@@ -236,8 +232,8 @@ body::-webkit-scrollbar {
 	.main {
 		width: 100%;
 		display: grid;
-		grid-template-columns: 1fr 1px 1.8fr;
-		gap: 0 48px;
+		grid-template-columns: 1fr 1px 1.6fr;
+		gap: 0 64px;
 		align-items: flex-start;
 		padding: 48px 0 44px;
 	}
@@ -246,11 +242,15 @@ body::-webkit-scrollbar {
 		background: linear-gradient(
 			to bottom,
 			transparent,
-			rgba(255, 255, 255, 0.08) 20%,
-			rgba(255, 255, 255, 0.08) 80%,
+			rgba(255, 255, 255, 0.15) 20%,
+			// ← was 0.08
+			rgba(255, 255, 255, 0.15) 80%,
+			// ← was 0.08
 			transparent
 		);
+		width: 1px;
 		align-self: stretch;
+		min-height: 100%;
 	}
 
 	.left {
@@ -263,7 +263,7 @@ body::-webkit-scrollbar {
 			display: flex;
 			align-items: center;
 			opacity: 1;
-			margin-left: -280px; // ← compensate for SVG left padding
+			margin-left: -340px;
 
 			img {
 				height: 120px;
@@ -698,24 +698,157 @@ body::-webkit-scrollbar {
 	top: 0;
 	left: 0;
 	width: 100%;
+	height: 44px;
 	z-index: 1000;
-
-	background: #f564a9;
-	color: #ffffff;
-	text-align: center;
-	padding: 8px 20px;
-	font-family: 'Jost', sans-serif;
-	font-size: 11.5px;
-	letter-spacing: 0.12em;
-	font-weight: 500;
-
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	background: linear-gradient(90deg, #1a1118 0%, #2d1a28 40%, #1a1118 100%);
 	opacity: 0;
 	transform: translateY(-100%);
-	transition: opacity 0.4s ease, transform 0.4s ease;
+	transition: opacity 0.5s ease, transform 0.5s ease;
+	cursor: default;
 
 	&.nb-ready {
 		opacity: 1;
 		transform: translateY(0);
+	}
+
+	// shimmer sweep
+	.ann-shimmer {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(105deg, transparent 35%, rgba(245, 100, 169, 0.08) 50%, transparent 65%);
+		background-size: 200% 100%;
+		animation: ann-sweep 3.5s linear infinite;
+		pointer-events: none;
+	}
+
+	// message
+	.ann-message {
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		z-index: 1;
+		transition: opacity 0.35s ease, transform 0.35s ease;
+
+		&.ann-enter {
+			opacity: 1;
+			transform: translateY(0);
+		}
+		&.ann-exit {
+			opacity: 0;
+			transform: translateY(-10px);
+		}
+	}
+
+	.ann-icon {
+		font-size: 15px;
+		line-height: 1;
+		flex-shrink: 0;
+	}
+
+	.ann-text {
+		font-family: 'Jost', sans-serif;
+		font-size: 12.5px;
+		font-weight: 400;
+		letter-spacing: 0.06em;
+		color: rgba(255, 255, 255, 0.82);
+		white-space: nowrap;
+	}
+
+	.ann-highlight {
+		font-family: 'Jost', sans-serif;
+		font-size: 12.5px;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		color: #f564a9;
+		white-space: nowrap;
+		animation: ann-glow 2.8s ease-in-out infinite;
+	}
+
+	// dot indicators
+	.ann-dots {
+		position: absolute;
+		right: 28px;
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		z-index: 2;
+	}
+
+	.ann-dot {
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.25);
+		cursor: pointer;
+		transition: background 0.25s ease, width 0.25s ease;
+
+		&.active {
+			width: 16px;
+			border-radius: 3px;
+			background: #f564a9;
+		}
+
+		&:hover:not(.active) {
+			background: rgba(255, 255, 255, 0.5);
+		}
+	}
+
+	// side accent lines
+	&::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 3px;
+		background: linear-gradient(180deg, transparent, #f564a9, transparent);
+		animation: ann-line-pulse 2s ease-in-out infinite;
+	}
+
+	&::after {
+		content: '';
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		width: 3px;
+		background: linear-gradient(180deg, transparent, #c08a5e, transparent);
+		animation: ann-line-pulse 2s ease-in-out infinite 1s;
+	}
+}
+
+@keyframes ann-sweep {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+@keyframes ann-glow {
+	0%,
+	100% {
+		text-shadow: none;
+		opacity: 1;
+	}
+	50% {
+		text-shadow: 0 0 12px rgba(245, 100, 169, 0.6);
+		opacity: 0.9;
+	}
+}
+
+@keyframes ann-line-pulse {
+	0%,
+	100% {
+		opacity: 0.3;
+	}
+	50% {
+		opacity: 1;
 	}
 }
 
@@ -726,7 +859,7 @@ body::-webkit-scrollbar {
 .navbar {
 	width: 100%;
 	position: fixed;
-	top: 33px;
+	top: 44px;
 	left: 0;
 	right: 0;
 	z-index: 999;
