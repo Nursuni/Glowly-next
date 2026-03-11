@@ -136,20 +136,22 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 
 			{/* TOOLBAR BOX */}
 			<div className="toolbar-box">
-				<div className="toolbar">
-					<Toolbar
-						searchText={searchText}
-						setSearchText={setSearchText}
-						onSearchSubmit={handleSearchSubmit}
-						onSearchKeyDown={handleSearchKeyDown}
-						sortingClickHandler={sortingClickHandler}
-						sortingHandler={sortingHandler}
-						sortingCloseHandler={sortingCloseHandler}
-						anchorEl={anchorEl}
-						sortingOpen={sortingOpen}
-						filterSortName={filterSortName}
-						sortOptions={SORT_OPTIONS}
-					/>
+				<div className="container">
+					<div className="toolbar">
+						<Toolbar
+							searchText={searchText}
+							setSearchText={setSearchText}
+							onSearchSubmit={handleSearchSubmit}
+							onSearchKeyDown={handleSearchKeyDown}
+							sortingClickHandler={sortingClickHandler}
+							sortingHandler={sortingHandler}
+							sortingCloseHandler={sortingCloseHandler}
+							anchorEl={anchorEl}
+							sortingOpen={sortingOpen}
+							filterSortName={filterSortName}
+							sortOptions={SORT_OPTIONS}
+						/>
+					</div>
 				</div>
 			</div>
 

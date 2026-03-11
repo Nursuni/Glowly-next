@@ -14,6 +14,7 @@ import 'swiper/css/navigation';
 import Top from '../Top';
 import Footer from '../Footer';
 import Chat from '../Chat';
+import Hero from '../homepage/Hero';
 
 const withLayoutMain = (Component: any) => {
 	return (props: any) => {

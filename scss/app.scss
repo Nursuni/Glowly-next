@@ -39,9 +39,24 @@ hr {
 
 	.container {
 		position: relative;
-		max-width: 1300px; // ✅ not width
+		width: 1300px;
 		width: 100%;
 		margin: 0 auto;
 		display: flex;
+	}
+}
+
+@keyframes floatIcon {
+	0% {
+		transform: translateY(0);
+		opacity: 0.3;
+	}
+	50% {
+		transform: translateY(-6px);
+		opacity: 0.6;
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 0.3;
 	}
 }

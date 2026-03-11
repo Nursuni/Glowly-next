@@ -1256,7 +1256,6 @@ body::-webkit-scrollbar {
 		}
 
 		&:hover {
-			background: rgba(245, 100, 169, 0.07);
 			color: #f564a9;
 		}
 
@@ -1266,20 +1265,37 @@ body::-webkit-scrollbar {
 		}
 
 		.user-avatar {
-			width: 28px;
-			height: 28px;
+			width: 22px;
+			height: 22px;
 			border-radius: 50%;
 			object-fit: cover;
+			transition: filter 0.18s ease, transform 0.18s ease;
+		}
+
+		&:hover .user-avatar {
+			filter: invert(52%) sepia(64%) saturate(1900%) hue-rotate(295deg) brightness(1.05);
+			transform: scale(1.05);
 		}
 	}
 
 	.basket-btn {
+		img {
+			width: 19px;
+			height: 19px;
+			filter: brightness(0) saturate(100%) invert(40%) sepia(20%) saturate(350%) hue-rotate(15deg) brightness(0.85);
+			transition: filter 0.18s ease;
+		}
+
+		&:hover img {
+			// turns #f564a9 pink on hover
+			filter: invert(52%) sepia(60%) saturate(800%) hue-rotate(295deg) brightness(1.1);
+		}
 		.cart-count {
 			position: absolute;
 			top: 4px;
 			right: 4px;
-			min-width: 15px;
-			height: 15px;
+			min-width: 10px;
+			height: 10px;
 			border-radius: 8px;
 			background: #f564a9;
 			color: #fff;
@@ -1356,7 +1372,7 @@ body::-webkit-scrollbar {
 
 				strong {
 					font-family: 'Jost', sans-serif;
-					font-size: 13px;
+					font-size: 11px;
 					font-weight: 500;
 					color: #2a2520;
 					white-space: nowrap;

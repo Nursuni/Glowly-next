@@ -32,7 +32,7 @@ const TopProducts = () => {
 	// ─── Shared header ─────────────────────────────────────
 	const renderHeader = () => (
 		<Stack className="info-box">
-			<Box component="div" className="header-center">
+			<Box component="div" className="container">
 				<span className="eyebrow">
 					<span className="icon-wrapper">
 						<svg width="14" height="14" viewBox="0 0 24 24" fill="white">

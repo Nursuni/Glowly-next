@@ -16,36 +16,38 @@ const TopBrandCard = ({ brand, likeMemberHandler }: TopBrandCardProps) => {
 
 	return (
 		<div className={'top-brand-card'}>
-			<div className={'brand-logo-wrap'}>
-				<img
-					src={logo}
-					alt={brand.memberNick}
-					className={'brand-logo'}
-					onError={(e) => {
-						const el = e.target as HTMLImageElement;
-						el.onerror = null;
-						el.src = FALLBACK;
-					}}
-				/>
-			</div>
-
-			<strong className={'brand-name'}>{brand.memberNick}</strong>
-			<span className={'brand-products'}>{(brand as any).memberProducts ?? 0} items</span>
-
-			<Stack className={'brand-stats'}>
-				<div className={'stat'}>
-					<RemoveRedEyeIcon sx={{ width: 13, height: 13 }} />
-					<span>{(brand as any).memberViews ?? 0}</span>
-				</div>
-				<div className={'stat'}>
-					<FavoriteIcon
-						sx={{ width: 13, height: 13 }}
-						onClick={() => likeMemberHandler && likeMemberHandler(null, brand._id)}
-						style={{ cursor: likeMemberHandler ? 'pointer' : 'default' }}
+			<div className="{container}">
+				<div className={'brand-logo-wrap'}>
+					<img
+						src={logo}
+						alt={brand.memberNick}
+						className={'brand-logo'}
+						onError={(e) => {
+							const el = e.target as HTMLImageElement;
+							el.onerror = null;
+							el.src = FALLBACK;
+						}}
 					/>
-					<span>{(brand as any).memberLikes ?? 0}</span>
 				</div>
-			</Stack>
+
+				<strong className={'brand-name'}>{brand.memberNick}</strong>
+				<span className={'brand-products'}>{(brand as any).memberProducts ?? 0} items</span>
+
+				<Stack className={'brand-stats'}>
+					<div className={'stat'}>
+						<RemoveRedEyeIcon sx={{ width: 13, height: 13 }} />
+						<span>{(brand as any).memberViews ?? 0}</span>
+					</div>
+					<div className={'stat'}>
+						<FavoriteIcon
+							sx={{ width: 13, height: 13 }}
+							onClick={() => likeMemberHandler && likeMemberHandler(null, brand._id)}
+							style={{ cursor: likeMemberHandler ? 'pointer' : 'default' }}
+						/>
+						<span>{(brand as any).memberLikes ?? 0}</span>
+					</div>
+				</Stack>
+			</div>
 		</div>
 	);
 };

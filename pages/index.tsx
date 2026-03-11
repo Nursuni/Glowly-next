@@ -29,11 +29,12 @@ const Home: NextPage = () => {
 		return (
 			<Stack className={'home-page'}>
 				<Hero />
+				<TrendProductCard />
 				<TopProducts />
 				<TopBrandsCarousel />
 				<ShopByCategories />
 				<Advertisement />
-				<TrendProductCard />
+
 				<CommunityBoards />
 			</Stack>
 		);
