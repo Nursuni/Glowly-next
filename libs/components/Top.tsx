@@ -28,6 +28,7 @@ import AnnouncementBar from './AnnouncementBar';
 const StyledMenu = styled((props: MenuProps) => (
 	<Menu
 		elevation={0}
+		disableScrollLock
 		anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
 		transformOrigin={{ vertical: 'top', horizontal: 'right' }}
 		{...props}
