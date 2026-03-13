@@ -31,7 +31,7 @@ const Home: NextPage = () => {
 				<Hero />
 				<TrendProductCard />
 				<TopProducts />
-				<TopBrandsCarousel />
+				<TopBrandsCarousel initialInput={undefined} />
 				<ShopByCategories />
 				<Advertisement />
 
