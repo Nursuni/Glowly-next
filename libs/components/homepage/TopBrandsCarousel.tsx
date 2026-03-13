@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation } from 'swiper';
@@ -8,7 +8,14 @@ import TopBrandCard from './TopBrandCard';
 import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { T } from '../../types/common';
 import { useQuery } from '@apollo/client';
+import { BrandsInquiry } from '@/libs/types/member/member.input';
+import useDeviceDetect from '@/libs/hooks/useDeviceDetect';
+import { useRouter } from 'next/router';
+import { Member } from '@/libs/types/member/member';
 
+interface TopBrandsProps {
+	initialInput: BrandsInquiry;
+}
 const dummyBrands = [
 	{ _id: 'b1', memberNick: 'La Mer', memberImage: null, memberProducts: 24, memberViews: 3200, memberLikes: 410 },
 	{ _id: 'b2', memberNick: 'Sulwhasoo', memberImage: null, memberProducts: 38, memberViews: 2850, memberLikes: 376 },
@@ -20,7 +27,27 @@ const dummyBrands = [
 	{ _id: 'b8', memberNick: 'Cosrx', memberImage: null, memberProducts: 33, memberViews: 2760, memberLikes: 402 },
 ];
 
-const TopBrandsCarousel = () => {
+const TopBrandsCarousel = (props: TopBrandsProps) => {
+	const { initialInput } = props;
+	const device = useDeviceDetect();
+	const router = useRouter();
+	const [topBrands, setTopBrands] = useState<Member[]>([]);
+
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getBrandsLoading,
+		data: getBrandsData,
+		error: getBrandsError,
+		refetch: getBrandsRefetch,
+	} = useQuery(GET_PRODUCTS, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: initialInput },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setTopBrands(data?.getBrands?.list);
+		},
+	});
+
 	return (
 		<Stack className={'top-brands'}>
 			<Stack className={'container'}>

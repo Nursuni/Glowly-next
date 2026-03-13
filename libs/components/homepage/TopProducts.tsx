@@ -6,9 +6,17 @@ import TopProductCard from './TopProductCard';
 import { dummyProducts } from '@/libs/dummyProducts';
 import { SkinType } from '@/libs/enums/product.enum';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
+import { GET_PRODUCTS } from '../../../apollo/user/query';
+import { T } from '../../types/common';
+import { useQuery } from '@apollo/client';
+import { Product } from '@/libs/types/product/product';
+import { ProductsInquiry } from '@/libs/types/product/product.input';
 
 // ─── Filter config ─────────────────────────────────────────
 type FilterValue = SkinType | 'ALL';
+interface TopProductsProps {
+	initialInput: ProductsInquiry;
+}
 
 const SKIN_FILTERS: { label: string; value: FilterValue }[] = [
 	{ label: 'All', value: 'ALL' },
@@ -19,9 +27,26 @@ const SKIN_FILTERS: { label: string; value: FilterValue }[] = [
 	{ label: 'Sensitive', value: SkinType.SENSITIVE },
 ];
 
-const TopProducts = () => {
+const TopProducts = (props: TopProductsProps) => {
+	const { initialInput } = props;
 	const device = useDeviceDetect();
 	const [activeFilter, setActiveFilter] = useState<FilterValue>('ALL');
+	const [topProducts, setTopProducts] = useState<Product[]>([]);
+
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getProductsLoading,
+		data: getProductsData,
+		error: getProductsError,
+		refetch: getProductsRefetch,
+	} = useQuery(GET_PRODUCTS, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: initialInput },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setTopProducts(data?.getProducts?.list);
+		},
+	});
 
 	// Filter dummy products by selected skin type
 	const filteredProducts = useMemo(() => {
@@ -113,6 +138,16 @@ const TopProducts = () => {
 			</Stack>
 		</Stack>
 	);
+};
+
+TopProducts.defaultProps = {
+	initialInput: {
+		page: 1,
+		limit: 8,
+		sort: 'productRank',
+		direction: 'DESC',
+		search: {},
+	},
 };
 
 export default TopProducts;
