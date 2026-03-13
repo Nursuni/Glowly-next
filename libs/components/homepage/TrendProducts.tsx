@@ -10,6 +10,9 @@ import { ProductsInquiry } from '../../types/product/product.input';
 import TrendProductCard from './TrendProductCard';
 import { ProductCard } from '../mypage/ProductCard';
 import { dummyProducts } from '@/libs/dummyProducts';
+import { GET_PRODUCTS } from '../../../apollo/user/query';
+import { T } from '../../types/common';
+import { useQuery } from '@apollo/client';
 
 interface TrendProductsProps {
 	initialInput: ProductsInquiry;
@@ -19,6 +22,21 @@ const TrendProducts = (props: TrendProductsProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
 	const [trendProducts, setTrendProducts] = useState<Product[]>([]);
+
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getProductsLoading,
+		data: getProductsData,
+		error: getProductsError,
+		refetch: getProductsRefetch,
+	} = useQuery(GET_PRODUCTS, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: initialInput },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setTrendProducts(data?.getProducts?.list);
+		},
+	});
 
 	useEffect(() => {
 		// TODO: replace with real Apollo/GraphQL fetch using initialInput

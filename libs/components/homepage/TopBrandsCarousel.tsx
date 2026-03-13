@@ -5,6 +5,9 @@ import { Autoplay, Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import TopBrandCard from './TopBrandCard';
+import { GET_PRODUCTS } from '../../../apollo/user/query';
+import { T } from '../../types/common';
+import { useQuery } from '@apollo/client';
 
 const dummyBrands = [
 	{ _id: 'b1', memberNick: 'La Mer', memberImage: null, memberProducts: 24, memberViews: 3200, memberLikes: 410 },

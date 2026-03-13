@@ -13,6 +13,7 @@ import SubscribeSection from '../../libs/components/common/SubscribeSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Toolbar from '../../libs/components/common/Toolbar';
 import { SORT_OPTIONS } from '@/libs/types/common';
+import { start } from 'repl';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -199,7 +200,7 @@ ProductList.defaultProps = {
 		limit: 9,
 		sort: 'createdAt',
 		direction: Direction.DESC,
-		search: {},
+		search: { pricesRange: { start: 0, end: 500 } },
 	},
 };
 
