@@ -7,16 +7,18 @@ import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Filter from '../../libs/components/product/Filter';
 import { Product } from '../../libs/types/product/product';
 import { ProductsInquiry } from '../../libs/types/product/product.input';
-import { Direction } from '../../libs/enums/common.enum';
+import { Direction, Message } from '../../libs/enums/common.enum';
 import { ProductCard } from '../../libs/components/mypage/ProductCard';
 import SubscribeSection from '../../libs/components/common/SubscribeSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Toolbar from '../../libs/components/common/Toolbar';
 import { SORT_OPTIONS } from '@/libs/types/common';
 import { start } from 'repl';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
+import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
+import { toastError, toastSuccess } from '@/libs/toast';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -43,6 +45,7 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 	const [searchText, setSearchText] = useState('');
 
 	/** APOLLO REQUESTS **/
+	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 	const {
 		loading: getProductsLoading,
 		data: getProductsData,
@@ -60,7 +63,7 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 
 	useEffect(() => {
 		console.log('SearchFilter', searchFilter);
-		//getPropertiesRefetch({input: searchFilter}).then()
+		//getProductsRefetch({input: searchFilter}).then()
 	}, [searchFilter]);
 
 	useEffect(() => {
@@ -143,6 +146,24 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 		sortingCloseHandler();
 	};
 
+	const likeProductHandler = async (user: T, id: string) => {
+		try {
+			if (!id) return;
+			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+			//execute likeTargetProduct
+			await likeTargetProduct({
+				variables: { input: id },
+			});
+			await getProductsRefetch({ input: initialInput });
+			//execute getProductsRefetch
+			await toastSuccess('success');
+		} catch (err) {
+			const errorMessage = err instanceof Error ? err.message : String(err);
+			console.log('errors, likeProperrtyHandler:', errorMessage);
+			toastError(errorMessage);
+		}
+	};
+
 	if (device === 'mobile') return <div>Mobile view</div>;
 
 	return (
@@ -194,7 +215,9 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 								<p>No products available for now</p>
 							</div>
 						) : (
-							products.map((product: Product) => <ProductCard product={product} key={product._id} />)
+							products.map((product: Product) => (
+								<ProductCard product={product} key={product._id} likeProductHandler={likeProductHandler} />
+							))
 						)}
 					</div>
 				</div>

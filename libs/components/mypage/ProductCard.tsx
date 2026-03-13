@@ -17,10 +17,11 @@ interface ProductCardProps {
 	memberPage?: boolean;
 	updateProductHandler?: any;
 	recentlyVisited?: any;
+	likeProductHandler?: any;
 }
 
 export const ProductCard = (props: ProductCardProps) => {
-	const { product, deleteProductHandler, memberPage, updateProductHandler } = props;
+	const { product, deleteProductHandler, memberPage, updateProductHandler, likeProductHandler } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
