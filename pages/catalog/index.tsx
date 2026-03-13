@@ -14,6 +14,9 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Toolbar from '../../libs/components/common/Toolbar';
 import { SORT_OPTIONS } from '@/libs/types/common';
 import { start } from 'repl';
+import { useQuery } from '@apollo/client';
+import { GET_PRODUCTS } from '../../apollo/user/query';
+import { T } from '../../libs/types/common';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -38,6 +41,27 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 	const [filterSortName, setFilterSortName] = useState('New');
 
 	const [searchText, setSearchText] = useState('');
+
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getProductsLoading,
+		data: getProductsData,
+		error: getProductsError,
+		refetch: getProductsRefetch,
+	} = useQuery(GET_PRODUCTS, {
+		fetchPolicy: 'network-only',
+		variables: { input: searchFilter },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setProducts(data?.getProducts?.list);
+			setTotal(data?.getProducts?.metaCounter[0]?.total);
+		},
+	});
+
+	useEffect(() => {
+		console.log('SearchFilter', searchFilter);
+		//getPropertiesRefetch({input: searchFilter}).then()
+	}, [searchFilter]);
 
 	useEffect(() => {
 		if (router.query.input) {
