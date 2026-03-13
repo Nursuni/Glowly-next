@@ -12,7 +12,12 @@ import { ProductCard } from '../mypage/ProductCard';
 import { dummyProducts } from '@/libs/dummyProducts';
 import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { T } from '../../types/common';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
+
+import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
+
+import { Message } from '../../enums/common.enum';
+import { toastError, toastSuccess } from '@/libs/toast';
 
 interface TrendProductsProps {
 	initialInput: ProductsInquiry;
@@ -24,6 +29,7 @@ const TrendProducts = (props: TrendProductsProps) => {
 	const [trendProducts, setTrendProducts] = useState<Product[]>([]);
 
 	/** APOLLO REQUESTS **/
+	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 	const {
 		loading: getProductsLoading,
 		data: getProductsData,
@@ -38,6 +44,24 @@ const TrendProducts = (props: TrendProductsProps) => {
 		},
 	});
 
+	/** HANDLERS **/
+	const likeProductHandler = async (user: T, id: string) => {
+		try {
+			if (!id) return;
+			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+			//execute likeTargetProduct
+			await likeTargetProduct({
+				variables: { input: id },
+			});
+			await getProductsRefetch({ input: initialInput });
+			//execute getProductsRefetch
+			await toastSuccess('success');
+		} catch (err) {
+			const errorMessage = err instanceof Error ? err.message : String(err);
+			console.log('errors, likeProductHandler:', errorMessage);
+			toastError(errorMessage);
+		}
+	};
 	useEffect(() => {
 		// TODO: replace with real Apollo/GraphQL fetch using initialInput
 		setTrendProducts(dummyProducts);
@@ -129,7 +153,7 @@ const TrendProducts = (props: TrendProductsProps) => {
 						>
 							{trendProducts.map((product: Product) => (
 								<SwiperSlide key={product._id} className="trend-product-slide">
-									<TrendProductCard product={product} />
+									<TrendProductCard product={product} likeProductHandler={likeProductHandler} />
 								</SwiperSlide>
 							))}
 						</Swiper>

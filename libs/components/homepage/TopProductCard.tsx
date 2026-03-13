@@ -12,10 +12,11 @@ import { REACT_APP_API_URL } from '../../config';
 
 interface TopProductCardProps {
 	product: Product;
-	onLike?: (productId: string) => void;
+	likeProductHandler: any;
 }
 
-const TopProductCard = ({ product, onLike }: TopProductCardProps) => {
+const TopProductCard = (props: TopProductCardProps) => {
+	const { product, likeProductHandler } = props;
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 
@@ -27,12 +28,6 @@ const TopProductCard = ({ product, onLike }: TopProductCardProps) => {
 
 	const redirectHandler = () => {
 		router.push(`/catalog/detail?productId=${product._id}`);
-	};
-
-	const likeHandler = (e: React.MouseEvent) => {
-		e.stopPropagation();
-		if (!user?._id) return;
-		onLike?.(product._id);
 	};
 
 	return (
@@ -88,7 +83,7 @@ const TopProductCard = ({ product, onLike }: TopProductCardProps) => {
 						</Box>
 
 						<Box className="top-stat-item">
-							<IconButton className="top-like-btn" onClick={likeHandler} disableRipple>
+							<IconButton className="top-like-btn" onClick={() => likeProductHandler(user, product?._id)} disableRipple>
 								{isLiked ? (
 									<FavoriteIcon className="top-like-icon active" />
 								) : (

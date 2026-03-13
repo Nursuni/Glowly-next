@@ -11,6 +11,11 @@ import { T } from '../../types/common';
 import { useQuery } from '@apollo/client';
 import { Product } from '@/libs/types/product/product';
 import { ProductsInquiry } from '@/libs/types/product/product.input';
+import { useMutation } from '@apollo/client';
+import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
+
+import { Message } from '../../enums/common.enum';
+import { toastDismiss, toastError, toastSuccess } from '@/libs/toast';
 
 // ─── Filter config ─────────────────────────────────────────
 type FilterValue = SkinType | 'ALL';
@@ -34,6 +39,7 @@ const TopProducts = (props: TopProductsProps) => {
 	const [topProducts, setTopProducts] = useState<Product[]>([]);
 
 	/** APOLLO REQUESTS **/
+	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 	const {
 		loading: getProductsLoading,
 		data: getProductsData,
@@ -47,6 +53,25 @@ const TopProducts = (props: TopProductsProps) => {
 			setTopProducts(data?.getProducts?.list);
 		},
 	});
+
+	/** HANDLERS **/
+	const likeProductHandler = async (user: T, id: string) => {
+		try {
+			if (!id) return;
+			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+			//execute likeTargetProduct
+			await likeTargetProduct({
+				variables: { input: id },
+			});
+			await getProductsRefetch({ input: initialInput });
+			//execute getsRefetch
+			await toastSuccess('success');
+		} catch (err) {
+			const errorMessage = err instanceof Error ? err.message : String(err);
+			console.log('errors, likeProductHandler:', errorMessage);
+			toastError(errorMessage);
+		}
+	};
 
 	// Filter dummy products by selected skin type
 	const filteredProducts = useMemo(() => {
@@ -110,7 +135,7 @@ const TopProducts = (props: TopProductsProps) => {
 			>
 				{filteredProducts.map((product) => (
 					<SwiperSlide key={product._id} className="top-product-slide">
-						<TopProductCard product={product} />
+						<TopProductCard product={product} likeProductHandler={likeProductHandler} />
 					</SwiperSlide>
 				))}
 			</Swiper>

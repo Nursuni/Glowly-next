@@ -13,21 +13,17 @@ import { userVar } from '../../../apollo/store';
 
 interface TrendProductCardProps {
 	product: Product;
+	likeProductHandler: any;
 }
 
 const TrendProductCard = (props: TrendProductCardProps) => {
-	const { product } = props;
+	const { product, likeProductHandler } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 
 	const redirectHandler = (e: React.MouseEvent) => {
 		router.push(`/catalog/detail?productId=${product._id}`);
-	};
-
-	const likeHandler = (e: React.MouseEvent) => {
-		e.stopPropagation();
-		// like handler logic here
 	};
 
 	const formattedPrice = product?.productPrice ? `$${Number(product.productPrice).toLocaleString()}` : '';
@@ -96,7 +92,11 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 
 						{/* Likes */}
 						<Box className="stat-item">
-							<IconButton className={`like-btn ${isLiked ? 'liked' : ''}`} onClick={likeHandler} disableRipple>
+							<IconButton
+								className={`like-btn ${isLiked ? 'liked' : ''}`}
+								onClick={() => likeProductHandler(user, product?._id)}
+								disableRipple
+							>
 								{isLiked ? <FavoriteIcon className="like-icon active" /> : <FavoriteBorderIcon className="like-icon" />}
 							</IconButton>
 							<span className="stat-count">{product?.productLikes ?? 0}</span>
