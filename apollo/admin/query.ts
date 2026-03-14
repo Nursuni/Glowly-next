@@ -59,7 +59,7 @@ export const GET_ALL_PRODUCTS_BY_ADMIN = gql`
 				skinType
 				productTarget
 				ingredientType
-				stock
+
 				productViews
 				productLikes
 				productComments

@@ -14,7 +14,7 @@ import { ProductsInquiry } from '@/libs/types/product/product.input';
 import { useMutation } from '@apollo/client';
 import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 
-import { Message } from '../../enums/common.enum';
+import { Direction, Message } from '../../enums/common.enum';
 import { toastDismiss, toastError, toastSuccess } from '@/libs/toast';
 
 // ─── Filter config ─────────────────────────────────────────

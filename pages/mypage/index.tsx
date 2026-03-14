@@ -123,7 +123,7 @@ const MyPage: NextPage = () => {
 							<Stack className="main-config" mb={'76px'}>
 								<Stack className={'list-config'}>
 									{category === 'addProduct' && <AddProduct />}
-									{category === 'myProducts' && <MyProducts />}
+									{category === 'myProducts' && <MyProducts initialInput={undefined} />}
 									{category === 'myOrder' && <MyOrders />}
 									{category === 'myFavorites' && <MyFavorites />}
 									{category === 'recentlyVisited' && <RecentlyVisited />}

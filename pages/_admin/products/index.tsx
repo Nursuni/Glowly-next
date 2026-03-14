@@ -50,9 +50,8 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		getAllProductsByAdminRefetch({ input: productsInquiry }).then();
+		getAllProductsByAdminRefetch({ input: productsInquiry });
 	}, [productsInquiry]);
-
 	/** HANDLERS **/
 	const changePageHandler = async (event: unknown, newPage: number) => {
 		productsInquiry.page = newPage + 1;
@@ -102,9 +101,18 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 	const removeProductHandler = async (id: string) => {
 		try {
 			if (await toastInfo('Are you sure to remove?')) {
+				await removeProductByAdmin({
+					variables: {
+						input: id,
+					},
+				});
+
+				await getAllProductsByAdminRefetch({ input: productsInquiry });
 			}
+
 			menuIconCloseHandler();
 		} catch (err: any) {
+			menuIconCloseHandler();
 			toastError(err);
 		}
 	};
@@ -180,11 +188,11 @@ const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 									Sold
 								</ListItem>
 								<ListItem
-									onClick={(e) => tabChangeHandler(e, 'DELETE')}
+									onClick={(e) => tabChangeHandler(e, 'DELETED')}
 									value="DELETE"
-									className={value === 'DELETE' ? 'li on' : 'li'}
+									className={value === 'DELETED' ? 'li on' : 'li'}
 								>
-									Delete
+									Deleted
 								</ListItem>
 							</List>
 							<Divider />

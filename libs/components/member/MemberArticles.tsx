@@ -32,15 +32,17 @@ const MemberArticles: NextPage = ({ initialInput, ...props }: any) => {
 		refetch: boardArticlesRefetch,
 	} = useQuery(GET_BOARD_ARTICLES, {
 		fetchPolicy: 'network-only',
-		variables: {
-			input: searchFilter,
-		},
+		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: any) => {
-			setMemberBoArticles(data?.getBoardArticles?.list);
-			setTotal(data?.getBoardArticles?.metaCounter?.[0]?.total || 0);
-		},
 	});
+
+	// derive state from data instead of using onCompleted
+	useEffect(() => {
+		if (boardArticles?.getBoardArticles) {
+			setMemberBoArticles(boardArticles.getBoardArticles.list);
+			setTotal(boardArticles.getBoardArticles.metaCounter?.[0]?.total || 0);
+		}
+	}, [boardArticles]);
 
 	/** LIFECYCLES **/
 	useEffect(() => {

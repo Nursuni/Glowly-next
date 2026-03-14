@@ -14,7 +14,9 @@ import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { MembersInquiry } from '../../../libs/types/member/member.input';
 import { Member } from '../../../libs/types/member/member';
 import { MemberStatus, MemberType } from '../../../libs/enums/member.enum';
-
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_ALL_MEMBERS_BY_ADMIN } from '../../../apollo/admin/query';
+import { UPDATE_MEMBER_BY_ADMIN } from '../../../apollo/admin/mutation';
 import { MemberUpdate } from '../../../libs/types/member/member.update';
 import { toastError } from '@/libs/toast';
 
@@ -31,8 +33,26 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 
 	/** APOLLO REQUESTS **/
 
+	const { data, loading, error, refetch } = useQuery(GET_ALL_MEMBERS_BY_ADMIN, {
+		variables: { input: membersInquiry },
+		fetchPolicy: 'network-only',
+	});
+
+	const [updateMember] = useMutation(UPDATE_MEMBER_BY_ADMIN);
+
 	/** LIFECYCLES **/
-	useEffect(() => {}, [membersInquiry]);
+	useEffect(() => {
+		if (data?.getAllMembersByAdmin) {
+			setMembers(data.getAllMembersByAdmin.list || []);
+			setMembersTotal(data.getAllMembersByAdmin.metaCounter?.[0]?.total || 0);
+		}
+	}, [data]);
+
+	useEffect(() => {
+		if (refetch) {
+			refetch({ input: membersInquiry });
+		}
+	}, [membersInquiry]);
 
 	/** HANDLERS **/
 	const changePageHandler = async (event: unknown, newPage: number) => {
@@ -81,12 +101,16 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 
 	const updateMemberHandler = async (updateData: MemberUpdate) => {
 		try {
+			await updateMember({
+				variables: { input: updateData },
+			});
+
 			menuIconCloseHandler();
+			await refetch({ input: membersInquiry });
 		} catch (err: any) {
 			toastError(err);
 		}
 	};
-
 	const textHandler = useCallback((value: string) => {
 		try {
 			setSearchText(value);

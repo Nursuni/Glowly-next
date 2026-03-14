@@ -77,7 +77,7 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 				...prev,
 				search: {
 					memberId: member?._id,
-					typeList: [],
+
 					productTypeList: [],
 				},
 			}));

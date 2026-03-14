@@ -1,6 +1,6 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import { Box, Pagination } from '@mui/material';
+import { Pagination } from '@mui/material';
 import { useRouter } from 'next/router';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
@@ -13,7 +13,6 @@ import SubscribeSection from '../../libs/components/common/SubscribeSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Toolbar from '../../libs/components/common/Toolbar';
 import { SORT_OPTIONS } from '@/libs/types/common';
-import { start } from 'repl';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
@@ -26,7 +25,27 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const ProductList: NextPage = ({ initialInput }: any) => {
+interface GetProductsData {
+	getProducts: {
+		list: Product[];
+		metaCounter: { total: number }[];
+	};
+}
+
+/* CLEAN GRAPHQL INPUT */
+const cleanSearchFilter = (input: ProductsInquiry): ProductsInquiry => {
+	return {
+		...input,
+		search: {
+			text: input.search?.text ?? '',
+			pricesRange: input.search?.pricesRange ?? { start: 0, end: 500 },
+			skinType: input.search?.skinType ?? [],
+			productTypeList: input.search?.productTypeList ?? [],
+		},
+	};
+};
+
+const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput }) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 
@@ -37,34 +56,26 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
-
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [sortingOpen, setSortingOpen] = useState(false);
 	const [filterSortName, setFilterSortName] = useState('New');
-
 	const [searchText, setSearchText] = useState('');
 
-	/** APOLLO REQUESTS **/
+	/* APOLLO */
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
-	const {
-		loading: getProductsLoading,
-		data: getProductsData,
-		error: getProductsError,
-		refetch: getProductsRefetch,
-	} = useQuery(GET_PRODUCTS, {
+
+	const { data, refetch } = useQuery<GetProductsData>(GET_PRODUCTS, {
 		fetchPolicy: 'network-only',
-		variables: { input: searchFilter },
+		variables: { input: cleanSearchFilter(searchFilter) },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setProducts(data?.getProducts?.list);
-			setTotal(data?.getProducts?.metaCounter[0]?.total);
-		},
 	});
 
 	useEffect(() => {
-		console.log('SearchFilter', searchFilter);
-		//getProductsRefetch({input: searchFilter}).then()
-	}, [searchFilter]);
+		if (data) {
+			setProducts(data.getProducts.list ?? []);
+			setTotal(data.getProducts.metaCounter?.[0]?.total ?? 0);
+		}
+	}, [data]);
 
 	useEffect(() => {
 		if (router.query.input) {
@@ -74,8 +85,14 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 		}
 	}, [router.query.input]);
 
-	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
+	useEffect(() => {
+		refetch({ input: cleanSearchFilter(searchFilter) });
+	}, [searchFilter]);
+
+	/* PAGINATION */
+	const handlePaginationChange = async (_: ChangeEvent<unknown>, value: number) => {
 		const updatedFilter = { ...searchFilter, page: value };
+
 		setSearchFilter(updatedFilter);
 		setCurrentPage(value);
 
@@ -84,6 +101,7 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 		});
 	};
 
+	/* SEARCH */
 	const handleSearchSubmit = async () => {
 		const updatedFilter = {
 			...searchFilter,
@@ -103,6 +121,7 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 		if (e.key === 'Enter') handleSearchSubmit();
 	};
 
+	/* SORTING */
 	const sortingClickHandler = (e: MouseEvent<HTMLElement>) => {
 		setAnchorEl(e.currentTarget);
 		setSortingOpen(true);
@@ -114,7 +133,7 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 	};
 
 	const sortingHandler = async (e: React.MouseEvent<HTMLLIElement>) => {
-		let updatedFilter = { ...searchFilter };
+		const updatedFilter = { ...searchFilter };
 
 		switch (e.currentTarget.id) {
 			case 'new':
@@ -122,11 +141,13 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 				updatedFilter.direction = Direction.DESC;
 				setFilterSortName('New');
 				break;
+
 			case 'lowest':
 				updatedFilter.sort = 'productPrice';
 				updatedFilter.direction = Direction.ASC;
 				setFilterSortName('Lowest Price');
 				break;
+
 			case 'highest':
 				updatedFilter.sort = 'productPrice';
 				updatedFilter.direction = Direction.DESC;
@@ -146,20 +167,19 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 		sortingCloseHandler();
 	};
 
+	/* LIKE */
 	const likeProductHandler = async (user: T, id: string) => {
 		try {
 			if (!id) return;
 			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
-			//execute likeTargetProduct
-			await likeTargetProduct({
-				variables: { input: id },
-			});
-			await getProductsRefetch({ input: initialInput });
-			//execute getProductsRefetch
-			await toastSuccess('success');
+
+			await likeTargetProduct({ variables: { input: id } });
+
+			await refetch({ input: cleanSearchFilter(searchFilter) });
+
+			toastSuccess('Product liked!');
 		} catch (err) {
 			const errorMessage = err instanceof Error ? err.message : String(err);
-			console.log('errors, likeProperrtyHandler:', errorMessage);
 			toastError(errorMessage);
 		}
 	};
@@ -171,37 +191,31 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 			<div className="hero-box">
 				<div className="product-main-info">
 					<span className="product-eyebrow">Our catalog</span>
-
 					<h1 className="product-heading">
 						Discover our <em>products</em>
 					</h1>
-
 					<p className="product-sub">Browse our latest cosmetics and beauty products</p>
 				</div>
 			</div>
 
-			{/* TOOLBAR BOX */}
 			<div className="toolbar-box">
 				<div className="container">
-					<div className="toolbar">
-						<Toolbar
-							searchText={searchText}
-							setSearchText={setSearchText}
-							onSearchSubmit={handleSearchSubmit}
-							onSearchKeyDown={handleSearchKeyDown}
-							sortingClickHandler={sortingClickHandler}
-							sortingHandler={sortingHandler}
-							sortingCloseHandler={sortingCloseHandler}
-							anchorEl={anchorEl}
-							sortingOpen={sortingOpen}
-							filterSortName={filterSortName}
-							sortOptions={SORT_OPTIONS}
-						/>
-					</div>
+					<Toolbar
+						searchText={searchText}
+						setSearchText={setSearchText}
+						onSearchSubmit={handleSearchSubmit}
+						onSearchKeyDown={handleSearchKeyDown}
+						sortingClickHandler={sortingClickHandler}
+						sortingHandler={sortingHandler}
+						sortingCloseHandler={sortingCloseHandler}
+						anchorEl={anchorEl}
+						sortingOpen={sortingOpen}
+						filterSortName={filterSortName}
+						sortOptions={SORT_OPTIONS}
+					/>
 				</div>
 			</div>
 
-			{/* CONTENT AREA */}
 			<div className="container">
 				<div className="product-page">
 					<div className="filter-config">
@@ -223,7 +237,6 @@ const ProductList: NextPage = ({ initialInput }: any) => {
 				</div>
 			</div>
 
-			{/* PAGINATION */}
 			{products.length > 0 && (
 				<div className="pagination-box">
 					<Pagination
@@ -247,7 +260,14 @@ ProductList.defaultProps = {
 		limit: 9,
 		sort: 'createdAt',
 		direction: Direction.DESC,
-		search: { pricesRange: { start: 0, end: 500 } },
+		search: {
+			text: '',
+			skinType: [],
+
+			pricesRange: { start: 0, end: 500 },
+
+			productTypeList: [],
+		},
 	},
 };
 

@@ -1,161 +1,113 @@
+// libs/apollo/client.ts
 import { useMemo } from 'react';
 import { ApolloClient, ApolloLink, InMemoryCache, split, from, NormalizedCacheObject } from '@apollo/client';
-import createUploadLink from 'apollo-upload-client/public/createUploadLink.js';
+import { createUploadLink } from 'apollo-upload-client';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
 import { getJwtToken } from '../libs/auth';
-import { TokenRefreshLink } from 'apollo-link-token-refresh';
-
 import { socketVar } from './store';
 import { toastError } from '../libs/toast';
+
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
+/** Get headers with JWT token */
 function getHeaders() {
-	const headers = {} as HeadersInit;
+	const headers: HeadersInit = {};
 	const token = getJwtToken();
-	// @ts-ignore
 	if (token) headers['Authorization'] = `Bearer ${token}`;
 	return headers;
 }
 
-const tokenRefreshLink = new TokenRefreshLink({
-	accessTokenField: 'accessToken',
-	isTokenValidOrUndefined: () => {
-		return true;
-	},
-	fetchAccessToken: () => {
-		// execute refresh token
-		return null;
-	},
-	handleFetch: (operation) => {
-		return operation;
-	},
-});
-//Custom WebSocket client
+/** Custom WebSocket wrapper */
 class LoggingWebSocket {
 	private socket: WebSocket;
-
 	constructor(url: string) {
 		this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
 		socketVar(this.socket);
 
-		this.socket.onopen = () => {
-			console.log('WebSocket connection!');
-		};
-
-		this.socket.onmessage = (msg) => {
-			console.log('WebSocket message:', msg.data);
-		};
-
-		this.socket.onerror = (error) => {
-			console.log('WebSocket error:', error);
-		};
+		this.socket.onopen = () => console.log('WebSocket connected');
+		this.socket.onmessage = (msg) => console.log('WS message:', msg.data);
+		this.socket.onerror = (err) => console.log('WS error:', err);
 	}
-
 	send(data: string | ArrayBuffer | SharedArrayBuffer | Blob | ArrayBufferView) {
 		this.socket.send(data);
 	}
-
 	close() {
 		this.socket.close();
 	}
 }
 
+/** Create Apollo link (HTTP + WS + auth + error) */
 function createIsomorphicLink() {
-	if (typeof window !== 'undefined') {
-		const authLink = new ApolloLink((operation, forward) => {
-			operation.setContext(({ headers = {} }) => ({
-				headers: {
-					...headers,
-					...getHeaders(),
-				},
-			}));
-			console.warn('requesting.. ', operation);
-			return forward(operation);
-		});
+	if (typeof window === 'undefined')
+		return createUploadLink({ uri: process.env.REACT_APP_API_GRAPHQL_URL }) as unknown as ApolloLink;
 
-		// @ts-ignore
-		const link = new createUploadLink({
-			uri: process.env.REACT_APP_API_GRAPHQL_URL,
-		});
+	// Auth link
+	const authLink = new ApolloLink((operation, forward) => {
+		operation.setContext(({ headers = {} }) => ({
+			headers: { ...headers, ...getHeaders() },
+		}));
+		return forward(operation);
+	});
 
-		/* WEBSOCKET SUBSCRIPTION LINK */
-		const wsLink = new WebSocketLink({
-			uri: process.env.REACT_APP_API_WS ?? 'ws://127.0.0.1:3007',
-			options: {
-				reconnect: false,
-				timeout: 30000,
-				connectionParams: () => {
-					return { headers: getHeaders() };
-				},
-			},
-			webSocketImpl: LoggingWebSocket,
-		});
+	// Upload HTTP link
+	const httpLink = createUploadLink({
+		uri: process.env.REACT_APP_API_GRAPHQL_URL,
+	});
 
-		const errorLink = onError(({ graphQLErrors, networkError, response }) => {
-			if (graphQLErrors) {
-				graphQLErrors.map(({ message, locations, path, extensions }) => {
-					console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
-					if (!message.includes('input')) toastError(message);
-				});
-			}
+	// WebSocket link
+	const wsLink = new WebSocketLink({
+		uri: process.env.REACT_APP_API_WS ?? 'ws://127.0.0.1:3007/graphql',
+		options: {
+			reconnect: true,
+			connectionParams: () => ({ headers: getHeaders() }),
+		},
+		webSocketImpl: LoggingWebSocket,
+	});
 
-			if (networkError) console.log(`[Network error]: ${networkError}`);
-			// @ts-ignore
-			if (networkError?.statusCode === 401) {
-				// Handle unauthorized error (e.g., redirect to login)
-			}
-		});
+	// Split for subscriptions vs queries/mutations
+	const splitLink = split(
+		({ query }) => {
+			const def = getMainDefinition(query);
+			return def.kind === 'OperationDefinition' && def.operation === 'subscription';
+		},
+		wsLink,
+		authLink.concat(httpLink),
+	);
 
-		const splitLink = split(
-			({ query }) => {
-				const definition = getMainDefinition(query);
-				return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-			},
-			wsLink,
-			authLink.concat(link),
-		);
+	// Error handling
+	const errorLink = onError(({ graphQLErrors, networkError }) => {
+		if (graphQLErrors) {
+			graphQLErrors.forEach(({ message, locations, path }) => {
+				console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
+				toastError(message);
+			});
+		}
+		if (networkError) console.log(`[Network error]:`, networkError);
+	});
 
-		return from([errorLink, tokenRefreshLink, splitLink]);
-	}
+	return from([errorLink, splitLink]);
 }
 
+/** Create Apollo client */
 function createApolloClient() {
 	return new ApolloClient({
 		ssrMode: typeof window === 'undefined',
 		link: createIsomorphicLink(),
 		cache: new InMemoryCache(),
-		resolvers: {},
 	});
 }
 
-export function initializeApollo(initialState = null) {
+/** Initialize Apollo client */
+export function initializeApollo(initialState: any = null) {
 	const _apolloClient = apolloClient ?? createApolloClient();
 	if (initialState) _apolloClient.cache.restore(initialState);
-	if (typeof window === 'undefined') return _apolloClient;
-	if (!apolloClient) apolloClient = _apolloClient;
-
+	if (typeof window !== 'undefined' && !apolloClient) apolloClient = _apolloClient;
 	return _apolloClient;
 }
 
+/** Hook for React components */
 export function useApollo(initialState: any) {
 	return useMemo(() => initializeApollo(initialState), [initialState]);
 }
-
-/**
-import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
-
-// No Subscription required for develop process
-
-const httpLink = createHttpLink({
-  uri: "http://localhost:3007/graphql",
-});
-
-const client = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache(),
-});
-
-export default client;
-*/

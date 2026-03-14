@@ -98,7 +98,7 @@ export const GET_PRODUCT = gql`
 			skinType
 			productTarget
 			ingredientType
-			stock
+
 			productViews
 			productLikes
 			productComments
@@ -155,7 +155,7 @@ export const GET_PRODUCTS = gql`
 				skinType
 				productTarget
 				ingredientType
-				stock
+
 				productViews
 				productLikes
 				productComments
@@ -217,7 +217,7 @@ export const GET_BRAND_PRODUCTS = gql`
 				skinType
 				productTarget
 				ingredientType
-				stock
+
 				productViews
 				productLikes
 				productComments
@@ -251,7 +251,7 @@ export const GET_FAVORITES = gql`
 				skinType
 				productTarget
 				ingredientType
-				stock
+
 				productViews
 				productLikes
 				productComments
@@ -297,7 +297,7 @@ export const GET_FAVORITES = gql`
 	}
 `;
 
-export const GET_VISITED = gql`
+export const GET_VISITED_PRODUCTS = gql`
 	query GetVisited($input: OrdinaryInquiry!) {
 		getVisited(input: $input) {
 			list {
@@ -313,7 +313,7 @@ export const GET_VISITED = gql`
 				skinType
 				productTarget
 				ingredientType
-				stock
+
 				productViews
 				productLikes
 				productComments

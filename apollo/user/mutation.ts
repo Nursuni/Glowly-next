@@ -141,7 +141,7 @@ export const CREATE_PRODUCT = gql`
 			skinType
 			productTarget
 			ingredientType
-			stock
+
 			productViews
 			productLikes
 			productComments
@@ -170,7 +170,7 @@ export const UPDATE_PRODUCT = gql`
 			skinType
 			productTarget
 			ingredientType
-			stock
+
 			productViews
 			productLikes
 			productComments
@@ -199,7 +199,7 @@ export const LIKE_TARGET_PRODUCT = gql`
 			skinType
 			productTarget
 			ingredientType
-			stock
+
 			productViews
 			productLikes
 			productComments

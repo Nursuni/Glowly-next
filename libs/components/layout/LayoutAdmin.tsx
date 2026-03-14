@@ -18,6 +18,7 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { REACT_APP_API_URL } from '../../config';
 import { MemberType } from '../../enums/member.enum';
+import MenuList from '../admin/AdminMenuList';
 const drawerWidth = 280;
 
 const withAdminLayout = (Component: ComponentType) => {
@@ -166,7 +167,7 @@ const withAdminLayout = (Component: ComponentType) => {
 							</Stack>
 						</Toolbar>
 						<Divider />
-						/** ========================= /* TODO: MenuList */
+						<MenuList />
 					</Drawer>
 
 					<Box component={'div'} id="bunker" sx={{ flexGrow: 1 }}>

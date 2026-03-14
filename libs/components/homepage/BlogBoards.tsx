@@ -2,59 +2,78 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { BoardArticle } from '../../types/board-article/board-article';
-import { BoardArticleCategory, BoardArticleStatus } from '../../enums/board-article.enum';
+import { BoardArticleCategory } from '../../enums/board-article.enum';
 import BlogCard from './BlogCard';
-import { T } from '../../types/common';
 import { useQuery } from '@apollo/client';
-import { GET_BOARD_ARTICLE } from '../../../apollo/user/query';
+import { GET_BOARD_ARTICLES } from '../../../apollo/user/query';
 
 const BlogBoards = () => {
 	const device = useDeviceDetect();
 	const ref = useRef<HTMLElement>(null);
 	const [visible, setVisible] = useState(false);
-	const [searchCommunity, setSearchCommunity] = useState({
-		page: 1,
-		sort: 'articleViews',
-		direction: 'DESC',
-	});
+
 	const [newsArticles, setNewsArticles] = useState<BoardArticle[]>([]);
 	const [freeArticles, setFreeArticles] = useState<BoardArticle[]>([]);
 
-	/** APOLLO REQUESTS **/
-	const { data: newsData, loading: getBoardArticlesLoading } = useQuery(GET_BOARD_ARTICLE, {
+	// Apollo Queries
+	const { data: newsData, loading: newsLoading } = useQuery(GET_BOARD_ARTICLES, {
 		fetchPolicy: 'network-only',
-		variables: { input: { ...searchCommunity, limit: 6, search: { articleCategory: BoardArticleCategory.NEWS } } },
-		notifyOnNetworkStatusChange: true,
+		variables: {
+			input: {
+				page: 1,
+				limit: 6,
+				sort: 'articleViews',
+				direction: 'DESC', // must match GraphQL enum
+				search: { articleCategory: BoardArticleCategory.NEWS },
+			},
+		},
 	});
 
-	const { data: freeData, loading: getFreeArticlesLoading } = useQuery(GET_BOARD_ARTICLE, {
+	const { data: freeData, loading: freeLoading } = useQuery(GET_BOARD_ARTICLES, {
 		fetchPolicy: 'network-only',
-		variables: { input: { ...searchCommunity, limit: 3, search: { articleCategory: BoardArticleCategory.FREE } } },
-		notifyOnNetworkStatusChange: true,
+		variables: {
+			input: {
+				page: 1,
+				limit: 3,
+				sort: 'articleViews',
+				direction: 'DESC',
+				search: { articleCategory: BoardArticleCategory.FREE },
+			},
+		},
 	});
 
+	// Update state when data changes
+	useEffect(() => {
+		if (newsData?.getBoardArticles?.list) setNewsArticles(newsData.getBoardArticles.list);
+		if (freeData?.getBoardArticles?.list) setFreeArticles(freeData.getBoardArticles.list);
+	}, [newsData, freeData]);
+
+	// Intersection Observer for animation
 	useEffect(() => {
 		const el = ref.current;
 		if (!el) return;
-		const obs = new IntersectionObserver(
-			([e]) => {
-				if (e.isIntersecting) {
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) {
 					setVisible(true);
-					obs.disconnect();
+					observer.disconnect();
 				}
 			},
 			{ threshold: 0.1 },
 		);
-		obs.observe(el);
-		return () => obs.disconnect();
+
+		observer.observe(el);
+		return () => observer.disconnect();
 	}, []);
 
+	// Hide section on mobile
 	if (device === 'mobile') return null;
 
 	return (
 		<section ref={ref} className={`blog-section${visible ? ' in-view' : ''}`}>
 			<div className="blog-inner">
-				{/* ── Header ── */}
+				{/* Header */}
 				<div className="blog-header">
 					<span className="blog-eyebrow">Journal</span>
 					<h2 className="blog-heading">
@@ -64,9 +83,9 @@ const BlogBoards = () => {
 					</h2>
 				</div>
 
-				{/* ── Two columns ── */}
+				{/* Two columns */}
 				<div className="blog-columns">
-					{/* Left — News grid */}
+					{/* News Column */}
 					<div className="blog-col blog-col--news">
 						<div className="blog-col-header">
 							<span>Latest News</span>
@@ -84,7 +103,7 @@ const BlogBoards = () => {
 					{/* Divider */}
 					<div className="blog-divider" />
 
-					{/* Right — Tips list */}
+					{/* Free/Tip Column */}
 					<div className="blog-col blog-col--tips">
 						<div className="blog-col-header">
 							<span>Beauty Tips</span>

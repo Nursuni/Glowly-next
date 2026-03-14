@@ -53,7 +53,7 @@ export const UPDATE_PRODUCT_BY_ADMIN = gql`
 			skinType
 			productTarget
 			ingredientType
-			stock
+
 			productViews
 			productLikes
 			productComments
@@ -82,7 +82,7 @@ export const REMOVE_PRODUCT_BY_ADMIN = gql`
 			skinType
 			productTarget
 			ingredientType
-			stock
+
 			productViews
 			productLikes
 			productComments

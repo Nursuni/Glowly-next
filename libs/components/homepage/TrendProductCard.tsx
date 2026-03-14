@@ -67,10 +67,6 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 
 				{/* Meta row */}
 				<Box className="card-meta">
-					<Box className="meta-item">
-						<span className="meta-label">Stock</span>
-						<span className="meta-value">{product.productStock ?? 0}</span>
-					</Box>
 					<Box className="meta-dot" />
 					<Box className="meta-item">
 						<span className="meta-label">Status</span>

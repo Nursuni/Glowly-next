@@ -29,7 +29,7 @@ export enum Message {
 	PRODUCT_NOT_AVAILABLE = 'Product is not available!',
 	ALREADY_PURCHASED = 'You have already purchased this product!',
 	ALREADY_REPORTED = 'ALREADY_REPORTED',
-	INSERT_ALL_INPUTS = "INSERT_ALL_INPUTS",
+	INSERT_ALL_INPUTS = 'INSERT_ALL_INPUTS',
 }
 
 export enum Direction {

@@ -10,98 +10,103 @@ import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { Product } from '../../types/product/product';
 import { ProductCard } from '../mypage/ProductCard';
 
-const MemberProducts = ({ initialInput, likeMemberHandler, ...props }: any) => {
-	// ✅ likeMemberHandler added to destructured props
+interface MemberProductsProps {
+	initialInput: ProductsInquiry;
+	likeMemberHandler?: (id: string) => void;
+}
+
+const MemberProducts: NextPage<MemberProductsProps> = ({ initialInput, likeMemberHandler }) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const { memberId } = router.query;
+
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>({ ...initialInput });
 	const [brandProducts, setBrandProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 
-	/** APOLLO REQUESTS **/
-	const {
-		loading: getProductsLoading,
-		data: getProductsData,
-		error: getProductsError,
-		refetch: getProductsRefetch,
-	} = useQuery(GET_PRODUCTS, {
+	/** APOLLO REQUEST **/
+	const { refetch } = useQuery(GET_PRODUCTS, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
 		skip: !searchFilter?.search?.memberId,
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: any) => {
-			setBrandProducts(data?.getProducts?.list);
-			setTotal(data?.getProducts?.metaCounter[0]?.total ?? 0);
+			setBrandProducts(data?.getProducts?.list ?? []);
+			setTotal(data?.getProducts?.metaCounter?.[0]?.total ?? 0);
 		},
 	});
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		getProductsRefetch().then();
-	}, [searchFilter]);
-
-	useEffect(() => {
-		if (memberId)
-			setSearchFilter({ ...initialInput, search: { ...initialInput.search, memberId: memberId as string } });
+		if (memberId) {
+			setSearchFilter({
+				...initialInput,
+				search: { ...initialInput.search, memberId: memberId as string },
+			});
+		}
 	}, [memberId]);
 
+	useEffect(() => {
+		if (refetch) refetch({ input: searchFilter });
+	}, [searchFilter, refetch]);
+
 	/** HANDLERS **/
-	const paginationHandler = (e: T, value: number) => {
-		setSearchFilter({ ...searchFilter, page: value });
+	const paginationHandler = (_: T, value: number) => {
+		setSearchFilter((prev) => ({ ...prev, page: value }));
 	};
 
-	if (device === 'mobile') {
-		return <div>Glowly MOBILE</div>;
-	} else {
-		return (
-			<div id="member-products-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">Products</Typography>
-					</Stack>
-				</Stack>
-				<Stack className="products-list-box">
-					<Stack className="list-box">
-						{brandProducts?.length > 0 && (
-							<Stack className="listing-title-box">
-								<Typography className="title-text">Product title</Typography>
-								<Typography className="title-text">Date Published</Typography>
-								<Typography className="title-text">Status</Typography>
-								<Typography className="title-text">View</Typography>
-							</Stack>
-						)}
-						{brandProducts?.length === 0 && (
-							<div className={'no-data'}>
-								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>You haven't added any beauty products yet.</p>
-							</div>
-						)}
-						{brandProducts?.map((product: Product) => {
-							return <ProductCard product={product} memberPage={true} key={product?._id} />;
-						})}
+	if (device === 'mobile') return <div>Glowly MOBILE</div>;
 
-						{brandProducts.length !== 0 && (
-							<Stack className="pagination-config">
-								<Stack className="pagination-box">
-									<Pagination
-										count={Math.ceil(total / searchFilter.limit)}
-										page={searchFilter.page}
-										shape="circular"
-										color="primary"
-										onChange={paginationHandler}
-									/>
-								</Stack>
-								<Stack className="total-result">
-									<Typography>{total} products available</Typography>
-								</Stack>
-							</Stack>
-						)}
-					</Stack>
+	return (
+		<div id="member-products-page">
+			<Stack className="main-title-box">
+				<Stack className="right-box">
+					<Typography className="main-title">Products</Typography>
 				</Stack>
-			</div>
-		);
-	}
+			</Stack>
+
+			<Stack className="products-list-box">
+				<Stack className="list-box">
+					{brandProducts.length > 0 && (
+						<Stack className="listing-title-box">
+							<Typography className="title-text">Product title</Typography>
+							<Typography className="title-text">Date Published</Typography>
+							<Typography className="title-text">Status</Typography>
+							<Typography className="title-text">View</Typography>
+						</Stack>
+					)}
+
+					{brandProducts.length === 0 && (
+						<div className="no-data">
+							<img src="/img/icons/icoAlert.svg" alt="no products" />
+							<p>You haven't added any beauty products yet.</p>
+						</div>
+					)}
+
+					{brandProducts.map((product: Product) => (
+						<ProductCard product={product} memberPage key={product?._id} />
+					))}
+
+					{brandProducts.length > 0 && (
+						<Stack className="pagination-config">
+							<Stack className="pagination-box">
+								<Pagination
+									count={Math.ceil(total / searchFilter.limit)}
+									page={searchFilter.page}
+									shape="circular"
+									color="primary"
+									onChange={paginationHandler}
+								/>
+							</Stack>
+							<Stack className="total-result">
+								<Typography>{total} products available</Typography>
+							</Stack>
+						</Stack>
+					)}
+				</Stack>
+			</Stack>
+		</div>
+	);
 };
 
 MemberProducts.defaultProps = {
@@ -111,6 +116,8 @@ MemberProducts.defaultProps = {
 		sort: 'createdAt',
 		search: {
 			memberId: '',
+
+			productTypeList: [],
 		},
 	},
 };

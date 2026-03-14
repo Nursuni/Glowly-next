@@ -95,7 +95,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 		const value = e.target.value;
 		const checked = e.target.checked;
 
-		let updatedTypes = searchFilter?.search?.typeList || [];
+		let updatedTypes = searchFilter?.search?.productTypeList || [];
 
 		if (checked) updatedTypes = [...updatedTypes, value];
 		else updatedTypes = updatedTypes.filter((item: string) => item !== value);
@@ -103,7 +103,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 		const updated = {
 			...searchFilter,
 			page: 1,
-			search: { ...searchFilter.search, typeList: updatedTypes },
+			search: { ...searchFilter.search, productTypeList: updatedTypes },
 		};
 
 		setSearchFilter(updated);
@@ -114,7 +114,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 		const value = e.target.value;
 		const checked = e.target.checked;
 
-		let updatedSkinTypes = searchFilter?.search?.typeList || [];
+		let updatedSkinTypes = searchFilter?.search?.productTypeList || [];
 
 		if (value === 'ALL') {
 			updatedSkinTypes = [];
@@ -126,7 +126,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 		const updated = {
 			...searchFilter,
 			page: 1,
-			search: { ...searchFilter.search, typeList: updatedSkinTypes },
+			search: { ...searchFilter.search, productTypeList: updatedSkinTypes },
 		};
 
 		setSearchFilter(updated);
@@ -188,7 +188,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 						<Stack key={type} direction="row" alignItems="center">
 							<Checkbox
 								value={type}
-								checked={(searchFilter?.search?.typeList || []).includes(type)}
+								checked={(searchFilter?.search?.productTypeList || []).includes(type)}
 								onChange={productTypeSelectHandler}
 							/>
 							<Typography>{type}</Typography>
@@ -210,8 +210,8 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 								value={type}
 								checked={
 									type === 'ALL'
-										? (searchFilter?.search?.typeList || []).length === 0
-										: (searchFilter?.search?.typeList || []).includes(type as SkinType)
+										? (searchFilter?.search?.productTypeList || []).length === 0
+										: (searchFilter?.search?.productTypeList || []).includes(type as SkinType)
 								}
 								onChange={skinTypeHandler}
 							/>

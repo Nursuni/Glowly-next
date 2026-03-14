@@ -1,86 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Pagination, Stack, Typography } from '@mui/material';
 
 import { T } from '../../types/common';
-import { GET_VISITED } from '../../../apollo/user/query';
+import { GET_VISITED_PRODUCTS } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 import { Product } from '../../types/product/product';
 import { ProductCard } from './ProductCard';
 
-const RecentlyVisited: NextPage = () => {
+const RecentlyVisitedProducts: NextPage = () => {
 	const device = useDeviceDetect();
-	const [recentlyVisited, setRecentlyVisited] = useState<Product[]>([]);
-	const [total, setTotal] = useState<number>(0);
-	const [searchVisited, setSearchVisited] = useState<T>({ page: 1, limit: 6 });
 
-	/** APOLLO REQUESTS **/
-	const {
-		loading: getVisitedLoading,
-		data: getVisitedData,
-		error: getVisitedError,
-		refetch: getVisitedRefetch,
-	} = useQuery(GET_VISITED, {
+	const [recentlyVisitedProducts, setRecentlyVisitedProducts] = useState<Product[]>([]);
+	const [total, setTotal] = useState<number>(0);
+	const [searchVisitedProducts, setSearchVisitedProducts] = useState<T>({
+		page: 1,
+		limit: 6,
+	});
+
+	/** APOLLO QUERY **/
+	const { data: getVisitedProductsData } = useQuery(GET_VISITED_PRODUCTS, {
 		fetchPolicy: 'network-only',
 		variables: {
-			input: searchVisited,
-		},
-		onCompleted(data: T) {
-			setRecentlyVisited(data.getVisited?.list);
-			setTotal(data.getVisited?.metaCounter?.[0]?.total || 0);
+			input: searchVisitedProducts,
 		},
 	});
 
-	/** HANDLERS **/
+	/** UPDATE STATE WHEN DATA ARRIVES **/
+	useEffect(() => {
+		if (getVisitedProductsData) {
+			setRecentlyVisitedProducts(getVisitedProductsData.getVisitedProducts?.list || []);
+			setTotal(getVisitedProductsData.getVisitedProducts?.metaCounter?.[0]?.total || 0);
+		}
+	}, [getVisitedProductsData]);
+
+	/** PAGINATION **/
 	const paginationHandler = (e: T, value: number) => {
-		setSearchVisited({ ...searchVisited, page: value });
+		setSearchVisitedProducts({
+			...searchVisitedProducts,
+			page: value,
+		});
 	};
 
 	if (device === 'mobile') {
-		return <div>glowly Saved Favorites MOBILE</div>;
-	} else {
-		return (
-			<div id="my-favorites-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">Recently Viewed</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
-					</Stack>
-				</Stack>
-				<Stack className="favorites-list-box">
-					{recentlyVisited?.length ? (
-						recentlyVisited?.map((product: Product) => {
-							return <ProductCard product={product} recentlyVisited={true} />;
-						})
-					) : (
-						<div className={'no-data'}>
-							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Recently Viewedproduct found!</p>
-						</div>
-					)}
-				</Stack>
-				{recentlyVisited?.length ? (
-					<Stack className="pagination-config">
-						<Stack className="pagination-box">
-							<Pagination
-								count={Math.ceil(total / searchVisited.limit)}
-								page={searchVisited.page}
-								shape="circular"
-								color="primary"
-								onChange={paginationHandler}
-							/>
-						</Stack>
-						<Stack className="total-result">
-							<Typography>
-								Total {total} recently viewed product{total > 1 ? 'ies' : 'y'}
-							</Typography>
-						</Stack>
-					</Stack>
-				) : null}
-			</div>
-		);
+		return <div>Recently Viewed MOBILE</div>;
 	}
+
+	return (
+		<div id="my-favorites-page">
+			<Stack className="main-title-box">
+				<Stack className="right-box">
+					<Typography className="main-title">Recently Viewed</Typography>
+					<Typography className="sub-title">We are glad to see you again!</Typography>
+				</Stack>
+			</Stack>
+
+			<Stack className="favorites-list-box">
+				{recentlyVisitedProducts?.length ? (
+					recentlyVisitedProducts.map((product: Product) => <ProductCard key={product._id} product={product} />)
+				) : (
+					<div className="no-data">
+						<img src="/img/icons/icoAlert.svg" alt="" />
+						<p>No Recently Viewed product found!</p>
+					</div>
+				)}
+			</Stack>
+
+			{recentlyVisitedProducts?.length ? (
+				<Stack className="pagination-config">
+					<Stack className="pagination-box">
+						<Pagination
+							count={Math.ceil(total / searchVisitedProducts.limit)}
+							page={searchVisitedProducts.page}
+							shape="circular"
+							color="primary"
+							onChange={paginationHandler}
+						/>
+					</Stack>
+
+					<Stack className="total-result">
+						<Typography>
+							Total {total} recently viewed product{total > 1 ? 's' : ''}
+						</Typography>
+					</Stack>
+				</Stack>
+			) : null}
+		</div>
+	);
 };
 
-export default RecentlyVisited;
+export default RecentlyVisitedProducts;
