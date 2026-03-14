@@ -1,0 +1,209 @@
+import React, { useEffect, useState } from 'react';
+import type { NextPage } from 'next';
+import withAdminLayout from '../../../libs/components/layout/LayoutAdmin';
+import { Box, List, ListItem, Stack } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { TabContext } from '@mui/lab';
+import TablePagination from '@mui/material/TablePagination';
+import { AllProductsInquiry } from '@/libs/types/product/product.input';
+import { Product } from '@/libs/types/product/product';
+import { ProductStatus, ProductType } from '@/libs/enums/product.enum';
+import { toastError, toastInfo } from '@/libs/toast';
+import { ProductUpdate } from '@/libs/types/product/product.update';
+import { ProductPanelList } from '@/libs/components/admin/products/ProductList';
+
+const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
+	const [anchorEl, setAnchorEl] = useState<[] | HTMLElement[]>([]);
+	const [productsInquiry, setProductsInquiry] = useState<AllProductsInquiry>(initialInquiry);
+	const [products, setProducts] = useState<Product[]>([]);
+	const [productsTotal, setProductsTotal] = useState<number>(0);
+	const [value, setValue] = useState(
+		productsInquiry?.search?.productStatus ? productsInquiry?.search?.productStatus : 'ALL',
+	);
+	const [searchType, setSearchType] = useState('ALL');
+
+	/** APOLLO REQUESTS **/
+
+	/** LIFECYCLES **/
+	useEffect(() => {}, [productsInquiry]);
+
+	/** HANDLERS **/
+	const changePageHandler = async (event: unknown, newPage: number) => {
+		productsInquiry.page = newPage + 1;
+		setProductsInquiry({ ...productsInquiry });
+	};
+
+	const changeRowsPerPageHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		productsInquiry.limit = parseInt(event.target.value, 10);
+		productsInquiry.page = 1;
+		setProductsInquiry({ ...productsInquiry });
+	};
+
+	const menuIconClickHandler = (e: any, index: number) => {
+		const tempAnchor = anchorEl.slice();
+		tempAnchor[index] = e.currentTarget;
+		setAnchorEl(tempAnchor);
+	};
+
+	const menuIconCloseHandler = () => {
+		setAnchorEl([]);
+	};
+
+	const tabChangeHandler = async (event: any, newValue: string) => {
+		setValue(newValue);
+
+		setProductsInquiry({ ...productsInquiry, page: 1, sort: 'createdAt' });
+
+		switch (newValue) {
+			case 'ACTIVE':
+				setProductsInquiry({ ...productsInquiry, search: { productStatus: ProductStatus.ACTIVE } });
+				break;
+			case 'SOLD':
+				setProductsInquiry({ ...productsInquiry, search: { productStatus: ProductStatus.SOLD } });
+				break;
+			case 'DELETE':
+				setProductsInquiry({ ...productsInquiry, search: { productStatus: ProductStatus.DELETED } });
+				break;
+			default:
+				delete productsInquiry?.search?.productStatus;
+				setProductsInquiry({ ...productsInquiry });
+				break;
+		}
+	};
+
+	const removeProductHandler = async (id: string) => {
+		try {
+			if (await toastInfo('Are you sure to remove?')) {
+			}
+			menuIconCloseHandler();
+		} catch (err: any) {
+			toastError(err);
+		}
+	};
+
+	const searchTypeHandler = async (newValue: string) => {
+		try {
+			setSearchType(newValue);
+
+			if (newValue !== 'ALL') {
+				setProductsInquiry({
+					...productsInquiry,
+					page: 1,
+					sort: 'createdAt',
+					search: {
+						...productsInquiry.search,
+						productType: newValue as ProductType,
+					},
+				});
+			} else {
+				delete productsInquiry?.search?.productType;
+				setProductsInquiry({ ...productsInquiry });
+			}
+		} catch (err: any) {
+			console.log('searchTypeHandler: ', err.message);
+		}
+	};
+
+	const updateProductHandler = async (updateData: ProductUpdate) => {
+		try {
+			console.log('+updateData: ', updateData);
+			menuIconCloseHandler();
+		} catch (err: any) {
+			menuIconCloseHandler();
+			toastError(err);
+		}
+	};
+
+	return (
+		<Box component={'div'} className={'content'}>
+			<Typography variant={'h2'} className={'tit'} sx={{ mb: '24px' }}>
+				Product List
+			</Typography>
+			<Box component={'div'} className={'table-wrap'}>
+				<Box component={'div'} sx={{ width: '100%', typography: 'body1' }}>
+					<TabContext value={value}>
+						<Box component={'div'}>
+							<List className={'tab-menu'}>
+								<ListItem
+									onClick={(e) => tabChangeHandler(e, 'ALL')}
+									value="ALL"
+									className={value === 'ALL' ? 'li on' : 'li'}
+								>
+									All
+								</ListItem>
+								<ListItem
+									onClick={(e) => tabChangeHandler(e, 'ACTIVE')}
+									value="ACTIVE"
+									className={value === 'ACTIVE' ? 'li on' : 'li'}
+								>
+									Active
+								</ListItem>
+								<ListItem
+									onClick={(e) => tabChangeHandler(e, 'SOLD')}
+									value="SOLD"
+									className={value === 'SOLD' ? 'li on' : 'li'}
+								>
+									Sold
+								</ListItem>
+								<ListItem
+									onClick={(e) => tabChangeHandler(e, 'DELETE')}
+									value="DELETE"
+									className={value === 'DELETE' ? 'li on' : 'li'}
+								>
+									Delete
+								</ListItem>
+							</List>
+							<Divider />
+							<Stack className={'search-area'} sx={{ m: '24px' }}>
+								<Select sx={{ width: '160px', mr: '20px' }} value={searchType}>
+									<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
+										ALL
+									</MenuItem>
+									{Object.values(ProductType).map((type: string) => (
+										<MenuItem value={type} onClick={() => searchTypeHandler(type)} key={type}>
+											{type}
+										</MenuItem>
+									))}
+								</Select>
+							</Stack>
+							<Divider />
+						</Box>
+						<ProductPanelList
+							products={products}
+							anchorEl={anchorEl}
+							menuIconClickHandler={menuIconClickHandler}
+							menuIconCloseHandler={menuIconCloseHandler}
+							updateProductHandler={updateProductHandler}
+							removeProductHandler={removeProductHandler}
+						/>
+
+						<TablePagination
+							rowsPerPageOptions={[10, 20, 40, 60]}
+							component="div"
+							count={productsTotal}
+							rowsPerPage={productsInquiry?.limit}
+							page={productsInquiry?.page - 1}
+							onPageChange={changePageHandler}
+							onRowsPerPageChange={changeRowsPerPageHandler}
+						/>
+					</TabContext>
+				</Box>
+			</Box>
+		</Box>
+	);
+};
+
+AdminProducts.defaultProps = {
+	initialInquiry: {
+		page: 1,
+		limit: 10,
+		sort: 'createdAt',
+		direction: 'DESC',
+		search: {},
+	},
+};
+
+export default withAdminLayout(AdminProducts);

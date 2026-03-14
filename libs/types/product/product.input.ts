@@ -48,6 +48,7 @@ export interface BrandProductsInquiry {
 
 interface ALPISearch {
 	productStatus?: ProductStatus;
+	productType?: ProductType;
 }
 
 export interface AllProductsInquiry {
