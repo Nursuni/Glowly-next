@@ -1,5 +1,5 @@
 export const REACT_APP_API_URL = `${process.env.REACT_APP_API_URL}`;
-
+const thisYear = new Date().getFullYear();
 export const Messages = {
 	// General
 	UNKNOWN_ERROR: 'Something went wrong!',
@@ -30,3 +30,5 @@ export const Messages = {
 	// Connection
 	TIMEOUT: 'Request timeout. Try again.',
 } as const;
+
+export const topProductRank = 50;
