@@ -21,7 +21,7 @@ import { CommentGroup } from '../../libs/enums/comment.enum';
 import { userVar } from '../../apollo/store';
 
 import { GET_MEMBER, GET_PRODUCTS, GET_COMMENTS } from '@/apollo/user/query';
-import { CREATE_COMMENT } from '@/apollo/user/mutation';
+import { CREATE_COMMENT, LIKE_TARGET_BOARD_ARTICLE, UPDATE_COMMENT } from '@/apollo/user/mutation';
 import { LIKE_TARGET_PRODUCT } from '@/apollo/user/mutation';
 import { REACT_APP_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -57,6 +57,11 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	});
 
 	const [createComment] = useMutation(CREATE_COMMENT);
+
+	/** APOLLO REQUESTS **/
+	const [likeTargetBoardArticle] = useMutation(LIKE_TARGET_BOARD_ARTICLE);
+
+	const [updateComment] = useMutation(UPDATE_COMMENT);
 
 	/** GET BRAND **/
 	useQuery(GET_MEMBER, {
