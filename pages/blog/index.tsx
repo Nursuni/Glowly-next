@@ -10,6 +10,12 @@ import { T } from '../../libs/types/common';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { BoardArticlesInquiry } from '../../libs/types/board-article/board-article.input';
 import { BoardArticleCategory } from '../../libs/enums/board-article.enum';
+import { GET_BOARD_ARTICLES } from '@/apollo/user/query';
+import { useMutation, useQuery } from '@apollo/client';
+import { LIKE_TARGET_BOARD_ARTICLE } from '@/apollo/user/mutation';
+
+import { toastError, toastSuccess } from '@/libs/toast';
+import { Message } from '@/libs/enums/common.enum';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -43,6 +49,22 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 	if (articleCategory) initialInput.search.articleCategory = articleCategory;
 
 	/** APOLLO REQUESTS **/
+	const [likeTargetBoardArticle] = useMutation(LIKE_TARGET_BOARD_ARTICLE);
+
+	const {
+		loading: getBoardArticlesLoading,
+		data: getBoardArticlesData,
+		error: getBoardArticlesError,
+		refetch: getBoardArticlesRefetch,
+	} = useQuery(GET_BOARD_ARTICLES, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: searchCommunity },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setBoardArticles(data?.getBoardArticles?.list);
+			setTotalCount(data?.getBoardArticles?.metaCounter[0]?.total);
+		},
+	});
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -70,6 +92,24 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 		await router.push({ pathname: '/blog', query: { articleCategory: value } }, router.pathname, { shallow: true });
 	};
 
+	const likeArticleHandler = async (e: T, user: T, id: string) => {
+		try {
+			e.stopPropagation();
+			if (!id) return;
+			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+			await likeTargetBoardArticle({
+				variables: { input: id },
+			});
+
+			await getBoardArticlesRefetch({ input: searchCommunity });
+			await toastSuccess('success');
+		} catch (err) {
+			const errorMessage = err instanceof Error ? err.message : String(err);
+			console.log('errors, likeProperrtyMember:', errorMessage);
+			toastError(errorMessage);
+		}
+	};
 	const paginationHandler = (e: T, value: number) => setSearchCommunity({ ...searchCommunity, page: value });
 
 	const currentTab = searchCommunity.search.articleCategory;
@@ -218,18 +258,32 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 
 						{/* Article grid */}
 						<Stack className="articles-grid">
-							{totalCount ? (
-								boardArticles?.map((boardArticle: BoardArticle, i: number) => (
-									<div className="scroll-reveal" key={boardArticle?._id} style={{ animationDelay: `${i * 70}ms` }}>
-										<CommunityCard boardArticle={boardArticle} likeArticleHandler={undefined} />
-									</div>
-								))
-							) : (
-								<Stack className="no-data scroll-reveal">
-									<span className="no-data-icon">✦</span>
-									<p>Nothing here just yet.</p>
-									<span className="no-data-cta">{meta.sub}</span>
+							{getBoardArticlesLoading && (
+								<Stack className="loading" alignItems="center">
+									<p>Loading...</p>
 								</Stack>
+							)}
+							{getBoardArticlesError && (
+								<Stack className="error" alignItems="center">
+									<p>Error: {getBoardArticlesError.message}</p>
+								</Stack>
+							)}
+							{!getBoardArticlesLoading && !getBoardArticlesError && (
+								<>
+									{totalCount ? (
+										boardArticles?.map((boardArticle: BoardArticle, i: number) => (
+											<div className="scroll-reveal" key={boardArticle?._id} style={{ animationDelay: `${i * 70}ms` }}>
+												<CommunityCard boardArticle={boardArticle} likeArticleHandler={likeArticleHandler} />
+											</div>
+										))
+									) : (
+										<Stack className="no-data scroll-reveal">
+											<span className="no-data-icon">✦</span>
+											<p>Nothing here just yet.</p>
+											<span className="no-data-cta">{meta.sub}</span>
+										</Stack>
+									)}
+								</>
 							)}
 						</Stack>
 
