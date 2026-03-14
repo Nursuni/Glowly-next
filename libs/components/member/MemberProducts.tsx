@@ -2,18 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-
 import { T } from '../../types/common';
 import { useRouter } from 'next/router';
-
 import { useQuery } from '@apollo/client';
 import { ProductsInquiry } from '../../types/product/product.input';
-
 import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { Product } from '../../types/product/product';
 import { ProductCard } from '../mypage/ProductCard';
 
-const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
+const MemberProducts = ({ initialInput, likeMemberHandler, ...props }: any) => {
+	// ✅ likeMemberHandler added to destructured props
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const { memberId } = router.query;
@@ -42,6 +40,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	useEffect(() => {
 		getProductsRefetch().then();
 	}, [searchFilter]);
+
 	useEffect(() => {
 		if (memberId)
 			setSearchFilter({ ...initialInput, search: { ...initialInput.search, memberId: memberId as string } });
@@ -75,7 +74,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 						{brandProducts?.length === 0 && (
 							<div className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>You haven’t added any beauty products yet.</p>
+								<p>You haven't added any beauty products yet.</p>
 							</div>
 						)}
 						{brandProducts?.map((product: Product) => {
@@ -105,7 +104,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 	}
 };
 
-MyProducts.defaultProps = {
+MemberProducts.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 5,
@@ -116,4 +115,4 @@ MyProducts.defaultProps = {
 	},
 };
 
-export default MyProducts;
+export default MemberProducts;

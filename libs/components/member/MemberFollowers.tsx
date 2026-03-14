@@ -17,11 +17,11 @@ interface MemberFollowsProps {
 	subscribeHandler: any;
 	unsubscribeHandler: any;
 	likeMemberHandler: any;
-	/**	redirectToMemberPageHandler: any;  */
+	redirectToMemberPageHandler?: any; // ✅ was commented out — now added as optional
 }
 
 const MemberFollowers = (props: MemberFollowsProps) => {
-	const { initialInput, subscribeHandler, likeMemberHandler, unsubscribeHandler } = props;
+	const { initialInput, subscribeHandler, likeMemberHandler, unsubscribeHandler, redirectToMemberPageHandler } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [total, setTotal] = useState<number>(0);
@@ -91,7 +91,8 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 						return (
 							<Stack className="follows-card-box" key={follower._id}>
 								<Stack
-									className={'info'} /** onClick={() => redirectToMemberPageHandler(follower?.followerData?._id)} */
+									className={'info'}
+									onClick={() => redirectToMemberPageHandler?.(follower?.followerData?._id)} // ✅ safe optional call
 								>
 									<Stack className="image-box">
 										<img src={imagePath} alt="" />

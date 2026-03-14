@@ -1,27 +1,22 @@
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import { Stack } from '@mui/material';
-
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
-import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
-import { useMutation, useReactiveVar } from '@apollo/client';
-import { userVar } from '../../apollo/store';
-import { Messages } from '../../libs/config';
-import { toastError, toastInfo, toastSuccess } from '../../libs/toast';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import MyMenu from '../../libs/components/mypage/MyMenu';
-import AddProduct from '../../libs/components/mypage/AddNewProduct';
-import MyProducts from '../../libs/components/member/MemberProducts';
-import MyFavorites from '../../libs/components/mypage/MyFavorites';
-import RecentlyVisited from '../../libs/components/mypage/RecentlyVisited';
-import WriteArticle from '../../libs/components/mypage/WriteArticle';
-import MyArticles from '../../libs/components/mypage/MyArticles';
-import MyProfile from '../../libs/components/mypage/MyProfile';
+import { Stack } from '@mui/material';
+import MemberMenu from '../../libs/components/member/MemberMenu';
+
+import { useRouter } from 'next/router';
 import MemberFollowers from '../../libs/components/member/MemberFollowers';
+import MemberArticles from '../../libs/components/member/MemberArticles';
+import { useMutation, useReactiveVar } from '@apollo/client';
+
 import MemberFollowings from '../../libs/components/member/MemberFollowings';
-import MyOrders from '@/libs/components/member/MemberOrders';
+import { userVar } from '../../apollo/store';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import MemberProducts from '@/libs/components/member/MemberProducts';
+import { toastError, toastSuccess } from '@/libs/toast';
+import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '@/apollo/user/mutation';
+import { Messages } from '@/libs/config';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -29,21 +24,32 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const MyPage: NextPage = () => {
+const MemberPage: NextPage = () => {
 	const device = useDeviceDetect();
-	const user = useReactiveVar(userVar);
 	const router = useRouter();
-	const category: any = router.query?.category ?? 'myProfile';
+	const category: any = router.query?.category;
+	const user = useReactiveVar(userVar);
 
 	/** APOLLO REQUESTS **/
-	const [subscribe] = useMutation(SUBSCRIBE); //
-	const [unsubscribe] = useMutation(UNSUBSCRIBE); //
-	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER); //
+	/** APOLLO REQUESTS **/
+	const [subscribe] = useMutation(SUBSCRIBE);
+	const [unsubscribe] = useMutation(UNSUBSCRIBE);
+	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
 
 	/** LIFECYCLES **/
-	/** useEffect(() => {
-		if (!user._id) router.push('/').then();
-	}, [user]); **/
+	useEffect(() => {
+		if (!router.isReady) return;
+		if (!category) {
+			router.replace(
+				{
+					pathname: router.pathname,
+					query: { ...router.query, category: 'products' },
+				},
+				undefined,
+				{ shallow: true },
+			);
+		}
+	}, [category, router]);
 
 	/** HANDLERS **/
 	const subscribeHandler = async (id: string, refetch: any, query: any) => {
@@ -57,7 +63,8 @@ const MyPage: NextPage = () => {
 					input: id,
 				},
 			});
-			await toastInfo('Subscribed!');
+
+			await toastSuccess('Followed!');
 			await refetch({ input: query });
 		} catch (err: any) {
 			toastError(err);
@@ -74,13 +81,13 @@ const MyPage: NextPage = () => {
 					input: id,
 				},
 			});
-			await toastInfo('Unsubscribed!');
+
+			await toastSuccess('Unfollowed!');
 			await refetch({ input: query });
 		} catch (err: any) {
 			toastError(err);
 		}
 	};
-
 	const likeMemberHandler = async (id: string, refetch: any, query: any) => {
 		try {
 			if (!id) return;
@@ -110,26 +117,19 @@ const MyPage: NextPage = () => {
 	};
 
 	if (device === 'mobile') {
-		return <div>MY PAGE</div>;
+		return <>MEMBER PAGE MOBILE</>;
 	} else {
 		return (
-			<div id="my-page" style={{ position: 'relative' }}>
+			<div id="member-page" style={{ position: 'relative' }}>
 				<div className="container">
-					<Stack className={'my-page'}>
+					<Stack className={'member-page'}>
 						<Stack className={'back-frame'}>
 							<Stack className={'left-config'}>
-								<MyMenu />
+								<MemberMenu subscribeHandler={subscribeHandler} unsubscribeHandler={unsubscribeHandler} />
 							</Stack>
 							<Stack className="main-config" mb={'76px'}>
 								<Stack className={'list-config'}>
-									{category === 'addProduct' && <AddProduct />}
-									{category === 'myProducts' && <MyProducts />}
-									{category === 'myOrder' && <MyOrders />}
-									{category === 'myFavorites' && <MyFavorites />}
-									{category === 'recentlyVisited' && <RecentlyVisited />}
-									{category === 'myArticles' && <MyArticles />}
-									{category === 'writeArticle' && <WriteArticle />}
-									{category === 'myProfile' && <MyProfile />}
+									{category === 'products' && <MemberProducts likeMemberHandler={likeMemberHandler} />}
 									{category === 'followers' && (
 										<MemberFollowers
 											subscribeHandler={subscribeHandler}
@@ -143,9 +143,10 @@ const MyPage: NextPage = () => {
 											subscribeHandler={subscribeHandler}
 											unsubscribeHandler={unsubscribeHandler}
 											redirectToMemberPageHandler={redirectToMemberPageHandler}
-											likeMemberHandler={likeMemberHandler}
+											likeMemberHandler={likeMemberHandler} // ← add this
 										/>
 									)}
+									{category === 'articles' && <MemberArticles />}
 								</Stack>
 							</Stack>
 						</Stack>
@@ -156,4 +157,4 @@ const MyPage: NextPage = () => {
 	}
 };
 
-export default withLayoutBasic(MyPage);
+export default withLayoutBasic(MemberPage);

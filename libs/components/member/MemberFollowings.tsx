@@ -3,7 +3,7 @@ import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { useRouter } from 'next/router';
 import { FollowInquiry } from '../../types/follow/follow.input';
-import { ApolloQueryResult, OperationVariables, useQuery, useReactiveVar } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { Following } from '../../types/follow/follow';
 import { REACT_APP_API_URL } from '../../config';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -16,12 +16,12 @@ interface MemberFollowingsProps {
 	initialInput: FollowInquiry;
 	subscribeHandler: any;
 	unsubscribeHandler: any;
-	/**redirectToMemberPageHandler: any; */
 	likeMemberHandler: any;
+	redirectToMemberPageHandler?: any; // ✅ was commented out — now added as optional
 }
 
 const MemberFollowings = (props: MemberFollowingsProps) => {
-	const { initialInput, subscribeHandler, likeMemberHandler, unsubscribeHandler } = props;
+	const { initialInput, subscribeHandler, likeMemberHandler, unsubscribeHandler, redirectToMemberPageHandler } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [total, setTotal] = useState<number>(0);
@@ -46,6 +46,7 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 			setTotal(data?.getMemberFollowings?.metaCounter[0]?.total);
 		},
 	});
+
 	/** LIFECYCLES **/
 	useEffect(() => {
 		if (router.query.memberId)
@@ -89,21 +90,10 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 						const imagePath: string = follower?.followingData?.memberImage
 							? `${REACT_APP_API_URL}/${follower?.followingData?.memberImage}`
 							: '/img/profile/defaultUser.svg';
-						function likeMemberHandler(
-							_id: string | undefined,
-							getMemberFollowingsRefetch: (
-								variables?: Partial<OperationVariables> | undefined,
-							) => Promise<ApolloQueryResult<any>>,
-							followInquiry: FollowInquiry,
-						) {
-							throw new Error('Function not implemented.');
-						}
 
 						return (
 							<Stack className="follows-card-box" key={follower._id}>
-								<Stack
-									className={'info'} /** onClick={() => redirectToMemberPageHandler(follower?.followingData?._id) } */
-								>
+								<Stack className={'info'} onClick={() => redirectToMemberPageHandler?.(follower?.followingData?._id)}>
 									<Stack className="image-box">
 										<img src={imagePath} alt="" />
 									</Stack>
@@ -124,15 +114,15 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 										{follower?.meLiked && follower?.meLiked[0]?.myFavorite ? (
 											<FavoriteIcon
 												color="primary"
-												onClick={() => {
-													likeMemberHandler(follower?.followingData?._id, getMemberFollowingsRefetch, followInquiry);
-												}}
+												onClick={() =>
+													likeMemberHandler(follower?.followingData?._id, getMemberFollowingsRefetch, followInquiry)
+												}
 											/>
 										) : (
 											<FavoriteBorderIcon
-												onClick={() => {
-													likeMemberHandler(follower?.followingData?._id, getMemberFollowingsRefetch, followInquiry);
-												}}
+												onClick={() =>
+													likeMemberHandler(follower?.followingData?._id, getMemberFollowingsRefetch, followInquiry)
+												}
 											/>
 										)}
 										<span>({follower?.followingData?.memberLikes})</span>
