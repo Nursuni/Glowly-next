@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useQuery, useReactiveVar } from '@apollo/client';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Autoplay, Navigation, Pagination } from 'swiper';
@@ -16,6 +16,7 @@ import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
 
 import { GET_PRODUCT, GET_PRODUCTS } from '../../apollo/user/query';
+import { LIKE_TARGET_PRODUCT } from '@/apollo/user/mutation';
 import { userVar } from '../../apollo/store';
 import { Direction } from '../../libs/enums/common.enum';
 import { T } from '../../libs/types/common';
@@ -46,8 +47,11 @@ const ProductDetail: NextPage = () => {
 
 	const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+	/** MUTATION **/
+	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+
 	/** GET PRODUCT **/
-	const { loading: productLoading } = useQuery(GET_PRODUCT, {
+	const { loading: productLoading, refetch: getProductRefetch } = useQuery(GET_PRODUCT, {
 		fetchPolicy: 'network-only',
 		variables: { input: productId },
 		skip: !productId,
@@ -61,7 +65,7 @@ const ProductDetail: NextPage = () => {
 	});
 
 	/** RELATED PRODUCTS **/
-	useQuery(GET_PRODUCTS, {
+	const { refetch: getProductsRefetch } = useQuery(GET_PRODUCTS, {
 		fetchPolicy: 'network-only',
 		variables: {
 			input: {
@@ -79,9 +83,35 @@ const ProductDetail: NextPage = () => {
 		},
 	});
 
-	const likeHandler = () => {
-		if (!user?._id) return;
-		setIsLiked((prev) => !prev);
+	/** LIKE HANDLER **/
+	const likeProductHandler = async () => {
+		try {
+			if (!product?._id) return;
+			if (!user?._id) {
+				alert('Please login first');
+				return;
+			}
+
+			await likeTargetProduct({
+				variables: { input: product._id },
+			});
+
+			setIsLiked((prev) => !prev);
+
+			await getProductRefetch({ input: product._id });
+
+			await getProductsRefetch({
+				input: {
+					page: 1,
+					limit: 4,
+					sort: 'createdAt',
+					direction: Direction.DESC,
+					search: {},
+				},
+			});
+		} catch (err) {
+			console.log('likeProductHandler error:', err);
+		}
 	};
 
 	if (device === 'mobile') {
@@ -126,7 +156,7 @@ const ProductDetail: NextPage = () => {
 						<div className="pd-main-img-wrap">
 							<img src={`${API_URL}/${activeImage}`} className="pd-main-img" />
 
-							<button className="pd-img-like" onClick={likeHandler}>
+							<button className="pd-img-like" onClick={likeProductHandler}>
 								{isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
 							</button>
 						</div>

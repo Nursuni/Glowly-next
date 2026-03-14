@@ -31,4 +31,4 @@ export const Messages = {
 	TIMEOUT: 'Request timeout. Try again.',
 } as const;
 
-export const topProductRank = 50;
+export const topProductRank = 2;
