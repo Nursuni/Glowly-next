@@ -73,7 +73,14 @@ const MyFavorites: NextPage = () => {
 				<Stack className="favorites-list-box">
 					{myFavorites?.length ? (
 						myFavorites?.map((product: Product) => {
-							return <ProductCard product={product} />;
+							return (
+								<ProductCard
+									key={product._id}
+									product={product}
+									memberPage={true}
+									likeProductHandler={likeProductHandler}
+								/>
+							);
 						})
 					) : (
 						<div className={'no-data'}>
