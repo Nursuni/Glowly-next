@@ -9,7 +9,7 @@ import { Product } from '../../types/product/product';
 import { ProductsInquiry } from '../../types/product/product.input';
 import TrendProductCard from './TrendProductCard';
 import { ProductCard } from '../mypage/ProductCard';
-import { dummyProducts } from '@/libs/dummyProducts';
+
 import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { T } from '../../types/common';
 import { useQuery, useMutation } from '@apollo/client';
@@ -30,19 +30,18 @@ const TrendProducts = (props: TrendProductsProps) => {
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
-	const {
-		loading: getProductsLoading,
-		data: getProductsData,
-		error: getProductsError,
-		refetch: getProductsRefetch,
-	} = useQuery(GET_PRODUCTS, {
+	const { data: getProductsData, refetch: getProductsRefetch } = useQuery(GET_PRODUCTS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setTrendProducts(data?.getProducts?.list);
-		},
 	});
+
+	// Update state when API data changes
+	useEffect(() => {
+		if (getProductsData?.getProducts?.list) {
+			setTrendProducts(getProductsData.getProducts.list);
+		}
+	}, [getProductsData]);
 
 	/** HANDLERS **/
 	const likeProductHandler = async (user: T, id: string) => {
@@ -62,10 +61,6 @@ const TrendProducts = (props: TrendProductsProps) => {
 			toastError(errorMessage);
 		}
 	};
-	useEffect(() => {
-		// TODO: replace with real Apollo/GraphQL fetch using initialInput
-		setTrendProducts(dummyProducts);
-	}, [initialInput]);
 
 	if (device === 'mobile') {
 		return (

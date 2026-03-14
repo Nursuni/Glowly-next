@@ -21,32 +21,16 @@ const BlogBoards = () => {
 	const [freeArticles, setFreeArticles] = useState<BoardArticle[]>([]);
 
 	/** APOLLO REQUESTS **/
-	const {
-		loading: getBoardArticlesLoading,
-		data: getBoardArticlesData,
-		error: getBoardArticlesError,
-		refetch: getBoardArticlesRefetch,
-	} = useQuery(GET_BOARD_ARTICLE, {
+	const { data: newsData, loading: getBoardArticlesLoading } = useQuery(GET_BOARD_ARTICLE, {
 		fetchPolicy: 'network-only',
 		variables: { input: { ...searchCommunity, limit: 6, search: { articleCategory: BoardArticleCategory.NEWS } } },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setNewsArticles(data?.getBoardArticles?.list);
-		},
 	});
 
-	const {
-		loading: getFreeArticlesLoading,
-		data: getFreeArticlesData,
-		error: getFreeArticlesError,
-		refetch: getFreeArticlesRefetch,
-	} = useQuery(GET_BOARD_ARTICLE, {
+	const { data: freeData, loading: getFreeArticlesLoading } = useQuery(GET_BOARD_ARTICLE, {
 		fetchPolicy: 'network-only',
 		variables: { input: { ...searchCommunity, limit: 3, search: { articleCategory: BoardArticleCategory.FREE } } },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setFreeArticles(data?.getFreeArticles?.list);
-		},
 	});
 
 	useEffect(() => {

@@ -65,7 +65,13 @@ const requestJwtToken = async ({
 	}
 };
 
-export const signUp = async (nick: string, password: string, phone: string, type: string): Promise<void> => {
+export const signUp = async (
+	nick: string,
+	password: string,
+	phone: string,
+	type: string,
+	gender: string,
+): Promise<void> => {
 	try {
 		const { jwtToken } = await requestSignUpJwtToken({ nick, password, phone, type });
 

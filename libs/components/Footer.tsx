@@ -6,6 +6,7 @@ import useDeviceDetect from '../hooks/useDeviceDetect';
 import { Stack, Box } from '@mui/material';
 import dayjs from 'dayjs';
 import { useEffect, useRef } from 'react';
+import React from 'react';
 
 const BADGES = [
 	{ icon: '🌿', title: 'Cruelty-Free', sub: 'Certified brands only' },
@@ -193,16 +194,16 @@ const Footer = () => {
 			{/* TRUST BADGES — separator only between items, not after last */}
 			<div className={'badges gf-fade'}>
 				{BADGES.map((b, i) => (
-					<>
-						<div className={'badge'} key={b.title}>
+					<div key={b.title} className="badge-wrapper">
+						<div className={'badge'}>
 							<div className={'badge-icon'}>{b.icon}</div>
 							<div className={'badge-text'}>
 								<strong>{b.title}</strong>
 								<span>{b.sub}</span>
 							</div>
 						</div>
-						{i < BADGES.length - 1 && <div className={'badge-sep'} key={`sep-${i}`} />}
-					</>
+						{i < BADGES.length - 1 && <div className={'badge-sep'} />}
+					</div>
 				))}
 			</div>
 

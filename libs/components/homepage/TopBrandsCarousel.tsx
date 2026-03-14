@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Stack, Box } from '@mui/material';
 import useDeviceDetect from '@/libs/hooks/useDeviceDetect';
@@ -23,15 +23,18 @@ const TopBrandsCarousel = (props: TopBrandsProps) => {
 	const [topBrands, setTopBrands] = useState<Member[]>([]);
 
 	/** APOLLO REQUEST **/
-	const { loading, data, error, refetch } = useQuery(GET_BRANDS, {
+	const { data } = useQuery(GET_BRANDS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setTopBrands(data?.getBrands?.list);
-		},
 	});
 
+	/** Update local state when data changes **/
+	useEffect(() => {
+		if (data?.getBrands?.list) {
+			setTopBrands(data.getBrands.list);
+		}
+	}, [data]);
 	if (device === 'mobile') {
 		return (
 			<Stack className={'top-brands'}>

@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Stack, Box } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper';
 import TopProductCard from './TopProductCard';
-import { dummyProducts } from '@/libs/dummyProducts';
+
 import { SkinType } from '@/libs/enums/product.enum';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { GET_PRODUCTS } from '../../../apollo/user/query';
@@ -40,19 +40,19 @@ const TopProducts = (props: TopProductsProps) => {
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
-	const {
-		loading: getProductsLoading,
-		data: getProductsData,
-		error: getProductsError,
-		refetch: getProductsRefetch,
-	} = useQuery(GET_PRODUCTS, {
+
+	const { data: getProductsData, refetch: getProductsRefetch } = useQuery(GET_PRODUCTS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setTopProducts(data?.getProducts?.list);
-		},
 	});
+
+	/** Update local state when API data changes **/
+	useEffect(() => {
+		if (getProductsData?.getProducts?.list) {
+			setTopProducts(getProductsData.getProducts.list);
+		}
+	}, [getProductsData]);
 
 	/** HANDLERS **/
 	const likeProductHandler = async (user: T, id: string) => {
@@ -75,9 +75,9 @@ const TopProducts = (props: TopProductsProps) => {
 
 	// Filter dummy products by selected skin type
 	const filteredProducts = useMemo(() => {
-		if (activeFilter === 'ALL') return dummyProducts;
-		return dummyProducts.filter((p) => Array.isArray(p.skinType) && p.skinType.includes(activeFilter as SkinType));
-	}, [activeFilter]);
+		if (activeFilter === 'ALL') return topProducts;
+		return topProducts.filter((p) => Array.isArray(p.skinType) && p.skinType.includes(activeFilter as SkinType));
+	}, [activeFilter, topProducts]);
 
 	// ─── Shared header ─────────────────────────────────────
 	const renderHeader = () => (
