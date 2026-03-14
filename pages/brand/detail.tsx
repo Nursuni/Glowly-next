@@ -20,6 +20,12 @@ import { REACT_APP_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { toastError } from '../../libs/toast';
 import ReviewCard from '@/libs/components/brand/ReviewCard';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_MEMBER } from '@/apollo/user/query';
+import { GET_PRODUCTS } from '@/apollo/user/query';
+import { GET_COMMENTS } from '@/apollo/user/query';
+import { CREATE_COMMENT } from '@/apollo/user/mutation';
+import { toastSuccess } from '@/libs/toast';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -42,19 +48,66 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
 	const [brandComments, setBrandComments] = useState<Comment[]>([]);
 	const [commentTotal, setCommentTotal] = useState<number>(0);
+	const [createComment] = useMutation(CREATE_COMMENT);
 
 	const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
 		commentGroup: CommentGroup.MEMBER,
 		commentContent: '',
 		commentRefId: '',
 	});
+	/** GET BRAND **/
+	const { refetch: getBrandRefetch } = useQuery(GET_MEMBER, {
+		fetchPolicy: 'network-only',
+		variables: { input: mbId },
+		skip: !mbId,
+		onCompleted: (data) => {
+			setBrand(data?.getMember);
+		},
+	});
+	/** GET BRAND PRODUCTS **/
+	const { refetch: getProductsRefetch } = useQuery(GET_PRODUCTS, {
+		fetchPolicy: 'network-only',
+		variables: { input: searchFilter },
+		skip: !mbId,
+		onCompleted: (data) => {
+			setBrandProducts(data?.getProducts?.list || []);
+			setProductTotal(data?.getProducts?.metaCounter?.[0]?.total || 0);
+		},
+	});
+	/** GET COMMENTS **/
+	const { refetch: getCommentsRefetch } = useQuery(GET_COMMENTS, {
+		fetchPolicy: 'network-only',
+		variables: { input: commentInquiry },
+		skip: !mbId,
+		onCompleted: (data) => {
+			setBrandComments(data?.getComments?.list || []);
+			setCommentTotal(data?.getComments?.metaCounter?.[0]?.total || 0);
+		},
+	});
 
 	/** LIFECYCLE **/
 	useEffect(() => {
 		if (router.query.brandId) {
-			setMbId(router.query.brandId as string);
+			const id = router.query.brandId as string;
+			setMbId(id);
+
+			setSearchFilter((prev) => ({
+				...prev,
+				search: {
+					...prev.search,
+					memberId: id,
+				},
+			}));
+
+			setCommentInquiry((prev) => ({
+				...prev,
+				search: {
+					...prev.search,
+					commentRefId: id,
+				},
+			}));
 		}
-	}, [router]);
+	}, [router.query.brandId]);
 
 	/** HANDLERS **/
 	const redirectToMemberPageHandler = async (memberId: string) => {
@@ -70,23 +123,43 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	};
 
 	const productPaginationChangeHandler = (event: ChangeEvent<unknown>, value: number) => {
-		searchFilter.page = value;
-		setSearchFilter({ ...searchFilter });
+		setSearchFilter({
+			...searchFilter,
+			page: value,
+		});
 	};
 
 	const commentPaginationChangeHandler = (event: ChangeEvent<unknown>, value: number) => {
-		commentInquiry.page = value;
-		setCommentInquiry({ ...commentInquiry });
+		setCommentInquiry((prev) => ({
+			...prev,
+			page: value,
+		}));
 	};
-
 	const createCommentHandler = async () => {
 		try {
-			// Your mutation logic here
+			if (!user?._id) throw new Error('Please login first');
+
+			await createComment({
+				variables: {
+					input: {
+						...insertCommentData,
+						commentRefId: mbId,
+					},
+				},
+			});
+
+			setInsertCommentData({
+				...insertCommentData,
+				commentContent: '',
+			});
+
+			await getCommentsRefetch({ input: commentInquiry });
+
+			toastSuccess('Review added successfully');
 		} catch (err: any) {
-			toastError(err);
+			toastError(err.message);
 		}
 	};
-
 	if (device === 'mobile') {
 		return <div>Brand DETAIL PAGE MOBILE</div>;
 	}
@@ -100,7 +173,11 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 						src={brand?.memberImage ? `${REACT_APP_API_URL}/${brand?.memberImage}` : '/img/profile/defaultUser.svg'}
 						alt=""
 					/>
-					<Box component={'div'} className={'info'} onClick={() => redirectToMemberPageHandler(brand?._id as string)}>
+					<Box
+						component={'div'}
+						className={'info'}
+						onClick={() => brand?._id && redirectToMemberPageHandler(brand._id)}
+					>
 						<strong>{brand?.memberFullName ?? brand?.memberNick}</strong>
 						<div>
 							<img src="/img/icons/call.svg" alt="" />

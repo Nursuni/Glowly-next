@@ -91,7 +91,10 @@ const ProductDetail: NextPage = () => {
 
 				setCommentInquiry((prev) => ({
 					...prev,
-					search: { commentRefId: data.getProduct._id },
+					search: {
+						...prev.search,
+						commentRefId: data.getProduct._id,
+					},
 				}));
 
 				setInsertCommentData((prev) => ({
@@ -143,7 +146,7 @@ const ProductDetail: NextPage = () => {
 			if (!product?._id) return;
 
 			if (!user?._id) {
-				alert('Please login first');
+				toastError('Please login first');
 				return;
 			}
 
@@ -162,13 +165,21 @@ const ProductDetail: NextPage = () => {
 		try {
 			if (!user?._id) throw new Error(Message.NOT_AUTHENTICATED);
 
+			if (!insertCommentData.commentContent.trim()) {
+				toastError('Please write a review');
+				return;
+			}
+
 			await createComment({ variables: { input: insertCommentData } });
 
-			setInsertCommentData({ ...insertCommentData, commentContent: '' });
+			setInsertCommentData({
+				...insertCommentData,
+				commentContent: '',
+			});
 
 			await getCommentsRefetch({ input: commentInquiry });
 		} catch (err: any) {
-			toastError(err);
+			toastError(err instanceof Error ? err.message : String(err));
 		}
 	};
 
@@ -190,7 +201,7 @@ const ProductDetail: NextPage = () => {
 
 			<div className="pd-gallery">
 				{product.productImages?.map((img: string, i: number) => (
-					<img key={i} src={`${API_URL}/${img}`} onClick={() => setActiveImage(img)} />
+					<img key={i} src={`${API_URL}/${img}`} alt="product image" onClick={() => setActiveImage(img)} />
 				))}
 			</div>
 

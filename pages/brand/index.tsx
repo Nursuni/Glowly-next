@@ -2,16 +2,20 @@ import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { Stack, Box, Button, Pagination, Menu, MenuItem } from '@mui/material';
-import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-import SearchIcon from '@mui/icons-material/Search';
+import { Stack, Pagination } from '@mui/material';
+
 import BrandCard from '../../libs/components/common/BrandCard';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Member } from '../../libs/types/member/member';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
+
 import Toolbar from '../../libs/components/common/Toolbar';
+import { LIKE_TARGET_MEMBER } from '@/apollo/user/mutation';
+import { T } from '@/libs/types/common';
+import { GET_BRANDS } from '@/apollo/user/query';
+import { useMutation, useQuery } from '@apollo/client';
+import { Message } from '@/libs/enums/common.enum';
+import { toastError, toastSuccess } from '@/libs/toast';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -39,12 +43,31 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 	const [total, setTotal] = useState<number>(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [searchText, setSearchText] = useState<string>('');
+	const [showSearch, setShowSearch] = useState<boolean>(false);
+
+	/** APOLLO REQUESTS **/
+	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
+
+	const {
+		loading: getBrandsLoading,
+		data: getBrandsData,
+		error: getBrandsError,
+		refetch: getBrandsRefetch,
+	} = useQuery(GET_BRANDS, {
+		fetchPolicy: 'network-only',
+		variables: { input: searchFilter },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setBrands(data?.getBrands?.list);
+			setTotal(data?.getBrands?.metaCounter[0]?.total);
+		},
+	});
 
 	const handleSearchSubmit = async () => {
 		const updatedFilter = { ...searchFilter, page: 1, search: { ...searchFilter.search, text: searchText } };
 		setSearchFilter(updatedFilter);
 		setCurrentPage(1);
-		await router.push({ pathname: '/catalog', query: { input: JSON.stringify(updatedFilter) } }, undefined, {
+		await router.push({ pathname: '/brand', query: { input: JSON.stringify(updatedFilter) } }, undefined, {
 			scroll: false,
 		});
 	};
@@ -85,11 +108,40 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 
 	/** PAGINATION **/
 	const paginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
-		searchFilter.page = value;
-		await router.push(`/brand?input=${JSON.stringify(searchFilter)}`, `/brand?input=${JSON.stringify(searchFilter)}`, {
+		const updatedFilter = { ...searchFilter, page: value };
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+
+		await router.push(`/brand?input=${JSON.stringify(updatedFilter)}`, undefined, {
 			scroll: false,
 		});
+
+		setSearchFilter(updatedFilter);
 		setCurrentPage(value);
+	};
+
+	const likeMemberHandler = async (user: T, id: string) => {
+		try {
+			if (!id) return;
+			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+			await likeTargetMember({
+				variables: { input: id },
+			});
+
+			await getBrandsRefetch({ input: searchFilter });
+			await toastSuccess('success');
+		} catch (err) {
+			const errorMessage = err instanceof Error ? err.message : String(err);
+			console.log('errors, likeProductMember:', errorMessage);
+			toastError(errorMessage);
+		}
+	};
+	const handleSearch = () => {
+		setSearchFilter({
+			...searchFilter,
+			search: { ...searchFilter.search, text: searchText },
+		});
+		setShowSearch(false);
 	};
 
 	if (device === 'mobile') {
@@ -136,7 +188,9 @@ const BrandList: NextPage = ({ initialInput, ...props }: any) => {
 							<span className="no-data-cta">Try adjusting your filters or search with a different keyword.</span>
 						</div>
 					) : (
-						brands.map((brand: Member) => <BrandCard brand={brand} key={brand._id} likeMemberHandler={undefined} />)
+						brands.map((brand: Member) => (
+							<BrandCard brand={brand} key={brand._id} likeMemberHandler={likeMemberHandler} />
+						))
 					)}
 				</Stack>
 
