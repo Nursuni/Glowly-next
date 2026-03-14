@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
@@ -15,18 +15,34 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
 
-import { GET_PRODUCT, GET_PRODUCTS } from '../../apollo/user/query';
+import { GET_PRODUCT, GET_PRODUCTS, GET_COMMENTS } from '../../apollo/user/query';
 import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from '@/apollo/user/mutation';
+
 import { userVar } from '../../apollo/store';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { T } from '../../libs/types/common';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
+
 import { toastError } from '@/libs/toast';
 import { CircularProgress, Stack } from '@mui/material';
 
+import { Comment } from '@/libs/types/comment/comment';
+import { CommentInput, CommentsInquiry } from '@/libs/types/comment/comment.input';
+import { CommentGroup } from '@/libs/enums/comment.enum';
+
 SwiperCore.use([Autoplay, Navigation, Pagination]);
+
+const initialComment: CommentsInquiry = {
+	page: 1,
+	limit: 5,
+	sort: 'createdAt',
+	direction: Direction.DESC,
+	search: {
+		commentRefId: '',
+	},
+};
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -43,10 +59,20 @@ const ProductDetail: NextPage = () => {
 
 	const [product, setProduct] = useState<any>(null);
 	const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
-	const [activeImage, setActiveImage] = useState<string>('');
+	const [activeImage, setActiveImage] = useState('');
 	const [isLiked, setIsLiked] = useState(false);
 	const [quantity, setQuantity] = useState(1);
 	const [comment, setComment] = useState('');
+
+	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
+	const [propertyComments, setPropertyComments] = useState<Comment[]>([]);
+	const [commentTotal, setCommentTotal] = useState<number>(0);
+
+	const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
+		commentGroup: CommentGroup.PRODUCT,
+		commentContent: '',
+		commentRefId: '',
+	});
 
 	const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -62,6 +88,16 @@ const ProductDetail: NextPage = () => {
 				setProduct(data.getProduct);
 				setActiveImage(data.getProduct.productImages?.[0]);
 				setIsLiked(data.getProduct?.meLiked?.[0]?.myFavorite ?? false);
+
+				setCommentInquiry((prev) => ({
+					...prev,
+					search: { commentRefId: data.getProduct._id },
+				}));
+
+				setInsertCommentData((prev) => ({
+					...prev,
+					commentRefId: data.getProduct._id,
+				}));
 			}
 		},
 	});
@@ -84,6 +120,24 @@ const ProductDetail: NextPage = () => {
 		},
 	});
 
+	const { refetch: getCommentsRefetch } = useQuery(GET_COMMENTS, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: commentInquiry },
+		skip: !commentInquiry.search.commentRefId,
+		onCompleted: (data: T) => {
+			if (data?.getComments?.list) {
+				setPropertyComments(data.getComments.list);
+				setCommentTotal(data.getComments.metaCounter?.[0]?.total ?? 0);
+			}
+		},
+	});
+
+	useEffect(() => {
+		if (commentInquiry.search.commentRefId) {
+			getCommentsRefetch({ input: commentInquiry });
+		}
+	}, [commentInquiry]);
+
 	const likeProductHandler = async () => {
 		try {
 			if (!product?._id) return;
@@ -93,9 +147,7 @@ const ProductDetail: NextPage = () => {
 				return;
 			}
 
-			await likeTargetProduct({
-				variables: { input: product._id },
-			});
+			await likeTargetProduct({ variables: { input: product._id } });
 
 			setIsLiked((prev) => !prev);
 
@@ -110,37 +162,21 @@ const ProductDetail: NextPage = () => {
 		try {
 			if (!user?._id) throw new Error(Message.NOT_AUTHENTICATED);
 
-			await createComment({
-				variables: {
-					input: {
-						commentRefId: product._id,
-						commentContent: comment,
-					},
-				},
-			});
+			await createComment({ variables: { input: insertCommentData } });
 
-			setComment('');
-			await getProductRefetch({ input: product._id });
+			setInsertCommentData({ ...insertCommentData, commentContent: '' });
+
+			await getCommentsRefetch({ input: commentInquiry });
 		} catch (err: any) {
 			toastError(err);
 		}
 	};
 
-	if (device === 'mobile') {
-		return <div>PRODUCT DETAIL MOBILE</div>;
-	}
+	if (device === 'mobile') return <div>PRODUCT DETAIL MOBILE</div>;
 
 	if (productLoading || !product) {
 		return (
-			<Stack
-				sx={{
-					display: 'flex',
-					justifyContent: 'center',
-					alignItems: 'center',
-					width: '100%',
-					height: '100vh',
-				}}
-			>
+			<Stack sx={{ justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
 				<CircularProgress size={'4rem'} />
 			</Stack>
 		);
@@ -150,90 +186,41 @@ const ProductDetail: NextPage = () => {
 
 	return (
 		<div id="product-detail-page">
-			<div className="pd-breadcrumb">
-				<div className="pd-container">
-					<span onClick={() => router.push('/')}>Home</span>
-					<span> › </span>
-					<span onClick={() => router.push('/catalog')}>Products</span>
-					<span> › </span>
-					<span>{product.productTitle}</span>
-				</div>
+			<h1>{product.productTitle}</h1>
+
+			<div className="pd-gallery">
+				{product.productImages?.map((img: string, i: number) => (
+					<img key={i} src={`${API_URL}/${img}`} onClick={() => setActiveImage(img)} />
+				))}
 			</div>
 
-			<div className="pd-container">
-				<div className="pd-main">
-					<div className="pd-gallery">
-						<div className="pd-thumbs">
-							{product.productImages?.map((img: string, i: number) => (
-								<div
-									key={i}
-									className={`pd-thumb ${activeImage === img ? 'active' : ''}`}
-									onClick={() => setActiveImage(img)}
-								>
-									<img src={`${API_URL}/${img}`} alt="thumb" />
-								</div>
-							))}
-						</div>
+			<p>{price}</p>
+			<p>{product.productDesc}</p>
 
-						<div className="pd-main-img-wrap">
-							<img src={`${API_URL}/${activeImage}`} className="pd-main-img" />
-
-							<button className="pd-img-like" onClick={likeProductHandler}>
-								{isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-							</button>
-						</div>
-					</div>
-
-					<div className="pd-info">
-						<h1>{product.productTitle}</h1>
-
-						<div className="pd-rating-row">
-							{[1, 2, 3, 4, 5].map((s) => (s <= 4 ? <StarIcon key={s} /> : <StarBorderIcon key={s} />))}
-							<span>{product.productComments ?? 0} reviews</span>
-
-							<RemoveRedEyeIcon />
-							<span>{product.productViews}</span>
-						</div>
-
-						<div className="pd-price-row">
-							<span className="pd-price">{price}</span>
-						</div>
-
-						<p>{product.productDesc}</p>
-
-						<div className="pd-actions">
-							<button onClick={() => setQuantity((q) => Math.max(1, q - 1))}>-</button>
-							<span>{quantity}</span>
-							<button onClick={() => setQuantity((q) => q + 1)}>+</button>
-
-							<button className="pd-btn-cart">Add to Cart</button>
-						</div>
-					</div>
-				</div>
-
-				<div className="pd-comment-box">
-					<textarea placeholder="Write a review..." value={comment} onChange={(e) => setComment(e.target.value)} />
-					<button onClick={createCommentHandler}>Submit</button>
-				</div>
-
-				{relatedProducts.length > 0 && (
-					<div className="pd-related">
-						<h2>Related Products</h2>
-
-						<Swiper slidesPerView="auto" spaceBetween={20}>
-							{relatedProducts.map((p) => (
-								<SwiperSlide key={p._id}>
-									<div className="pd-related-card" onClick={() => router.push(`/catalog/detail?productId=${p._id}`)}>
-										<img src={`${API_URL}/${p.productImages?.[0]}`} />
-										<strong>{p.productTitle}</strong>
-										<span>${Number(p.productPrice).toFixed(2)}</span>
-									</div>
-								</SwiperSlide>
-							))}
-						</Swiper>
-					</div>
-				)}
+			<div>
+				<textarea
+					value={insertCommentData.commentContent}
+					onChange={(e) => setInsertCommentData({ ...insertCommentData, commentContent: e.target.value })}
+				/>
+				<button onClick={createCommentHandler}>Submit</button>
 			</div>
+
+			{propertyComments.map((c) => (
+				<div key={c._id}>{c.commentContent}</div>
+			))}
+
+			{relatedProducts.length > 0 && (
+				<Swiper slidesPerView={'auto'} spaceBetween={20}>
+					{relatedProducts.map((p) => (
+						<SwiperSlide key={p._id}>
+							<div onClick={() => router.push(`/catalog/detail?productId=${p._id}`)}>
+								<img src={`${API_URL}/${p.productImages?.[0]}`} />
+								<strong>{p.productTitle}</strong>
+							</div>
+						</SwiperSlide>
+					))}
+				</Swiper>
+			)}
 		</div>
 	);
 };
