@@ -16,13 +16,14 @@ import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
 
 import { GET_PRODUCT, GET_PRODUCTS } from '../../apollo/user/query';
-import { LIKE_TARGET_PRODUCT } from '@/apollo/user/mutation';
+import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from '@/apollo/user/mutation';
 import { userVar } from '../../apollo/store';
-import { Direction } from '../../libs/enums/common.enum';
+import { Direction, Message } from '../../libs/enums/common.enum';
 import { T } from '../../libs/types/common';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { toastError } from '@/libs/toast';
 
 SwiperCore.use([Autoplay, Navigation, Pagination]);
 
@@ -44,11 +45,13 @@ const ProductDetail: NextPage = () => {
 	const [activeImage, setActiveImage] = useState<string>('');
 	const [isLiked, setIsLiked] = useState(false);
 	const [quantity, setQuantity] = useState(1);
+	const [comment, setComment] = useState('');
 
 	const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-	/** LIKE MUTATION **/
+	/** MUTATIONS **/
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+	const [createComment] = useMutation(CREATE_COMMENT);
 
 	/** GET PRODUCT **/
 	const { loading: productLoading, refetch: getProductRefetch } = useQuery(GET_PRODUCT, {
@@ -100,18 +103,30 @@ const ProductDetail: NextPage = () => {
 			setIsLiked((prev) => !prev);
 
 			await getProductRefetch({ input: product._id });
-
-			await getProductsRefetch({
-				input: {
-					page: 1,
-					limit: 4,
-					sort: 'createdAt',
-					direction: Direction.DESC,
-					search: {},
-				},
-			});
+			await getProductsRefetch();
 		} catch (err) {
 			console.log('likeProductHandler error:', err);
+		}
+	};
+
+	/** COMMENT HANDLER **/
+	const createCommentHandler = async () => {
+		try {
+			if (!user?._id) throw new Error(Message.NOT_AUTHENTICATED);
+
+			await createComment({
+				variables: {
+					input: {
+						commentRefId: product._id,
+						commentContent: comment,
+					},
+				},
+			});
+
+			setComment('');
+			await getProductRefetch({ input: product._id });
+		} catch (err: any) {
+			toastError(err);
 		}
 	};
 
@@ -127,7 +142,6 @@ const ProductDetail: NextPage = () => {
 
 	return (
 		<div id="product-detail-page">
-			{/* BREADCRUMB */}
 			<div className="pd-breadcrumb">
 				<div className="pd-container">
 					<span onClick={() => router.push('/')}>Home</span>
@@ -169,7 +183,6 @@ const ProductDetail: NextPage = () => {
 
 						<div className="pd-rating-row">
 							{[1, 2, 3, 4, 5].map((s) => (s <= 4 ? <StarIcon key={s} /> : <StarBorderIcon key={s} />))}
-
 							<span>{product.productComments ?? 0} reviews</span>
 
 							<RemoveRedEyeIcon />
@@ -182,17 +195,20 @@ const ProductDetail: NextPage = () => {
 
 						<p>{product.productDesc}</p>
 
-						{/* QUANTITY */}
 						<div className="pd-actions">
 							<button onClick={() => setQuantity((q) => Math.max(1, q - 1))}>-</button>
-
 							<span>{quantity}</span>
-
 							<button onClick={() => setQuantity((q) => q + 1)}>+</button>
 
 							<button className="pd-btn-cart">Add to Cart</button>
 						</div>
 					</div>
+				</div>
+
+				{/* COMMENT */}
+				<div className="pd-comment-box">
+					<textarea placeholder="Write a review..." value={comment} onChange={(e) => setComment(e.target.value)} />
+					<button onClick={createCommentHandler}>Submit</button>
 				</div>
 
 				{/* RELATED PRODUCTS */}
@@ -205,9 +221,7 @@ const ProductDetail: NextPage = () => {
 								<SwiperSlide key={p._id}>
 									<div className="pd-related-card" onClick={() => router.push(`/catalog/detail?productId=${p._id}`)}>
 										<img src={`${API_URL}/${p.productImages?.[0]}`} />
-
 										<strong>{p.productTitle}</strong>
-
 										<span>${Number(p.productPrice).toFixed(2)}</span>
 									</div>
 								</SwiperSlide>
