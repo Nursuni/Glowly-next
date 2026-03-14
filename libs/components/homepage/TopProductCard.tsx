@@ -34,7 +34,12 @@ const TopProductCard = (props: TopProductCardProps) => {
 		<Stack className="top-card-box" onClick={redirectHandler}>
 			{/* ── Image ── */}
 			<Box className="top-card-img-wrap">
-				<Box className="top-card-img" style={{ backgroundImage: `url(${REACT_APP_API_URL}/${firstImage})` }} />
+				<Box
+					className="top-card-img"
+					style={{
+						backgroundImage: firstImage ? `url(${REACT_APP_API_URL}/${firstImage})` : 'none',
+					}}
+				/>
 				<Box className="top-card-overlay" />
 
 				{/* Category pill — top left */}
@@ -83,7 +88,14 @@ const TopProductCard = (props: TopProductCardProps) => {
 						</Box>
 
 						<Box className="top-stat-item">
-							<IconButton className="top-like-btn" onClick={() => likeProductHandler(user, product?._id)} disableRipple>
+							<IconButton
+								className="top-like-btn"
+								onClick={(e) => {
+									e.stopPropagation();
+									likeProductHandler(user, product?._id);
+								}}
+								disableRipple
+							>
 								{isLiked ? (
 									<FavoriteIcon className="top-like-icon active" />
 								) : (

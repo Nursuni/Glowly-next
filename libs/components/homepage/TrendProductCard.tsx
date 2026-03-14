@@ -22,9 +22,10 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 
-	const redirectHandler = (e: React.MouseEvent) => {
+	const redirectHandler = () => {
 		router.push(`/catalog/detail?productId=${product._id}`);
 	};
+	const firstImage = product?.productImages?.[0];
 
 	const formattedPrice = product?.productPrice ? `$${Number(product.productPrice).toLocaleString()}` : '';
 
@@ -37,7 +38,7 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 				<Box
 					className="card-img"
 					style={{
-						backgroundImage: `url(${REACT_APP_API_URL}/${product?.productImages?.[0]})`,
+						backgroundImage: firstImage ? `url(${REACT_APP_API_URL}/${firstImage})` : 'none',
 					}}
 				>
 					{/* Hover overlay */}
@@ -94,7 +95,10 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 						<Box className="stat-item">
 							<IconButton
 								className={`like-btn ${isLiked ? 'liked' : ''}`}
-								onClick={() => likeProductHandler(user, product?._id)}
+								onClick={(e) => {
+									e.stopPropagation();
+									likeProductHandler(user, product?._id);
+								}}
 								disableRipple
 							>
 								{isLiked ? <FavoriteIcon className="like-icon active" /> : <FavoriteBorderIcon className="like-icon" />}
