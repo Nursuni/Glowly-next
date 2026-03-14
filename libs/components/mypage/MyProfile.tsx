@@ -108,6 +108,25 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 			toastError(err);
 		}
 	}, [updateData, user]);
+	const updateProductHandler = useCallback(async () => {
+		try {
+			if (!user._id) throw new Error(Messages.LOGIN_REQUIRED);
+			updateData._id = user._id;
+			const result = await updateMember({
+				variables: {
+					input: updateData,
+				},
+			});
+
+			// @ts-ignore
+			const jwtToken = result.data.updateMember?.accessToken;
+			await updateStorage({ jwtToken });
+			updateUserInfo(result.data.updateMember?.accessToken);
+			await toastSuccess('information updated successfully.');
+		} catch (err: any) {
+			toastError(err);
+		}
+	}, [updateData]);
 
 	/** BUTTON DISABLE CHECK **/
 	const doDisabledCheck = () => {
