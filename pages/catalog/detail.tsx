@@ -47,7 +47,7 @@ const ProductDetail: NextPage = () => {
 
 	const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-	/** MUTATION **/
+	/** LIKE MUTATION **/
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 
 	/** GET PRODUCT **/
@@ -87,6 +87,7 @@ const ProductDetail: NextPage = () => {
 	const likeProductHandler = async () => {
 		try {
 			if (!product?._id) return;
+
 			if (!user?._id) {
 				alert('Please login first');
 				return;
