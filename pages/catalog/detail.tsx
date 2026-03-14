@@ -24,6 +24,7 @@ import { T } from '../../libs/types/common';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { toastError } from '@/libs/toast';
+import { CircularProgress, Stack } from '@mui/material';
 
 SwiperCore.use([Autoplay, Navigation, Pagination]);
 
@@ -49,11 +50,9 @@ const ProductDetail: NextPage = () => {
 
 	const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-	/** MUTATIONS **/
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 	const [createComment] = useMutation(CREATE_COMMENT);
 
-	/** GET PRODUCT **/
 	const { loading: productLoading, refetch: getProductRefetch } = useQuery(GET_PRODUCT, {
 		fetchPolicy: 'network-only',
 		variables: { input: productId },
@@ -67,7 +66,6 @@ const ProductDetail: NextPage = () => {
 		},
 	});
 
-	/** RELATED PRODUCTS **/
 	const { refetch: getProductsRefetch } = useQuery(GET_PRODUCTS, {
 		fetchPolicy: 'network-only',
 		variables: {
@@ -86,7 +84,6 @@ const ProductDetail: NextPage = () => {
 		},
 	});
 
-	/** LIKE HANDLER **/
 	const likeProductHandler = async () => {
 		try {
 			if (!product?._id) return;
@@ -109,7 +106,6 @@ const ProductDetail: NextPage = () => {
 		}
 	};
 
-	/** COMMENT HANDLER **/
 	const createCommentHandler = async () => {
 		try {
 			if (!user?._id) throw new Error(Message.NOT_AUTHENTICATED);
@@ -135,7 +131,19 @@ const ProductDetail: NextPage = () => {
 	}
 
 	if (productLoading || !product) {
-		return <div>Loading product...</div>;
+		return (
+			<Stack
+				sx={{
+					display: 'flex',
+					justifyContent: 'center',
+					alignItems: 'center',
+					width: '100%',
+					height: '100vh',
+				}}
+			>
+				<CircularProgress size={'4rem'} />
+			</Stack>
+		);
 	}
 
 	const price = `$${Number(product.productPrice).toFixed(2)}`;
@@ -154,7 +162,6 @@ const ProductDetail: NextPage = () => {
 
 			<div className="pd-container">
 				<div className="pd-main">
-					{/* GALLERY */}
 					<div className="pd-gallery">
 						<div className="pd-thumbs">
 							{product.productImages?.map((img: string, i: number) => (
@@ -177,7 +184,6 @@ const ProductDetail: NextPage = () => {
 						</div>
 					</div>
 
-					{/* INFO */}
 					<div className="pd-info">
 						<h1>{product.productTitle}</h1>
 
@@ -205,13 +211,11 @@ const ProductDetail: NextPage = () => {
 					</div>
 				</div>
 
-				{/* COMMENT */}
 				<div className="pd-comment-box">
 					<textarea placeholder="Write a review..." value={comment} onChange={(e) => setComment(e.target.value)} />
 					<button onClick={createCommentHandler}>Submit</button>
 				</div>
 
-				{/* RELATED PRODUCTS */}
 				{relatedProducts.length > 0 && (
 					<div className="pd-related">
 						<h2>Related Products</h2>
