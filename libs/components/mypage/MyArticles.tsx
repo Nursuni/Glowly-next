@@ -12,6 +12,7 @@ import { GET_BOARD_ARTICLES } from '../../../apollo/user/query';
 import { Messages } from '../../config';
 import { LIKE_TARGET_BOARD_ARTICLE } from '../../../apollo/user/mutation';
 import { toastError, toastSuccess } from '../../toast';
+import { Direction } from '@/libs/enums/common.enum';
 
 const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 	const device = useDeviceDetect();
@@ -130,7 +131,7 @@ MyArticles.defaultProps = {
 		page: 1,
 		limit: 6,
 		sort: 'createdAt',
-		direction: 'DESC',
+		direction: Direction.DESC,
 		search: {},
 	},
 };

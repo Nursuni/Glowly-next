@@ -170,7 +170,7 @@ TopProducts.defaultProps = {
 		page: 1,
 		limit: 8,
 		sort: 'productRank',
-		direction: 'DESC',
+		direction: Direction.DESC,
 		search: {},
 	},
 };

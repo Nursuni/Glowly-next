@@ -4,28 +4,37 @@ import { Button, Stack, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import axios from 'axios';
 
-// ── adjust these import paths to match your project ──────────────────────────
 import { CREATE_PRODUCT, UPDATE_PRODUCT } from '@/apollo/user/mutation';
 import { GET_PRODUCT } from '@/apollo/user/query';
 import { getJwtToken } from '@/libs/auth';
 import { toastError, toastSuccess } from '@/libs/toast';
 import { REACT_APP_API_URL } from '@/libs/config';
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ── import real enums from your schema ───────────────────────────────────────
+import {
+	ProductType,
+	VolumeUnit,
+	DiscountType,
+	SkinType,
+	ProductTarget,
+	IngredientType,
+	AgeRange,
+} from '@/libs/enums/product.enum';
 
-/* ---------- static option lists (no enum imports needed) ---------- */
-const PRODUCT_TYPES = ['CLEANSER', 'TONER', 'SERUM', 'CREAM', 'SUNSCREEN', 'MOISTURIZER', 'MASK'];
-const VOLUME_UNITS = ['ML', 'G', 'OZ'];
-const DISCOUNT_TYPES = ['PERCENTAGE', 'FIXED'];
-const SKIN_TYPES = ['OILY', 'DRY', 'COMBINATION', 'SENSITIVE', 'NORMAL'];
-const PRODUCT_TARGETS = ['FACE', 'BODY', 'HAIR'];
-const INGREDIENT_TYPES = ['NATURAL', 'SYNTHETIC', 'VEGAN', 'ORGANIC', 'CRUELTY_FREE'];
-const AGE_RANGES = ['TEENS', 'TWENTIES', 'THIRTIES', 'FORTIES_PLUS'];
+// ── derive option arrays directly from enums ─────────────────────────────────
+const PRODUCT_TYPES = Object.values(ProductType);
+const VOLUME_UNITS = Object.values(VolumeUnit);
+const DISCOUNT_TYPES = Object.values(DiscountType);
+const SKIN_TYPES = Object.values(SkinType);
+const PRODUCT_TARGETS = Object.values(ProductTarget);
+const INGREDIENT_TYPES = Object.values(IngredientType);
+const AGE_RANGES = Object.values(AgeRange);
 
-/* ---------- types ---------- */
+/* ---------- types — match schema exactly ---------- */
 type Variant = {
 	name: string;
 	hexCode: string;
+	images: string[]; // ✅ present in VariantSchema
 	price: number;
 	sku: string;
 	isActive: boolean;
@@ -55,7 +64,7 @@ const DEFAULT_VALUES: ProductInput = {
 	productDesc: '',
 	productImages: [],
 	volume: 0,
-	volumeUnit: 'ML',
+	volumeUnit: VolumeUnit.ML, // ✅ enum default
 	skinType: [],
 	productTarget: '',
 	ageRange: [],
@@ -68,6 +77,7 @@ const DEFAULT_VALUES: ProductInput = {
 const EMPTY_VARIANT: Variant = {
 	name: '',
 	hexCode: '#ffffff',
+	images: [], // ✅ schema field
 	price: 0,
 	sku: '',
 	isActive: true,
@@ -81,7 +91,6 @@ const AddProductPage = ({ initialValues }: { initialValues?: ProductInput }) => 
 
 	const [insertProductData, setInsertProductData] = useState<ProductInput>(initialValues ?? DEFAULT_VALUES);
 
-	/* ── apollo ── */
 	const [createProduct] = useMutation(CREATE_PRODUCT);
 	const [updateProduct] = useMutation(UPDATE_PRODUCT);
 
@@ -102,7 +111,7 @@ const AddProductPage = ({ initialValues }: { initialValues?: ProductInput }) => 
 			productDesc: p.productDesc ?? '',
 			productImages: p.productImages ?? [],
 			volume: p.volume ?? 0,
-			volumeUnit: p.volumeUnit ?? 'ML',
+			volumeUnit: p.volumeUnit ?? VolumeUnit.ML,
 			skinType: p.skinType ?? [],
 			productTarget: p.productTarget ?? '',
 			ageRange: p.ageRange ?? [],
@@ -124,35 +133,45 @@ const AddProductPage = ({ initialValues }: { initialValues?: ProductInput }) => 
 		!insertProductData.productDesc ||
 		insertProductData.productImages.length === 0;
 
+	const handleMultiSelect = (e: React.ChangeEvent<HTMLSelectElement>, field: keyof ProductInput) =>
+		set(
+			field,
+			Array.from(e.target.selectedOptions, (o) => o.value),
+		);
+
 	/* ── image upload ── */
 	const uploadImages = async () => {
 		try {
 			if (!inputRef.current?.files) return;
-			const selectedFiles = inputRef.current.files;
+			const selectedFiles = Array.from(inputRef.current.files);
 			if (selectedFiles.length === 0) return;
 			if (selectedFiles.length > 5) throw new Error('Cannot upload more than 5 images!');
+
+			const count = selectedFiles.length;
+
+			// ✅ dynamic nulls — only as many as files selected
+			const nullFiles = Array(count).fill(null);
+
+			// ✅ dynamic map — only map the slots that exist
+			const map: Record<string, string[]> = {};
+			selectedFiles.forEach((_, i) => {
+				map[String(i)] = [`variables.files.${i}`];
+			});
 
 			const formData = new FormData();
 			formData.append(
 				'operations',
 				JSON.stringify({
 					query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) {
-						imagesUploader(files: $files, target: $target)
-					}`,
-					variables: { files: [null, null, null, null, null], target: 'product' },
+					imagesUploader(files: $files, target: $target)
+				}`,
+					variables: { files: nullFiles, target: 'product' },
 				}),
 			);
-			formData.append(
-				'map',
-				JSON.stringify({
-					'0': ['variables.files.0'],
-					'1': ['variables.files.1'],
-					'2': ['variables.files.2'],
-					'3': ['variables.files.3'],
-					'4': ['variables.files.4'],
-				}),
-			);
-			Array.from(selectedFiles).forEach((file, i) => formData.append(`${i}`, file));
+			formData.append('map', JSON.stringify(map));
+
+			// ✅ append only the actual files
+			selectedFiles.forEach((file, i) => formData.append(String(i), file));
 
 			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_GRAPHQL_URL}`, formData, {
 				headers: {
@@ -164,6 +183,7 @@ const AddProductPage = ({ initialValues }: { initialValues?: ProductInput }) => 
 
 			const responseImages: string[] = response.data.data.imagesUploader;
 			set('productImages', responseImages);
+			toastSuccess('Images uploaded successfully.');
 		} catch (err: unknown) {
 			const message = err instanceof Error ? err.message : 'Upload failed';
 			await toastError(message);
@@ -183,19 +203,12 @@ const AddProductPage = ({ initialValues }: { initialValues?: ProductInput }) => 
 			variants: prev.variants.filter((_, i) => i !== idx),
 		}));
 
-	const updateVariant = (idx: number, field: keyof Variant, value: string | number | boolean) =>
+	const updateVariant = (idx: number, field: keyof Variant, value: string | number | boolean | string[]) =>
 		setInsertProductData((prev) => {
 			const updated = [...prev.variants];
 			updated[idx] = { ...updated[idx], [field]: value };
 			return { ...prev, variants: updated };
 		});
-
-	/* ── multi-select helper ── */
-	const handleMultiSelect = (e: React.ChangeEvent<HTMLSelectElement>, field: keyof ProductInput) =>
-		set(
-			field,
-			Array.from(e.target.selectedOptions, (o) => o.value),
-		);
 
 	/* ── submit ── */
 	const insertProductHandler = useCallback(async () => {
@@ -211,7 +224,9 @@ const AddProductPage = ({ initialValues }: { initialValues?: ProductInput }) => 
 	const updateProductHandler = useCallback(async () => {
 		try {
 			const id = getProductData?.getProduct?._id;
-			await updateProduct({ variables: { input: { ...insertProductData, _id: id } } });
+			await updateProduct({
+				variables: { input: { ...insertProductData, _id: id } },
+			});
 			await toastSuccess('Product has been updated successfully.');
 			await router.push({ pathname: '/mypage', query: { category: 'myProducts' } });
 		} catch (err) {
@@ -224,7 +239,6 @@ const AddProductPage = ({ initialValues }: { initialValues?: ProductInput }) => 
 	/* ================================================================ */
 	return (
 		<div id="add-product-page">
-			{/* ── page header ── */}
 			<Stack className="main-title-box">
 				<Typography className="main-title">{isEditMode ? 'Edit Product' : 'Add New Product'}</Typography>
 				<Typography className="sub-title">We are glad to see you again!</Typography>
@@ -310,7 +324,7 @@ const AddProductPage = ({ initialValues }: { initialValues?: ProductInput }) => 
 							</Stack>
 						</Stack>
 
-						{/* ── DISCOUNT ── */}
+						{/* ── DISCOUNT TYPE + VALUE ── */}
 						<Stack className="config-row">
 							<Stack className="price-year-after-price">
 								<Typography className="title">Discount Type</Typography>
@@ -419,7 +433,6 @@ const AddProductPage = ({ initialValues }: { initialValues?: ProductInput }) => 
 						</Stack>
 
 						{/* ── DESCRIPTION ── */}
-						<Typography className="property-title">Product Description</Typography>
 						<Stack className="config-column">
 							<Typography className="title">Description *</Typography>
 							<textarea
@@ -431,7 +444,7 @@ const AddProductPage = ({ initialValues }: { initialValues?: ProductInput }) => 
 						</Stack>
 
 						{/* ── VARIANTS ── */}
-						<Typography className="property-title">Variants</Typography>
+						<Typography className="upload-title">Variants</Typography>
 
 						{insertProductData.variants.map((variant, idx) => (
 							<Stack

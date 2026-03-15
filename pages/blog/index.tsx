@@ -15,7 +15,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { LIKE_TARGET_BOARD_ARTICLE } from '@/apollo/user/mutation';
 
 import { toastError, toastSuccess } from '@/libs/toast';
-import { Message } from '@/libs/enums/common.enum';
+import { Direction, Message } from '@/libs/enums/common.enum';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -314,7 +314,7 @@ Community.defaultProps = {
 		page: 1,
 		limit: 6,
 		sort: 'createdAt',
-		direction: 'ASC',
+		direction: Direction.ASC,
 		search: { articleCategory: 'FREE' },
 	},
 };

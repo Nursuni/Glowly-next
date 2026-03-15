@@ -18,6 +18,7 @@ import { REMOVE_PRODUCT_BY_ADMIN, UPDATE_PRODUCT_BY_ADMIN } from '@/apollo/admin
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_PRODUCTS_BY_ADMIN } from '@/apollo/admin/query';
 import { T } from '@/libs/types/common';
+import { Direction } from '@/libs/enums/common.enum';
 
 const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
 	const [anchorEl, setAnchorEl] = useState<[] | HTMLElement[]>([]);
@@ -240,7 +241,7 @@ AdminProducts.defaultProps = {
 		page: 1,
 		limit: 10,
 		sort: 'createdAt',
-		direction: 'DESC',
+		direction: Direction.DESC,
 		search: {},
 	},
 };

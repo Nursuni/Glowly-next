@@ -77,9 +77,7 @@ const withAdminLayout = (Component: ComponentType) => {
 							<Tooltip title="Open settings">
 								<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
 									<Avatar
-										src={
-											user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'
-										}
+										src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/user.svg'}
 									/>
 								</IconButton>
 							</Tooltip>
@@ -158,7 +156,7 @@ const withAdminLayout = (Component: ComponentType) => {
 								}}
 							>
 								<Avatar
-									src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'}
+									src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/user.svg'}
 								/>
 								<Typography variant={'body2'} p={1} ml={1}>
 									{user?.memberNick} <br />

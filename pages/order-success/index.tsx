@@ -1,8 +1,10 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Box, Typography, Button, Paper } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { Box, Typography, Button } from '@mui/material';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import withLayoutBasic from '@/libs/components/layout/LayoutBasic';
 
 const OrderSuccessPage: NextPage = () => {
@@ -10,46 +12,58 @@ const OrderSuccessPage: NextPage = () => {
 	const { orderId } = router.query;
 
 	return (
-		<Box
-			sx={{
-				maxWidth: 600,
-				margin: '80px auto',
-				textAlign: 'center',
-				padding: '20px',
-			}}
-		>
-			<Paper sx={{ padding: '40px', borderRadius: '16px' }}>
-				<CheckCircleOutlineIcon sx={{ fontSize: 80, color: 'green', mb: 2 }} />
+		<div id="pc-wrap">
+			<div id="order-success-page">
+				<div className="success-container">
+					{/* ── Icon ── */}
+					<div className="success-icon-wrap">
+						<CheckCircleOutlineRoundedIcon className="success-icon" />
+					</div>
 
-				<Typography variant="h4" fontWeight={600} mb={2}>
-					Thank You for Your Order!
-				</Typography>
+					{/* ── Eyebrow ── */}
+					<span className="success-eyebrow">Order Confirmed</span>
 
-				<Typography mb={3}>
-					We sincerely appreciate your purchase. Your order has been placed successfully and is being processed.
-				</Typography>
+					{/* ── Title ── */}
+					<Typography className="success-title">Thank You for Your Order</Typography>
 
-				{orderId && (
-					<Typography mb={3} color="text.secondary">
-						Your Order ID: <b>{orderId}</b>
+					{/* ── Subtitle ── */}
+					<Typography className="success-subtitle">
+						Your order has been placed successfully and is now being prepared with care.
 					</Typography>
-				)}
 
-				<Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-					<Button variant="contained" onClick={() => router.push('/catalog')}>
-						Continue Shopping
-					</Button>
+					{/* ── Order ID pill ── */}
+					{orderId && (
+						<div className="order-id-pill">
+							<ReceiptLongOutlinedIcon className="order-id-icon" />
+							<span className="order-id-label">Order ID</span>
+							<span className="order-id-value">{orderId}</span>
+						</div>
+					)}
 
-					<Button variant="outlined" onClick={() => router.push('/orders')}>
-						View My Purchases
-					</Button>
-				</Box>
+					{/* ── Divider ── */}
+					<div className="success-divider" />
 
-				<Typography mt={3} color="text.secondary">
-					If you have any questions or need assistance, please feel free to contact us.
-				</Typography>
-			</Paper>
-		</Box>
+					{/* ── Note ── */}
+					<Typography className="success-note">
+						A confirmation email has been sent to you. If you have any questions, our team is happy to help.
+					</Typography>
+
+					{/* ── Actions ── */}
+					<Box className="success-actions">
+						<Button
+							className="btn-primary"
+							endIcon={<ArrowForwardRoundedIcon />}
+							onClick={() => router.push('/catalog')}
+						>
+							Continue Shopping
+						</Button>
+						<Button className="btn-ghost" onClick={() => router.push('/orders')}>
+							View My Purchases
+						</Button>
+					</Box>
+				</div>
+			</div>
+		</div>
 	);
 };
 

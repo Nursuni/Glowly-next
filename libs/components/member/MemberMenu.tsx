@@ -40,7 +40,7 @@ const MemberMenu = ({ subscribeHandler, unsubscribeHandler }: MemberMenuProps) =
 		return <div>MEMBER MENU MOBILE</div>;
 	}
 
-	const imageSrc = member?.memberImage ? `${REACT_APP_API_URL}/${member.memberImage}` : '/img/profile/defaultUser.svg';
+	const imageSrc = member?.memberImage ? `${REACT_APP_API_URL}/${member.memberImage}` : '/img/profile/user.svg';
 
 	const isFollowing = member?.meFollowed?.[0]?.myFollowing;
 

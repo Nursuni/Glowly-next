@@ -4,7 +4,11 @@ import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 
-import { TextField, Button, Stack, Typography, Box, Divider, Paper } from '@mui/material';
+import { TextField, Button, Stack, Typography, Box, Divider } from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 
 import withLayoutBasic from '@/libs/components/layout/LayoutBasic';
 
@@ -43,86 +47,155 @@ const CheckoutPage: NextPage = () => {
 	};
 
 	const handleOrder = () => {
-		const fakeOrderId = 'ORD-' + Date.now();
-
-		router.push(`/order-success?orderId=${fakeOrderId}`);
+		router.push(`/order-success?orderId=ORD-${Date.now()}`);
 	};
+
 	return (
-		<Box sx={{ maxWidth: 1200, mx: 'auto', py: 6, px: 2 }}>
-			<Typography variant="h4" mb={4}>
-				Checkout
-			</Typography>
+		<div id="pc-wrap">
+			<div id="checkout-page">
+				<div className="checkout-container">
+					{/* ── Page header ── */}
+					<div className="checkout-header">
+						<span className="checkout-eyebrow">Secure Checkout</span>
+						<Typography className="checkout-title">Complete Your Order</Typography>
+						<Typography className="checkout-subtitle">
+							Your information is protected with 256-bit SSL encryption
+						</Typography>
+					</div>
 
-			<Box sx={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-				{/* FORM */}
-				<Box sx={{ flex: 2, minWidth: 320 }}>
-					<Typography variant="h6" mb={2}>
-						Shipping Information
-					</Typography>
+					<div className="checkout-body">
+						{/* ── LEFT: form ── */}
+						<div className="checkout-form-col">
+							{/* Section: Shipping */}
+							<div className="form-section">
+								<div className="form-section-label">
+									<LocalShippingOutlinedIcon className="section-icon" />
+									<span>Shipping Information</span>
+								</div>
 
-					<Stack spacing={2}>
-						<TextField label="Full Name" fullWidth onChange={handleChange('name')} />
-						<TextField label="Email" fullWidth onChange={handleChange('email')} />
-						<TextField label="Phone Number" fullWidth onChange={handleChange('phone')} />
-						<TextField label="Address" fullWidth onChange={handleChange('address')} />
-						<TextField label="City" fullWidth onChange={handleChange('city')} />
+								<Stack spacing="14px">
+									<TextField
+										label="Full Name"
+										fullWidth
+										variant="outlined"
+										onChange={handleChange('name')}
+										className="glowly-input"
+									/>
+									<Box sx={{ display: 'flex', gap: '14px' }}>
+										<TextField
+											label="Email Address"
+											fullWidth
+											variant="outlined"
+											onChange={handleChange('email')}
+											className="glowly-input"
+										/>
+										<TextField
+											label="Phone Number"
+											fullWidth
+											variant="outlined"
+											onChange={handleChange('phone')}
+											className="glowly-input"
+										/>
+									</Box>
+									<TextField
+										label="Street Address"
+										fullWidth
+										variant="outlined"
+										onChange={handleChange('address')}
+										className="glowly-input"
+									/>
+									<Box sx={{ display: 'flex', gap: '14px' }}>
+										<TextField
+											label="City"
+											fullWidth
+											variant="outlined"
+											onChange={handleChange('city')}
+											className="glowly-input"
+										/>
+										<TextField
+											label="Postal Code"
+											fullWidth
+											variant="outlined"
+											onChange={handleChange('postal')}
+											className="glowly-input"
+										/>
+										<TextField
+											label="Country"
+											fullWidth
+											variant="outlined"
+											onChange={handleChange('country')}
+											className="glowly-input"
+										/>
+									</Box>
+								</Stack>
+							</div>
 
-						<Stack direction="row" spacing={2}>
-							<TextField label="Postal Code" fullWidth onChange={handleChange('postal')} />
-							<TextField label="Country" fullWidth onChange={handleChange('country')} />
-						</Stack>
+							{/* Trust badges */}
+							<div className="trust-row">
+								{['Free Returns', 'Secure Payment', 'Fast Delivery'].map((badge) => (
+									<div className="trust-badge" key={badge}>
+										<CheckCircleOutlineRoundedIcon className="trust-icon" />
+										<span>{badge}</span>
+									</div>
+								))}
+							</div>
+						</div>
 
-						<Button variant="contained" size="large" onClick={handleOrder}>
-							Place Order
-						</Button>
-					</Stack>
-				</Box>
+						{/* ── RIGHT: summary ── */}
+						<div className="checkout-summary">
+							<Typography className="summary-title">Order Summary</Typography>
 
-				{/* SUMMARY */}
-				<Paper
-					elevation={0}
-					sx={{
-						flex: 1,
-						minWidth: 280,
-						bgcolor: '#fafafa',
-						p: 3,
-						borderRadius: 3,
-					}}
-				>
-					<Typography variant="h6">Order Summary</Typography>
+							{/* Items */}
+							<div className="summary-items">
+								{cartItems.map((item) => (
+									<div className="summary-item" key={item.id}>
+										<div className="summary-item-img" />
+										<div className="summary-item-info">
+											<span className="summary-item-name">{item.name}</span>
+											<span className="summary-item-qty">Qty {item.qty}</span>
+										</div>
+										<span className="summary-item-price">${item.price * item.qty}</span>
+									</div>
+								))}
+							</div>
 
-					<Box mt={2}>
-						{cartItems.map((item) => (
-							<Box key={item.id} sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-								<span>
-									{item.name} × {item.qty}
-								</span>
-								<span>${item.price * item.qty}</span>
-							</Box>
-						))}
-					</Box>
+							<Divider className="summary-divider" />
 
-					<Divider sx={{ my: 2 }} />
+							{/* Rows */}
+							<div className="summary-rows">
+								<div className="summary-row">
+									<span>Subtotal</span>
+									<span>${subtotal}</span>
+								</div>
+								<div className="summary-row">
+									<span>Shipping</span>
+									<span className={shipping === 0 ? 'free-tag' : ''}>{shipping === 0 ? 'Free' : `$${shipping}`}</span>
+								</div>
+							</div>
 
-					<Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-						<span>Subtotal</span>
-						<span>${subtotal}</span>
-					</Box>
+							<Divider className="summary-divider" />
 
-					<Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-						<span>Shipping</span>
-						<span>{shipping === 0 ? 'Free' : `$${shipping}`}</span>
-					</Box>
+							{/* Total */}
+							<div className="summary-total">
+								<span>Total</span>
+								<span className="total-amount">${total}</span>
+							</div>
 
-					<Divider sx={{ my: 2 }} />
+							{/* CTA */}
+							<Button fullWidth onClick={handleOrder} endIcon={<ArrowForwardRoundedIcon />} className="place-order-btn">
+								Place Order
+							</Button>
 
-					<Box sx={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
-						<span>Total</span>
-						<span>${total}</span>
-					</Box>
-				</Paper>
-			</Box>
-		</Box>
+							{/* Lock note */}
+							<div className="secure-note">
+								<LockOutlinedIcon className="lock-icon" />
+								<span>Payments are secure &amp; encrypted</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	);
 };
 

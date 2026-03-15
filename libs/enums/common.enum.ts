@@ -31,8 +31,7 @@ export enum Message {
 	ALREADY_REPORTED = 'ALREADY_REPORTED',
 	INSERT_ALL_INPUTS = 'INSERT_ALL_INPUTS',
 }
-
-export enum Direction {
-	ASC = 1,
-	DESC = -1,
-}
+export const Direction = {
+	ASC: 1,
+	DESC: -1,
+} as const;

@@ -76,15 +76,16 @@ export default function ShopByCategories() {
 				<Box className="section-header">
 					<Box className="header-text">
 						<Typography className="section-title">Not Sure Where to Start?</Typography>
+
 						<Typography className="section-sub">
 							Explore our curated collection and find what your skin truly needs.
 						</Typography>
 					</Box>
+
 					<Link href="/catalog" className="view-all-link">
 						View All
 					</Link>
 				</Box>
-
 				{/* ── Grid ── */}
 				<Grid container spacing={3}>
 					{categoryData.map((cat, i) => (

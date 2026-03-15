@@ -14,7 +14,7 @@ import { LIKE_TARGET_MEMBER } from '@/apollo/user/mutation';
 import { T } from '@/libs/types/common';
 import { GET_BRANDS } from '@/apollo/user/query';
 import { useMutation, useQuery } from '@apollo/client';
-import { Message } from '@/libs/enums/common.enum';
+import { Direction, Message } from '@/libs/enums/common.enum';
 import { toastError, toastSuccess } from '@/libs/toast';
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -24,10 +24,10 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const SORT_OPTIONS = [
-	{ id: 'recent', label: 'Recent', sort: 'createdAt', direction: 'ASC' },
-	{ id: 'old', label: 'Oldest', sort: 'createdAt', direction: 'DESC' },
-	{ id: 'likes', label: 'Likes', sort: 'memberLikes', direction: 'DESC' },
-	{ id: 'views', label: 'Views', sort: 'memberViews', direction: 'DESC' },
+	{ id: 'recent', label: 'Recent', sort: 'createdAt', direction: Direction.ASC },
+	{ id: 'old', label: 'Oldest', sort: 'createdAt', direction: Direction.DESC },
+	{ id: 'likes', label: 'Likes', sort: 'memberLikes', direction: Direction.DESC },
+	{ id: 'views', label: 'Views', sort: 'memberViews', direction: Direction.DESC },
 ];
 
 const BrandList: NextPage<{ initialInput: T }> = ({ initialInput }) => {
@@ -207,7 +207,7 @@ const BrandList: NextPage<{ initialInput: T }> = ({ initialInput }) => {
 };
 
 BrandList.defaultProps = {
-	initialInput: { page: 1, limit: 10, sort: 'createdAt', direction: 'DESC', search: {} },
+	initialInput: { page: 1, limit: 10, sort: 'createdAt', direction: -1, search: {} },
 };
 
 export default withLayoutBasic(BrandList);

@@ -160,9 +160,7 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 						<Stack className="image-box">
 							<img
 								src={
-									updateData?.memberImage
-										? `${REACT_APP_API_URL}/${updateData.memberImage}`
-										: '/img/profile/defaultUser.svg'
+									updateData?.memberImage ? `${REACT_APP_API_URL}/${updateData.memberImage}` : '/img/profile/user.svg'
 								}
 								alt=""
 							/>

@@ -141,7 +141,6 @@ export const CREATE_PRODUCT = gql`
 			skinType
 			productTarget
 			ingredientType
-
 			productViews
 			productLikes
 			productComments
@@ -170,7 +169,6 @@ export const UPDATE_PRODUCT = gql`
 			skinType
 			productTarget
 			ingredientType
-
 			productViews
 			productLikes
 			productComments
@@ -199,7 +197,6 @@ export const LIKE_TARGET_PRODUCT = gql`
 			skinType
 			productTarget
 			ingredientType
-
 			productViews
 			productLikes
 			productComments
@@ -228,6 +225,7 @@ export const CREATE_BOARD_ARTICLE = gql`
 			articleImage
 			articleViews
 			articleLikes
+			articleComments
 			memberId
 			createdAt
 			updatedAt
@@ -246,6 +244,7 @@ export const UPDATE_BOARD_ARTICLE = gql`
 			articleImage
 			articleViews
 			articleLikes
+			articleComments
 			memberId
 			createdAt
 			updatedAt
@@ -264,6 +263,7 @@ export const LIKE_TARGET_BOARD_ARTICLE = gql`
 			articleImage
 			articleViews
 			articleLikes
+			articleComments
 			memberId
 			createdAt
 			updatedAt
@@ -306,7 +306,7 @@ export const UPDATE_COMMENT = gql`
 `;
 
 /**************************
- *         FOLLOW        *
+ *         FOLLOW         *
  *************************/
 
 export const SUBSCRIBE = gql`
@@ -333,7 +333,7 @@ export const UNSUBSCRIBE = gql`
 	}
 `;
 
-export const CreateOrder = gql`
+export const CREATE_ORDER = gql`
 	mutation CreateOrder($input: CreateOrderInput!) {
 		createOrder(input: $input) {
 			_id
@@ -365,7 +365,7 @@ export const CreateOrder = gql`
 	}
 `;
 
-const SUBSCRIBE_NEWSLETTER = gql`
+export const SUBSCRIBE_NEWSLETTER = gql`
 	mutation SubscribeNewsletter($email: String!) {
 		subscribeNewsletter(email: $email) {
 			_id

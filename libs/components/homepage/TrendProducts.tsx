@@ -16,7 +16,7 @@ import { useQuery, useMutation } from '@apollo/client';
 
 import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 
-import { Message } from '../../enums/common.enum';
+import { Direction, Message } from '../../enums/common.enum';
 import { toastError, toastSuccess } from '@/libs/toast';
 
 interface TrendProductsProps {
@@ -164,7 +164,7 @@ TrendProducts.defaultProps = {
 		page: 1,
 		limit: 8,
 		sort: 'productLikes',
-		direction: 'DESC',
+		direction: Direction.DESC,
 		search: {},
 	},
 };

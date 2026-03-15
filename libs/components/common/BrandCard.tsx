@@ -20,9 +20,7 @@ const BrandCard = (props: BrandCard) => {
 
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
-	const imagePath: string = brand?.memberImage
-		? `${REACT_APP_API_URL}/${brand?.memberImage}`
-		: '/img/profile/defaultUser.svg';
+	const imagePath: string = brand?.memberImage ? `${REACT_APP_API_URL}/${brand?.memberImage}` : '/img/profile/user.svg';
 
 	if (device === 'mobile') {
 		return (

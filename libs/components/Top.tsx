@@ -12,7 +12,6 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
-import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { Logout } from '@mui/icons-material';
 import { CaretDown } from 'phosphor-react';
@@ -79,8 +78,8 @@ const Top = () => {
 	const [userDropOpen, setUserDropOpen] = useState(false);
 	const userDropRef = useRef<HTMLDivElement>(null);
 
-	const catalogTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const avatar = user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/user.svg';
+
 	useEffect(() => {
 		setNavReady(false);
 		const id = setTimeout(() => setNavReady(true), 30);
@@ -167,26 +166,23 @@ const Top = () => {
 			<div className={`navbar${navReady ? ' nb-ready' : ''}`}>
 				<div className={`navbar-main${bgColor ? ' transparent' : ''}${scrolled ? ' scrolled' : ''}`}>
 					<div className="container">
-						{/* LOGO */}
+						{/* ── LOGO ── */}
 						<div className="logo-box nb-item">
 							<Link href="/">
 								<Image src="/img/logo/glowly.svg" alt="Glowly" width={120} height={40} />
 							</Link>
 						</div>
 
-						{/* NAV LINKS */}
+						{/* ── NAV LINKS ── */}
 						<div className="router-box">
 							<Link href="/" className={isActive('/') ? 'active' : ''}>
 								{t('home')}
 							</Link>
-
-							{/* Catalog + mega-menu */}
 							<div>
 								<Link href="/catalog" className={isActive('/catalog') ? 'active' : ''}>
 									{t('catalog')}
 								</Link>
 							</div>
-
 							<Link href="/brand" className={isActive('/brand') ? 'active' : ''}>
 								{t('brands')}
 							</Link>
@@ -201,27 +197,29 @@ const Top = () => {
 							</Link>
 						</div>
 
-						{/* Basket */}
+						{/* ── USER BOX ── */}
 						<div className="user-box">
-							{/* Basket */}
+							{/* Basket — always visible */}
 							<button className="icon-btn basket-btn" onClick={() => setBasketOpen(true)} aria-label="Basket">
-								<img src="/img/icons/basket.svg" />
+								<img src="/img/icons/basket.svg" alt="basket" />
 								<span className="cart-count">{2}</span>
 							</button>
 							<BasketModal open={basketOpen} onClose={() => setBasketOpen(false)} />
 
-							{/* Notifications */}
-							<button className="icon-btn notification-btn" aria-label="Notifications">
-								<NotificationsOutlinedIcon />
-								<span className="unread-dot" />
-							</button>
+							{/* Notifications + Chat — logged-in only */}
+							{user && (
+								<>
+									<button className="icon-btn notification-btn" aria-label="Notifications">
+										<NotificationsOutlinedIcon />
+										<span className="unread-dot" />
+									</button>
+									<button className="icon-btn" aria-label="Chat">
+										<ChatBubbleOutlineOutlinedIcon />
+									</button>
+								</>
+							)}
 
-							{/* Chat */}
-							<button className="icon-btn" aria-label="Chat">
-								<ChatBubbleOutlineOutlinedIcon />
-							</button>
-
-							{/* User dropdown */}
+							{/* ── User icon — always visible ── */}
 							<div className="user-drop-wrap" ref={userDropRef}>
 								<button
 									className={`icon-btn user-btn${userDropOpen ? ' active' : ''}`}
@@ -233,7 +231,8 @@ const Top = () => {
 
 								{userDropOpen && (
 									<div className="user-dropdown">
-										{user ? (
+										{user?._id ? (
+											/* ── Logged in ── */
 											<>
 												<div className="ud-header">
 													<img
@@ -270,6 +269,7 @@ const Top = () => {
 												</button>
 											</>
 										) : (
+											/* ── Guest: login + register only ── */
 											<>
 												<div className="ud-header ud-header--guest">
 													<PersonOutlineOutlinedIcon className="ud-guest-icon" />
@@ -279,22 +279,12 @@ const Top = () => {
 													</div>
 												</div>
 												<div className="ud-divider" />
-												<Link href="/login" className="ud-item ud-item--primary" onClick={() => setUserDropOpen(false)}>
-													Login
-												</Link>
-												<Link href="/join" className="ud-item" onClick={() => setUserDropOpen(false)}>
-													<AccountCircleOutlinedIcon /> Sign Up
-												</Link>
-												<div className="ud-divider" />
 												<Link
-													href="/login?redirect=wishlist"
-													className="ud-item"
+													href="/account/join"
+													className="ud-item ud-item--primary"
 													onClick={() => setUserDropOpen(false)}
 												>
-													<FavoriteBorderOutlinedIcon /> Wishlist
-												</Link>
-												<Link href="/login?redirect=orders" className="ud-item" onClick={() => setUserDropOpen(false)}>
-													<LocalShippingOutlinedIcon /> Track Orders
+													<AccountCircleOutlinedIcon /> Login/Sign Up
 												</Link>
 											</>
 										)}
@@ -302,7 +292,7 @@ const Top = () => {
 								)}
 							</div>
 
-							{/* Language */}
+							{/* ── Language selector ── */}
 							<Button
 								disableRipple
 								onClick={langClick}
@@ -348,25 +338,23 @@ const Top = () => {
 
 							<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose}>
 								<MenuItem id="en" onClick={langChoice}>
-									<img src="/img/flag/langen.png" width="16" style={{ marginRight: 8 }} />
+									<img src="/img/flag/langen.png" width="16" style={{ marginRight: 8 }} alt="en" />
 									English
 								</MenuItem>
 								<MenuItem id="kr" onClick={langChoice}>
-									<img src="/img/flag/langkr.png" width="16" style={{ marginRight: 8 }} />
+									<img src="/img/flag/langkr.png" width="16" style={{ marginRight: 8 }} alt="kr" />
 									한국어
 								</MenuItem>
 								<MenuItem id="ru" onClick={langChoice}>
-									<img src="/img/flag/langru.png" width="16" style={{ marginRight: 8 }} />
+									<img src="/img/flag/langru.png" width="16" style={{ marginRight: 8 }} alt="ru" />
 									Русский
 								</MenuItem>
 								<MenuItem id="uz" onClick={langChoice}>
-									<img src="/img/flag/languz.png" width="16" style={{ marginRight: 8 }} />
+									<img src="/img/flag/languz.png" width="16" style={{ marginRight: 8 }} alt="uz" />
 									O'zbek
 								</MenuItem>
 							</StyledMenu>
 						</div>
-
-						{/* Language */}
 					</div>
 				</div>
 			</div>

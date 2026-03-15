@@ -199,7 +199,7 @@ export const NoticeList = (props: NoticeListType) => {
 					<EnhancedTableToolbar />
 					<TableBody>
 						{[1, 2, 3, 4, 5].map((ele: any, index: number) => {
-							const member_image = '/img/profile/defaultUser.svg';
+							const member_image = '/img/profile/user.svg';
 
 							return (
 								<TableRow hover key={'member._id'} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>

@@ -44,40 +44,40 @@ export const GET_BRANDS = gql`
 `;
 
 export const GET_MEMBER = gql(`
-query GetMember($input: String!) {
-    getMember(memberId: $input) {
-        _id
-        memberType
-        memberStatus
-        memberAuthType
-        memberPhone
-        memberNick
-        memberFullName
-        memberImage
-		memberGender
-        memberAddress
-        memberDesc
-  	memberProducts
-        memberArticles
-        memberPoints
-        memberLikes
-        memberViews
-        memberFollowings
-				memberFollowers
-        memberRank
-        memberWarnings
-        memberBlocks
-        deletedAt
-        createdAt
-        updatedAt
-        accessToken
-        meFollowed {
-					followingId
-					followerId
-					myFollowing
-				}
-    }
-}
+	query GetMember($input: String!) {
+		getMember(memberId: $input) {
+			_id
+			memberType
+			memberStatus
+			memberAuthType
+			memberPhone
+			memberNick
+			memberFullName
+			memberImage
+			memberGender
+			memberAddress
+			memberDesc
+			memberProducts
+			memberArticles
+			memberPoints
+			memberLikes
+			memberViews
+			memberFollowings
+			memberFollowers
+			memberRank
+			memberWarnings
+			memberBlocks
+			deletedAt
+			createdAt
+			updatedAt
+			accessToken
+			meFollowed {
+				followingId
+				followerId
+				myFollowing
+			}
+		}
+	}
 `);
 
 /**************************
@@ -87,6 +87,7 @@ query GetMember($input: String!) {
 export const GET_PRODUCT = gql`
 	query GetProduct($input: String!) {
 		getProduct(productId: $input) {
+			_id
 			productType
 			productStatus
 			productTitle
@@ -98,7 +99,6 @@ export const GET_PRODUCT = gql`
 			skinType
 			productTarget
 			ingredientType
-
 			productViews
 			productLikes
 			productComments
@@ -155,7 +155,6 @@ export const GET_PRODUCTS = gql`
 				skinType
 				productTarget
 				ingredientType
-
 				productViews
 				productLikes
 				productComments
@@ -217,7 +216,6 @@ export const GET_BRAND_PRODUCTS = gql`
 				skinType
 				productTarget
 				ingredientType
-
 				productViews
 				productLikes
 				productComments
@@ -251,7 +249,6 @@ export const GET_FAVORITES = gql`
 				skinType
 				productTarget
 				ingredientType
-
 				productViews
 				productLikes
 				productComments
@@ -278,7 +275,6 @@ export const GET_FAVORITES = gql`
 					memberPoints
 					memberLikes
 					memberViews
-					memberComments
 					memberFollowings
 					memberFollowers
 					memberRank
@@ -313,7 +309,6 @@ export const GET_VISITED_PRODUCTS = gql`
 				skinType
 				productTarget
 				ingredientType
-
 				productViews
 				productLikes
 				productComments
@@ -340,7 +335,6 @@ export const GET_VISITED_PRODUCTS = gql`
 					memberPoints
 					memberLikes
 					memberViews
-					memberComments
 					memberFollowings
 					memberFollowers
 					memberRank
@@ -511,8 +505,9 @@ export const GET_COMMENTS = gql`
 `;
 
 /**************************
- *         FOLLOW        *
+ *         FOLLOW         *
  *************************/
+
 export const GET_MEMBER_FOLLOWERS = gql`
 	query GetMemberFollowers($input: FollowInquiry!) {
 		getMemberFollowers(input: $input) {
@@ -522,11 +517,6 @@ export const GET_MEMBER_FOLLOWERS = gql`
 				followerId
 				createdAt
 				updatedAt
-				meLiked {
-					memberId
-					likeRefId
-					myFavorite
-				}
 				meFollowed {
 					followingId
 					followerId
@@ -549,7 +539,6 @@ export const GET_MEMBER_FOLLOWERS = gql`
 					memberPoints
 					memberLikes
 					memberViews
-					memberComments
 					memberFollowings
 					memberFollowers
 					memberRank
@@ -593,7 +582,6 @@ export const GET_MEMBER_FOLLOWINGS = gql`
 					memberPoints
 					memberLikes
 					memberViews
-					memberComments
 					memberFollowings
 					memberFollowers
 					memberRank
@@ -603,11 +591,6 @@ export const GET_MEMBER_FOLLOWINGS = gql`
 					createdAt
 					updatedAt
 					accessToken
-				}
-				meLiked {
-					memberId
-					likeRefId
-					myFavorite
 				}
 				meFollowed {
 					followingId
@@ -627,15 +610,14 @@ export const GET_MY_ORDERS = gql`
 		getMyOrders(input: $input) {
 			_id
 			orderStatus
-			totalPrice
+			orderTotal
 			createdAt
 			orderItems {
 				_id
-				quantity
-				price
-				product {
-					_id
-					name
+				itemQty
+				itemPrice
+				productData {
+					productTitle
 					productImages
 				}
 			}

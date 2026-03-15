@@ -19,6 +19,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_BOARD_ARTICLES_BY_ADMIN } from '../../../apollo/admin/query';
 import { T } from '../../../libs/types/common';
 import { toastError, toastInfo } from '@/libs/toast';
+import { Direction } from '@/libs/enums/common.enum';
 
 const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
 	const [anchorEl, setAnchorEl] = useState<any>([]);
@@ -232,7 +233,7 @@ AdminCommunity.defaultProps = {
 		page: 1,
 		limit: 10,
 		sort: 'createdAt',
-		direction: 'DESC',
+		direction: Direction.DESC,
 		search: {},
 	},
 };

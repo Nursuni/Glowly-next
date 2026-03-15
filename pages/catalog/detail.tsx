@@ -91,7 +91,7 @@ const ProductDetail: NextPage = () => {
 	const { refetch: getProductsRefetch } = useQuery(GET_PRODUCTS, {
 		fetchPolicy: 'network-only',
 		variables: {
-			input: { page: 1, limit: 4, sort: 'createdAt', direction: 'DESC', search: {} },
+			input: { page: 1, limit: 4, sort: 'createdAt', direction: -1, search: {} },
 		},
 		onCompleted: (data: T) => {
 			if (data?.getProducts?.list) setRelatedProducts(data.getProducts.list);

@@ -59,7 +59,6 @@ export const GET_ALL_PRODUCTS_BY_ADMIN = gql`
 				skinType
 				productTarget
 				ingredientType
-
 				productViews
 				productLikes
 				productComments
@@ -117,6 +116,7 @@ export const GET_ALL_BOARD_ARTICLES_BY_ADMIN = gql`
 				articleImage
 				articleViews
 				articleLikes
+				articleComments
 				memberId
 				createdAt
 				updatedAt

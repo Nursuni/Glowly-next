@@ -30,7 +30,7 @@ const NewMessage = (type: any) => {
 	} else {
 		return (
 			<Box flexDirection={'row'} style={{ display: 'flex' }} sx={{ m: '10px 0px' }} component={'div'}>
-				<Avatar alt={'jonik'} src={'/img/profile/defaultUser.svg'} />
+				<Avatar alt={'jonik'} src={'/img/profile/user.svg'} />
 				<div className={'msg_left'}></div>
 			</Box>
 		);
@@ -125,7 +125,7 @@ const Chat = () => {
 								const { text, memberData } = ele;
 								const memberImage = memberData?.memberImage
 									? `${REACT_APP_API_URL}/${memberData.memberImage}`
-									: '/img/profile/defaultUser.svg';
+									: '/img/profile/user.svg';
 								return memberData?._id === user?._id ? (
 									<Box
 										component={'div'}

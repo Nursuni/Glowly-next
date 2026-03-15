@@ -29,7 +29,7 @@ interface Data {
 	status: string;
 }
 
-type Order = 'asc' | 'desc';
+type Order = 'Asc' | 'Desc';
 
 interface HeadCell {
 	disablePadding: boolean;

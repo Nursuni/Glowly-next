@@ -8,8 +8,9 @@ export const UPDATE_MEMBER_BY_ADMIN = gql`
 	mutation UpdateMemberByAdmin($input: MemberUpdate!) {
 		updateMemberByAdmin(input: $input) {
 			_id
+			memberType
 			memberStatus
-
+			memberAuthType
 			memberPhone
 			memberNick
 			memberFullName
@@ -18,7 +19,6 @@ export const UPDATE_MEMBER_BY_ADMIN = gql`
 			memberGender
 			memberDesc
 			memberProducts
-
 			memberRank
 			memberArticles
 			memberPoints
@@ -53,7 +53,6 @@ export const UPDATE_PRODUCT_BY_ADMIN = gql`
 			skinType
 			productTarget
 			ingredientType
-
 			productViews
 			productLikes
 			productComments
@@ -82,7 +81,6 @@ export const REMOVE_PRODUCT_BY_ADMIN = gql`
 			skinType
 			productTarget
 			ingredientType
-
 			productViews
 			productLikes
 			productComments
@@ -111,6 +109,7 @@ export const UPDATE_BOARD_ARTICLE_BY_ADMIN = gql`
 			articleImage
 			articleViews
 			articleLikes
+			articleComments
 			memberId
 			createdAt
 			updatedAt
@@ -129,6 +128,7 @@ export const REMOVE_BOARD_ARTICLE_BY_ADMIN = gql`
 			articleImage
 			articleViews
 			articleLikes
+			articleComments
 			memberId
 			createdAt
 			updatedAt

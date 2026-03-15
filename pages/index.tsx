@@ -5,7 +5,6 @@ import withLayoutMain from '../libs/components/layout/LayoutHome';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Stack } from '@mui/material';
 
-import CommunityBoards from '../libs/components/homepage/BlogBoards';
 import Advertisement from '../libs/components/homepage/Advertisement';
 import TopProducts from '../libs/components/homepage/TopProducts';
 import ShopByCategories from '../libs/components/homepage/ShopByCategories';
@@ -34,8 +33,6 @@ const Home: NextPage = () => {
 				<TopBrandsCarousel initialInput={undefined} />
 				<ShopByCategories />
 				<Advertisement />
-
-				<CommunityBoards />
 			</Stack>
 		);
 	}

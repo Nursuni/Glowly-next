@@ -26,6 +26,7 @@ import { LIKE_TARGET_PRODUCT } from '@/apollo/user/mutation';
 import { REACT_APP_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { toastError, toastSuccess } from '@/libs/toast';
+import { Direction } from '@/libs/enums/common.enum';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -198,9 +199,7 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 			<Stack className={'container'}>
 				{/* BRAND INFO */}
 				<Stack className={'brand-info'}>
-					<img
-						src={brand?.memberImage ? `${REACT_APP_API_URL}/${brand.memberImage}` : '/img/profile/defaultUser.svg'}
-					/>
+					<img src={brand?.memberImage ? `${REACT_APP_API_URL}/${brand.memberImage}` : '/img/profile/user.svg'} />
 
 					<Box className={'info'}>
 						<strong>{brand?.memberFullName ?? brand?.memberNick}</strong>
@@ -311,7 +310,7 @@ BrandDetail.defaultProps = {
 		page: 1,
 		limit: 5,
 		sort: 'createdAt',
-		direction: 'ASC',
+		direction: Direction.ASC,
 		search: {
 			commentRefId: '',
 		},

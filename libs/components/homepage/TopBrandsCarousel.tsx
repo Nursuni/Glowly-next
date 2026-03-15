@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import React from 'react';
 import { Stack, Box } from '@mui/material';
 import useDeviceDetect from '@/libs/hooks/useDeviceDetect';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -9,32 +8,26 @@ import TopBrandCard from './TopBrandCard';
 import { Member } from '@/libs/types/member/member';
 import { BrandsInquiry } from '@/libs/types/member/member.input';
 import { GET_BRANDS } from '@/apollo/user/query';
-import { T } from '@/libs/types/common';
 import { useQuery } from '@apollo/client';
+import { Direction } from '@/libs/enums/common.enum';
 
 interface TopBrandsProps {
 	initialInput: BrandsInquiry;
 }
 
-const TopBrandsCarousel = (props: TopBrandsProps) => {
-	const { initialInput } = props;
+const TopBrandsCarousel = ({ initialInput }: TopBrandsProps) => {
 	const device = useDeviceDetect();
-	const router = useRouter();
-	const [topBrands, setTopBrands] = useState<Member[]>([]);
 
-	/** APOLLO REQUEST **/
+	/** APOLLO QUERY **/
 	const { data } = useQuery(GET_BRANDS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 	});
 
-	/** Update local state when data changes **/
-	useEffect(() => {
-		if (data?.getBrands?.list) {
-			setTopBrands(data.getBrands.list);
-		}
-	}, [data]);
+	const topBrands: Member[] = data?.getBrands?.list ?? [];
+
+	/** MOBILE **/
 	if (device === 'mobile') {
 		return (
 			<Stack className={'top-brands'}>
@@ -47,13 +40,14 @@ const TopBrandsCarousel = (props: TopBrandsProps) => {
 						<Swiper
 							className={'top-brands-swiper'}
 							slidesPerView={'auto'}
-							centeredSlides={true}
+							centeredSlides
 							spaceBetween={24}
 							modules={[Autoplay]}
+							autoplay={{ delay: 2500 }}
 						>
-							{topBrands.map((brand: Member) => (
-								<SwiperSlide className={'top-brands-slide'} key={brand?._id}>
-									<TopBrandCard brand={brand} likeMemberHandler={undefined} />
+							{topBrands.map((brand) => (
+								<SwiperSlide className={'top-brands-slide'} key={brand._id}>
+									<TopBrandCard brand={brand} likeMemberHandler={() => {}} />
 								</SwiperSlide>
 							))}
 						</Swiper>
@@ -61,56 +55,58 @@ const TopBrandsCarousel = (props: TopBrandsProps) => {
 				</Stack>
 			</Stack>
 		);
-	} else {
-		return (
-			<Stack className={'top-brands'}>
-				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<Box className={'left'}>
-							<span>Top Brands</span>
-							<p>Discover the most loved skincare brands</p>
-						</Box>
+	}
 
-						<Box className={'right'}>
-							<div className={'more-box'}>
-								<span>See All Brands</span>
-								<img src="/img/icons/rightup.svg" alt="" />
-							</div>
-						</Box>
-					</Stack>
+	/** DESKTOP **/
+	return (
+		<Stack className={'top-brands'}>
+			<Stack className={'container'}>
+				<Stack className={'info-box'}>
+					<Box className={'left'}>
+						<span>Top Brands</span>
+						<p>Discover the most loved skincare brands</p>
+					</Box>
 
-					<Stack className={'wrapper'}>
-						<Box className={'switch-btn swiper-brands-prev'}>
-							<ArrowBackIosNewIcon />
-						</Box>
+					<Box className={'right'}>
+						<div className={'more-box'}>
+							<span>See All Brands</span>
+							<img src="/img/icons/rightup.svg" alt="" />
+						</div>
+					</Box>
+				</Stack>
 
-						<Box className={'card-wrapper'}>
-							<Swiper
-								className={'top-brands-swiper'}
-								slidesPerView={'auto'}
-								spaceBetween={24}
-								modules={[Autoplay, Navigation, Pagination]}
-								navigation={{
-									nextEl: '.swiper-brands-next',
-									prevEl: '.swiper-brands-prev',
-								}}
-							>
-								{topBrands.map((brand: Member) => (
-									<SwiperSlide className={'top-brands-slide'} key={brand?._id}>
-										<TopBrandCard brand={brand} likeMemberHandler={undefined} />
-									</SwiperSlide>
-								))}
-							</Swiper>
-						</Box>
+				<Stack className={'wrapper'}>
+					<Box className={'switch-btn swiper-brands-prev'}>
+						<ArrowBackIosNewIcon />
+					</Box>
 
-						<Box className={'switch-btn swiper-brands-next'}>
-							<ArrowBackIosNewIcon />
-						</Box>
-					</Stack>
+					<Box className={'card-wrapper'}>
+						<Swiper
+							className={'top-brands-swiper'}
+							slidesPerView={'auto'}
+							spaceBetween={24}
+							modules={[Autoplay, Navigation, Pagination]}
+							autoplay={{ delay: 3000 }}
+							navigation={{
+								nextEl: '.swiper-brands-next',
+								prevEl: '.swiper-brands-prev',
+							}}
+						>
+							{topBrands.map((brand) => (
+								<SwiperSlide className={'top-brands-slide'} key={brand._id}>
+									<TopBrandCard brand={brand} likeMemberHandler={() => {}} />
+								</SwiperSlide>
+							))}
+						</Swiper>
+					</Box>
+
+					<Box className={'switch-btn swiper-brands-next'}>
+						<ArrowBackIosNewIcon />
+					</Box>
 				</Stack>
 			</Stack>
-		);
-	}
+		</Stack>
+	);
 };
 
 TopBrandsCarousel.defaultProps = {
@@ -118,7 +114,7 @@ TopBrandsCarousel.defaultProps = {
 		page: 1,
 		limit: 10,
 		sort: 'memberRank',
-		direction: 'DESC',
+		direction: Direction.DESC,
 		search: {},
 	},
 };

@@ -19,7 +19,7 @@ const Review: React.FC<ReviewProps> = ({ comment }) => {
 
 	const imagePath: string = comment?.memberData?.memberImage
 		? `${REACT_APP_API_URL}/${comment?.memberData?.memberImage}`
-		: '/img/profile/defaultUser.svg';
+		: '/img/profile/user.svg';
 
 	/** HANDLERS **/
 	const goMemberPage = (id: string) => {

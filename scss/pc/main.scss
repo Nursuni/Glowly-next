@@ -8,6 +8,7 @@
 @import '/scss/pc/catalog/catalog.scss';
 @import '/scss/pc/catalog/detail.scss';
 @import '/scss/pc/order/basket.scss';
+@import '/scss/pc/order/order-success.scss';
 
 // MOBILE PAGES
 @import '/scss/mobile/about/about.scss';
@@ -45,6 +46,7 @@
 @import '/scss/pc/member/memberArticles.scss';
 @import '/scss/pc/member/memberProducts.scss';
 
+@import '/scss/pc/checkout/checkout.scss';
 body {
 	padding-top: 58px;
 	-ms-overflow-style: none;

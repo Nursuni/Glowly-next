@@ -102,7 +102,7 @@ const MemberFollowings = ({
 				{memberFollowings.map((following: Following) => {
 					const imagePath = following?.followingData?.memberImage
 						? `${REACT_APP_API_URL}/${following.followingData.memberImage}`
-						: '/img/profile/defaultUser.svg';
+						: '/img/profile/user.svg';
 
 					return (
 						<Stack className="follows-card-box" key={following._id}>
