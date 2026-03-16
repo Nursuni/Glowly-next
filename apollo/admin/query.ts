@@ -39,6 +39,53 @@ export const GET_ALL_MEMBERS_BY_ADMIN = gql`
 	}
 `;
 
+export const GET_ALL_ORDERS = gql`
+	query GetAllOrders($input: AllOrdersInquiry!) {
+		getAllOrders(input: $input) {
+			list {
+				_id
+				orderStatus
+				paymentStatus
+				orderTotal
+				createdAt
+
+				memberData {
+					_id
+					memberNick
+					memberEmail
+				}
+			}
+
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+export const GET_ALL_ORDERS = gql`
+	query GetAllOrders($input: AllOrdersInquiry!) {
+		getAllOrders(input: $input) {
+			list {
+				_id
+				orderStatus
+				paymentStatus
+				orderTotal
+				createdAt
+
+				memberData {
+					_id
+					memberNick
+					memberEmail
+				}
+			}
+
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
 /**************************
  *        PRODUCT        *
  *************************/

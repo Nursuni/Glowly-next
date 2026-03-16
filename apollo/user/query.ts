@@ -610,17 +610,56 @@ export const GET_MY_ORDERS = gql`
 		getMyOrders(input: $input) {
 			_id
 			orderStatus
+			paymentStatus
 			orderTotal
 			createdAt
+
 			orderItems {
 				_id
 				itemQty
 				itemPrice
+				itemShade
+
 				productData {
-					productTitle
+					_id
+					productName
+					productPrice
 					productImages
 				}
 			}
+		}
+	}
+`;
+
+export const GET_ORDER = gql`
+	query GetOrder($orderId: String!) {
+		getOrder(orderId: $orderId) {
+			_id
+			orderStatus
+			paymentStatus
+			deliveryMethod
+			orderTotal
+
+			recipientName
+			recipientPhone
+			deliveryAddress
+			deliveryCity
+
+			orderItems {
+				_id
+				itemQty
+				itemPrice
+				itemShade
+
+				productData {
+					_id
+					productName
+					productPrice
+					productImages
+				}
+			}
+
+			createdAt
 		}
 	}
 `;

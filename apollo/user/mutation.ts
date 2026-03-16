@@ -62,6 +62,17 @@ export const LOGIN = gql`
 		}
 	}
 `;
+export const UPDATE_ORDER = gql`
+	mutation UpdateOrder($input: OrderUpdate!) {
+		updateOrder(input: $input) {
+			_id
+			orderStatus
+			cancelledAt
+			orderNote
+			updatedAt
+		}
+	}
+`;
 
 export const UPDATE_MEMBER = gql`
 	mutation UpdateMember($input: MemberUpdate!) {
@@ -334,37 +345,32 @@ export const UNSUBSCRIBE = gql`
 `;
 
 export const CREATE_ORDER = gql`
-	mutation CreateOrder($input: CreateOrderInput!) {
+	mutation CreateOrder($input: OrderInput!) {
 		createOrder(input: $input) {
 			_id
 			orderStatus
 			paymentStatus
-			paymentMethod
-			deliveryMethod
-			recipientName
-			recipientPhone
-			deliveryAddress
+			orderTotal
+			deliveryFee
+			itemsTotal
+			createdAt
+
 			orderItems {
 				_id
-				productId
 				itemQty
 				itemPrice
 				itemShade
+
 				productData {
-					productTitle
+					_id
+					productName
+					productPrice
 					productImages
 				}
 			}
-			itemsTotal
-			deliveryFee
-			discountAmount
-			orderTotal
-			couponCode
-			createdAt
 		}
 	}
 `;
-
 export const SUBSCRIBE_NEWSLETTER = gql`
 	mutation SubscribeNewsletter($email: String!) {
 		subscribeNewsletter(email: $email) {
