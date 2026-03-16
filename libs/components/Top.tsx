@@ -11,7 +11,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { Logout } from '@mui/icons-material';
 import { CaretDown } from 'phosphor-react';
@@ -212,9 +212,6 @@ const Top = () => {
 									<button className="icon-btn notification-btn" aria-label="Notifications">
 										<NotificationsOutlinedIcon />
 										<span className="unread-dot" />
-									</button>
-									<button className="icon-btn" aria-label="Chat">
-										<ChatBubbleOutlineOutlinedIcon />
 									</button>
 								</>
 							)}

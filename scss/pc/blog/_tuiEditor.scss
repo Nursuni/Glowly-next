@@ -1,0 +1,238 @@
+#pc-wrap {
+	#my-page {
+		#write-article-page {
+			.tui-editor-wrap {
+				display: flex;
+				flex-direction: column;
+				gap: 20px;
+				width: 100%;
+
+				// ── Top controls row ──────────────────────
+				.tui-controls {
+					display: flex;
+					flex-direction: row;
+					gap: 20px;
+					align-items: flex-end;
+					flex-wrap: wrap;
+
+					.tui-field {
+						display: flex;
+						flex-direction: column;
+						gap: 8px;
+
+						&.tui-field-title {
+							flex: 1;
+							min-width: 260px;
+						}
+					}
+
+					.tui-label {
+						font-family: $font-body;
+						font-size: 12px;
+						font-weight: 600;
+						color: $text-primary;
+						letter-spacing: 0.03em;
+					}
+
+					.tui-select-wrap {
+						position: relative;
+						width: 200px;
+
+						.tui-select {
+							width: 100%;
+							height: 44px;
+							padding: 0 38px 0 14px;
+							border-radius: 10px;
+							border: 1.5px solid $border-soft;
+							background: #fff;
+							font-family: $font-body;
+							font-size: 13px;
+							color: $text-primary;
+							appearance: none;
+							outline: none;
+							cursor: pointer;
+							transition: border-color 0.18s ease;
+
+							&:focus {
+								border-color: $pink;
+							}
+						}
+
+						.tui-select-arrow {
+							position: absolute;
+							right: 12px;
+							top: 50%;
+							transform: translateY(-50%);
+							width: 14px;
+							height: 14px;
+							color: $text-muted;
+							pointer-events: none;
+						}
+					}
+
+					.tui-input {
+						width: 100%;
+						height: 44px;
+						padding: 0 14px;
+						border-radius: 10px;
+						border: 1.5px solid $border-soft;
+						font-family: $font-body;
+						font-size: 13px;
+						color: $text-primary;
+						outline: none;
+						background: #fff;
+						transition: border-color 0.18s ease;
+						box-sizing: border-box;
+
+						&::placeholder {
+							color: $text-dim;
+						}
+
+						&:focus {
+							border-color: $pink;
+						}
+					}
+				}
+
+				// ── Editor box ────────────────────────────
+				.tui-editor-box {
+					border-radius: 14px;
+					overflow: hidden;
+					border: 1.5px solid $border-soft;
+					transition: border-color 0.18s ease;
+
+					&:focus-within {
+						border-color: rgba(245, 100, 169, 0.35);
+					}
+
+					// ── Hide tabs + markdown pane ─────────
+					.toastui-editor-tabs,
+					.toastui-editor-tab-style,
+					.toastui-editor-md-container,
+					.toastui-editor-md-splitter,
+					.toastui-editor-mode-switch,
+					.te-switch-button {
+						display: none !important;
+					}
+
+					// ── Hide md placeholder ───────────────
+					.toastui-editor-md-container .ProseMirror::before,
+					.toastui-editor-md-container [data-placeholder]::before,
+					.toastui-editor-md-container .toastui-editor-placeholder {
+						display: none !important;
+					}
+
+					// ── Force WYSIWYG full width ──────────
+					.toastui-editor-ww-container {
+						width: 100% !important;
+						display: block !important;
+						background: #fff !important;
+					}
+
+					.toastui-editor-defaultUI {
+						border: none !important;
+						font-family: $font-body !important;
+					}
+
+					.toastui-editor-toolbar {
+						border-bottom: 1px solid $border-soft !important;
+						background: $warm-off !important;
+						padding: 6px 12px !important;
+					}
+
+					.toastui-editor-toolbar-icons {
+						border-radius: 6px !important;
+
+						&:hover {
+							background: rgba(245, 100, 169, 0.08) !important;
+						}
+
+						&.active {
+							background: rgba(245, 100, 169, 0.12) !important;
+							color: $pink !important;
+						}
+					}
+
+					.toastui-editor-contents {
+						font-family: $font-body !important;
+						font-size: 14px !important;
+						color: $text-primary !important;
+						line-height: 1.75 !important;
+						padding: 20px 24px !important;
+					}
+				}
+
+				// ── Footer publish bar ────────────────────
+				.tui-footer {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: space-between;
+					padding: 16px 20px;
+					border-radius: 12px;
+					background: $warm-off;
+					border: 1px solid $border-soft;
+
+					.tui-footer-hint {
+						display: flex;
+						align-items: center;
+						gap: 6px;
+						font-family: $font-body;
+						font-size: 12px;
+						color: $text-muted;
+
+						svg {
+							flex-shrink: 0;
+							color: $text-muted;
+						}
+					}
+
+					.tui-publish-btn {
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						height: 42px;
+						padding: 0 28px;
+						border-radius: 10px;
+						border: none;
+						background: linear-gradient(120deg, $pink, #ff8dc7);
+						color: #fff;
+						font-family: $font-body;
+						font-size: 13px;
+						font-weight: 600;
+						cursor: pointer;
+						transition: opacity 0.2s ease, transform 0.15s ease;
+						box-shadow: 0 3px 14px rgba(245, 100, 169, 0.35);
+
+						&:hover:not(:disabled) {
+							opacity: 0.9;
+							transform: translateY(-1px);
+						}
+
+						&:disabled {
+							background: #e0d6da;
+							box-shadow: none;
+							cursor: not-allowed;
+							transform: none;
+						}
+
+						.tui-spinner {
+							width: 14px;
+							height: 14px;
+							border: 2px solid rgba(255, 255, 255, 0.4);
+							border-top-color: #fff;
+							border-radius: 50%;
+							animation: tui-spin 0.7s linear infinite;
+						}
+
+						@keyframes tui-spin {
+							to {
+								transform: rotate(360deg);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

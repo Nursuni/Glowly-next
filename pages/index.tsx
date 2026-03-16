@@ -12,6 +12,7 @@ import AIChat from '../libs/components/AIChat';
 import TopBrandsCarousel from '@/libs/components/homepage/TopBrandsCarousel';
 import TrendProductCard from '@/libs/components/homepage/TrendProducts';
 import Hero from '@/libs/components/homepage/Hero';
+import BoardArticles from '@/libs/components/homepage/BoardArticles';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -33,6 +34,7 @@ const Home: NextPage = () => {
 				<TopBrandsCarousel initialInput={undefined} />
 				<ShopByCategories />
 				<Advertisement />
+				<BoardArticles />
 			</Stack>
 		);
 	}

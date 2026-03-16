@@ -1,6 +1,7 @@
 #pc-wrap {
 	#my-page {
-		background: #f6f6f6;
+		background: $bg;
+
 		.container {
 			.my-page {
 				position: relative;
@@ -8,324 +9,1278 @@
 				flex-direction: row;
 				gap: 25px;
 				padding-top: 96px;
+
 				.back-frame {
 					width: 1260px;
 					height: auto;
 					display: flex;
 					flex-direction: row;
-					margin: 100px 0 200px 0;
-					border-radius: 12px;
-					border: 1px solid #c4c4c4;
+					margin: 60px 0 200px 0;
+					border-radius: 20px;
+					border: 1px solid $border-soft;
 					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+					box-shadow: 0 4px 32px rgba(245, 100, 169, 0.06), 0 1px 6px rgba(0, 0, 0, 0.04);
+
+					// ── Left sidebar ─────────────────────────────────
 					.left-config {
 						position: relative;
-						padding: 0 0 0 0;
-						width: 266px;
-						height: 700px;
-						border-radius: 12px;
-						background: #fff;
-						border: 1px solid rgba(196, 196, 196, 0.79);
-						box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-						margin: 180px 20px 40px 20px;
-						.profile {
-							margin-top: 5px;
-							position: relative;
-							display: flex;
-							flex-direction: row;
-							.profile-img {
-								img {
-									width: 79px;
-									height: 79px;
-									border-radius: 50%;
-									right: 30px;
-									bottom: 12px;
-									object-fit: cover;
-								}
-							}
-							.user-info {
-								margin-left: 20px;
-								display: flex;
-								flex-direction: column;
-								.user-name {
-									color: #181a20;
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-								}
-								.user-phone {
-									display: flex;
-									flex-direction: row;
-									img {
-										margin-top: 7px;
-										margin-right: 4px;
-										width: 16px;
-										height: 16px;
-									}
-								}
-								.view-list {
-									font-weight: bold;
-									color: red;
-								}
-							}
-						}
-						.sections {
-							height: auto;
-							gap: 45px;
-							margin-top: 30px;
-							.section {
-								height: auto;
-								.title {
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 400;
-									line-height: 28px;
-								}
-								.sub-section {
-									width: 230px;
-									height: 26px;
-									display: flex;
-									flex-direction: column;
-									align-items: center;
-									cursor: pointer;
-									padding: 0 5px 0 5px;
-									li {
-										height: 33px;
-										margin-bottom: 6px;
-										border-radius: 4px;
-									}
-									.focus {
-										height: 50px;
-										background: #000000;
-										border-radius: 10px;
-										p {
-											font-size: 14px;
-											color: #ffffff;
-										}
-									}
-									.flex-box {
-										display: flex;
-										align-items: center;
-										.com-icon {
-											display: flex;
-											flex-direction: row;
-											justify-content: flex-end;
-											margin-left: 11px;
-										}
-										p {
-											font-size: 14px;
-										}
-									}
-								}
-								img {
-									width: 16px;
-									height: 16px;
-								}
-								.sub-title {
-									margin-left: 12px;
-									color: #181a20;
-									font-family: $font;
-									font-size: 14px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: 55px;
-								}
-							}
-						}
+						width: 280px;
+						flex-shrink: 0;
+						margin: 40px 24px 40px 24px;
+						align-self: flex-start;
+						top: 0;
 					}
+
+					// ── Main content area ────────────────────────────
 					.main-config {
 						position: relative;
-						width: 936px;
-						margin-top: 52px;
-						align-items: center;
-						gap: 109px;
+						flex: 1;
+						min-width: 0;
+						padding: 40px 40px 60px 16px;
+						display: flex;
+						flex-direction: column;
+						gap: 32px;
+
+						// ── Shared title box ──────────────────────────
+						.main-title-box {
+							flex-direction: row;
+							justify-content: space-between;
+							align-items: flex-end;
+							padding-bottom: 20px;
+							border-bottom: 1px solid $border-soft;
+
+							.right-box {
+								.main-title {
+									font-family: $font-display;
+									font-size: 32px;
+									font-weight: 400;
+									color: $text-primary;
+									line-height: 1.1;
+									margin: 0 0 4px;
+
+									em {
+										font-style: italic;
+										color: $pink;
+									}
+								}
+
+								.sub-title {
+									font-family: $font-body;
+									font-size: 13px;
+									color: $text-muted;
+									line-height: 1.5;
+								}
+							}
+						}
+
 						.list-config {
 							display: flex;
 							width: 100%;
 							height: auto;
-							flex-direction: row;
-							flex-wrap: wrap;
-							gap: 22px;
-							.card-config {
-								width: 296px;
-								height: 413px;
-								margin-bottom: 7px;
-								border-radius: 12px;
-								background: #fff;
-								box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-								.top {
-									position: relative;
-									width: 100%;
-									height: 240px;
-									img {
-										width: 100%;
-										height: 100%;
-										object-fit: contain;
-										border-radius: 12px 12px 0 0;
-									}
-									.top-badge {
-										position: absolute;
-										top: 20px;
-										left: 16px;
-										display: flex;
-										width: 80px;
-										height: 30px;
-										justify-content: center;
-										align-items: center;
-										border-radius: 6px;
-										padding: 6px 20px;
-										background: #eb6753;
-										color: #fff;
-										text-align: center;
-										text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-										font-family: $font;
-										font-size: 12px;
-										font-style: normal;
-										font-weight: 600;
-										line-height: normal;
-										img {
-											height: 16px;
-										}
-									}
-									.price-box {
-										position: absolute;
-										bottom: 20px;
-										left: 20px;
-										padding: 8px 15px;
-										align-items: center;
-										border-radius: 6px;
-										border: 1px solid rgba(255, 255, 255, 0.5);
-										background: #fff;
-										p {
-											color: #181a20;
-											font-family: $font;
-											font-size: 15px;
-											font-style: normal;
-											font-weight: 600;
-											line-height: normal;
-										}
-									}
-								}
-								.bottom {
-									width: 100%;
-									height: 100%;
-									padding: 20px 16px 10px 16px;
-									.name-address {
-										width: 100%;
-										height: 48px;
-										gap: 5px;
-										margin-bottom: 20px;
-										.name {
-											width: 100%;
-											height: 23px;
-											overflow: hidden;
-											p {
-												color: #181a20;
-												font-family: $font;
-												font-size: 15px;
-												font-style: normal;
-												font-weight: 600;
-												line-height: normal;
-												text-transform: capitalize;
-											}
-										}
-										.address {
-											width: 100%;
-											overflow: hidden;
-											p {
-												color: #717171;
-												font-family: $font;
-												font-size: 13px;
-												font-style: normal;
-												font-weight: 400;
-												line-height: normal;
-											}
-										}
-									}
-									.options {
-										flex-direction: row;
-										width: 100%;
-										height: 20px;
-										gap: 20px;
-										margin-bottom: 10px;
-										.option {
-											flex-direction: row;
-											gap: 5px;
-											align-items: center;
-											p {
-												color: #181a20;
-												font-family: $font;
-												font-size: 13px;
-												font-style: normal;
-												font-weight: 400;
-												line-height: normal;
-											}
-										}
-									}
-									.divider {
-										width: 100%;
-										height: 1px;
-										background: #ddd;
-										margin-bottom: 17px;
-									}
-									.type-buttons {
-										flex-direction: row;
-										width: 100%;
-										justify-content: space-between;
-										align-items: center;
-										.type {
-											flex-direction: row;
-											align-items: center;
-											gap: 7px;
-											p {
-												color: #181a20;
-												font-family: $font;
-												font-style: normal;
-												line-height: normal;
-											}
-											.disabled-type {
-												color: rgba(143, 143, 143, 0.54);
-												font-family: $font;
-												font-style: normal;
-												line-height: normal;
-											}
-										}
-										.buttons {
-											flex-direction: row;
-											width: auto;
-											gap: 12px;
-											justify-content: center;
-											align-items: center;
-											padding-right: 10px;
-										}
-									}
-								}
-							}
+							flex-direction: column;
+							gap: 0;
 						}
-						.pagination-config {
-							width: 442px;
-							height: 86px;
+					}
+				}
+			}
+		}
+	}
+
+	// ══════════════════════════════════════════════════
+	// MY FAVORITES & RECENTLY VIEWED
+	// ══════════════════════════════════════════════════
+	#my-favorites-page {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+
+		.main-title-box {
+			.right-box {
+				.main-title {
+					font-family: $font-display;
+					font-size: 30px;
+					font-weight: 400;
+					color: $text-primary;
+				}
+
+				.sub-title {
+					font-size: 13px;
+					color: $text-muted;
+					font-family: $font-body;
+				}
+			}
+		}
+
+		.favorites-list-box {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 20px;
+
+			.no-data {
+				grid-column: 1 / -1;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 64px 20px;
+				gap: 12px;
+				color: $text-muted;
+				font-family: $font-body;
+				font-size: 14px;
+
+				img {
+					opacity: 0.4;
+					width: 40px;
+				}
+			}
+		}
+
+		.pagination-config {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 10px;
+			padding-top: 8px;
+
+			.pagination-box {
+				.MuiPaginationItem-root {
+					font-family: $font-body;
+					color: $text-secondary;
+					border-radius: 8px;
+
+					&.Mui-selected {
+						background: $pink;
+						color: #fff;
+					}
+				}
+			}
+
+			.total-result {
+				p {
+					font-family: $font-body;
+					font-size: 13px;
+					color: $text-muted;
+				}
+			}
+		}
+	}
+
+	// ══════════════════════════════════════════════════
+	// PRODUCT CARD (shared: favorites, recently viewed, my products)
+	// ══════════════════════════════════════════════════
+	.product-card-box {
+		flex-direction: row;
+		align-items: center;
+		padding: 14px 16px;
+		border-radius: 14px;
+		border: 1px solid $border-soft;
+		background: #fff;
+		gap: 16px;
+		transition: box-shadow 0.2s ease, transform 0.2s ease;
+		margin-bottom: 10px;
+
+		&:hover {
+			box-shadow: 0 4px 20px rgba(245, 100, 169, 0.1);
+			transform: translateY(-1px);
+		}
+
+		.image-box {
+			width: 72px;
+			height: 72px;
+			border-radius: 10px;
+			overflow: hidden;
+			flex-shrink: 0;
+			cursor: pointer;
+			background: $warm-off;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				transition: transform 0.35s ease;
+			}
+
+			&:hover img {
+				transform: scale(1.06);
+			}
+		}
+
+		.information-box {
+			flex: 1;
+			cursor: pointer;
+			gap: 4px;
+
+			.name {
+				font-family: $font-display;
+				font-size: 15px;
+				font-weight: 500;
+				color: $text-primary;
+				line-height: 1.3;
+			}
+
+			.price {
+				font-family: $font-body;
+				font-size: 14px;
+				color: $text-secondary;
+
+				strong {
+					color: $pink;
+					font-weight: 600;
+				}
+			}
+		}
+
+		.date-box {
+			.date {
+				font-family: $font-body;
+				font-size: 12px;
+				color: $text-muted;
+			}
+		}
+
+		.status-box {
+			.coloured-box {
+				padding: 5px 14px;
+				border-radius: 20px;
+				cursor: pointer;
+				transition: opacity 0.2s;
+
+				&:hover {
+					opacity: 0.8;
+				}
+
+				.status {
+					font-family: $font-body;
+					font-size: 12px;
+					font-weight: 600;
+					letter-spacing: 0.04em;
+				}
+			}
+		}
+
+		.views-box {
+			.views {
+				font-family: $font-body;
+				font-size: 13px;
+				color: $text-muted;
+				min-width: 40px;
+				text-align: center;
+			}
+		}
+
+		.action-box {
+			flex-direction: row;
+			gap: 4px;
+
+			.icon-button {
+				width: 34px;
+				height: 34px;
+				border-radius: 8px;
+				border: 1px solid $border-soft;
+				transition: background 0.18s ease, border-color 0.18s ease;
+
+				&:hover {
+					background: rgba(245, 100, 169, 0.08);
+					border-color: rgba(245, 100, 169, 0.3);
+				}
+
+				.buttons {
+					font-size: 16px;
+					color: $text-muted;
+				}
+			}
+		}
+	}
+
+	// ══════════════════════════════════════════════════
+	// MY PRODUCTS PAGE
+	// ══════════════════════════════════════════════════
+	#my-product-page {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+
+		.main-title-box {
+			.right-box {
+				.main-title {
+					font-family: $font-display;
+					font-size: 30px;
+					font-weight: 400;
+					color: $text-primary;
+				}
+
+				.sub-title {
+					font-size: 13px;
+					color: $text-muted;
+					font-family: $font-body;
+				}
+			}
+		}
+
+		.product-list-box {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+
+			// ── Tab filters ──────────────────────────────
+			.tab-name-box {
+				display: flex;
+				flex-direction: row;
+				gap: 4px;
+				background: $warm-off;
+				padding: 4px;
+				border-radius: 12px;
+				width: fit-content;
+
+				.tab-name,
+				.active-tab-name {
+					padding: 8px 20px;
+					border-radius: 8px;
+					font-family: $font-body;
+					font-size: 13px;
+					font-weight: 500;
+					cursor: pointer;
+					transition: background 0.18s ease, color 0.18s ease;
+					color: $text-muted;
+				}
+
+				.active-tab-name {
+					background: #fff;
+					color: $pink;
+					box-shadow: 0 1px 6px rgba(245, 100, 169, 0.15);
+				}
+
+				.tab-name:hover {
+					color: $text-secondary;
+				}
+			}
+
+			// ── Table list ───────────────────────────────
+			.list-box {
+				display: flex;
+				flex-direction: column;
+				border-radius: 14px;
+				border: 1px solid $border-soft;
+				overflow: hidden;
+
+				.listing-title-box {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					padding: 12px 16px;
+					background: $warm-off;
+					border-bottom: 1px solid $border-soft;
+					gap: 16px;
+
+					.title-text {
+						font-family: $font-body;
+						font-size: 11px;
+						font-weight: 600;
+						letter-spacing: 0.08em;
+						text-transform: uppercase;
+						color: $text-muted;
+						flex: 1;
+					}
+				}
+
+				.no-data {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					padding: 64px 20px;
+					gap: 12px;
+					color: $text-muted;
+					font-family: $font-body;
+					font-size: 14px;
+
+					img {
+						opacity: 0.4;
+						width: 40px;
+					}
+				}
+			}
+
+			.pagination-config {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 10px;
+
+				.pagination-box {
+					.MuiPaginationItem-root {
+						font-family: $font-body;
+						color: $text-secondary;
+						border-radius: 8px;
+
+						&.Mui-selected {
+							background: $pink;
+							color: #fff;
+						}
+					}
+				}
+
+				.total-result {
+					p {
+						font-family: $font-body;
+						font-size: 13px;
+						color: $text-muted;
+					}
+				}
+			}
+		}
+	}
+
+	// ══════════════════════════════════════════════════
+	// MY ARTICLES PAGE
+	// ══════════════════════════════════════════════════
+	#my-articles-page {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+
+		.main-title-box {
+			.right-box {
+				.main-title {
+					font-family: $font-display;
+					font-size: 30px;
+					font-weight: 400;
+					color: $text-primary;
+				}
+
+				.sub-title {
+					font-size: 13px;
+					color: $text-muted;
+					font-family: $font-body;
+				}
+			}
+		}
+
+		.article-list-box {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 16px;
+
+			.no-data {
+				grid-column: 1 / -1;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 64px 20px;
+				gap: 12px;
+				color: $text-muted;
+				font-family: $font-body;
+				font-size: 14px;
+
+				img {
+					opacity: 0.4;
+					width: 40px;
+				}
+			}
+		}
+
+		.pagination-conf {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 10px;
+
+			.pagination-box {
+				.MuiPaginationItem-root {
+					font-family: $font-body;
+					color: $text-secondary;
+					border-radius: 8px;
+
+					&.Mui-selected {
+						background: $pink;
+						color: #fff;
+					}
+				}
+			}
+
+			.total {
+				p {
+					font-family: $font-body;
+					font-size: 13px;
+					color: $text-muted;
+				}
+			}
+		}
+	}
+
+	// ══════════════════════════════════════════════════
+	// ARTICLE (Community card) — card-config
+	// ══════════════════════════════════════════════════
+	.card-config {
+		border-radius: 16px;
+		overflow: hidden;
+		background: #fff;
+		border: 1px solid $border-soft;
+		box-shadow: 0 2px 12px rgba(245, 100, 169, 0.06);
+		transition: transform 0.25s ease, box-shadow 0.25s ease;
+		cursor: pointer;
+
+		&:hover {
+			transform: translateY(-4px);
+			box-shadow: 0 8px 28px rgba(245, 100, 169, 0.14);
+		}
+
+		.top {
+			position: relative;
+			width: 100%;
+			aspect-ratio: 16 / 10;
+			overflow: hidden;
+			background: $warm-off;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				transition: transform 0.5s ease;
+			}
+
+			&:hover img {
+				transform: scale(1.04);
+			}
+
+			.date {
+				position: absolute;
+				bottom: 12px;
+				left: 14px;
+				background: rgba(255, 255, 255, 0.92);
+				backdrop-filter: blur(8px);
+				padding: 5px 12px;
+				border-radius: 20px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+				p {
+					font-family: $font-sans;
+					font-size: 11px;
+					font-weight: 600;
+					letter-spacing: 0.06em;
+					color: $text-secondary;
+				}
+			}
+		}
+
+		.bottom {
+			padding: 16px 18px 18px;
+
+			.name-address {
+				gap: 5px;
+
+				.name {
+					p {
+						font-family: $font-display;
+						font-size: 16px;
+						font-weight: 500;
+						color: $text-primary;
+						line-height: 1.3;
+						overflow: hidden;
+						display: -webkit-box;
+					}
+				}
+
+				.address {
+					p {
+						font-family: $font-body;
+						font-size: 12px;
+						color: $text-muted;
+						line-height: 1.5;
+					}
+				}
+			}
+		}
+	}
+
+	// ══════════════════════════════════════════════════
+	// MY PROFILE PAGE
+	// ══════════════════════════════════════════════════
+	#my-profile-page {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+
+		.main-title-box {
+			.right-box {
+				.main-title {
+					font-family: $font-display;
+					font-size: 30px;
+					font-weight: 400;
+					color: $text-primary;
+				}
+
+				.sub-title {
+					font-size: 13px;
+					color: $text-muted;
+					font-family: $font-body;
+				}
+			}
+		}
+
+		// ── Section card shared style ─────────────────
+		.top-box,
+		.bottom-box {
+			width: 100%;
+			padding: 28px;
+			border-radius: 16px;
+			border: 1px solid $border-soft;
+			background: #fff;
+			box-shadow: 0 2px 12px rgba(245, 100, 169, 0.05);
+			display: flex;
+			flex-direction: column;
+			gap: 24px;
+		}
+
+		.top-box {
+			// ── Photo upload ──────────────────────────
+			.photo-box {
+				gap: 16px;
+
+				.title {
+					font-family: $font-body;
+					font-size: 13px;
+					font-weight: 600;
+					color: $text-primary;
+					letter-spacing: 0.02em;
+				}
+
+				.image-big-box {
+					flex-direction: row;
+					gap: 32px;
+					align-items: flex-end;
+
+					.image-box {
+						position: relative;
+						width: 96px;
+						height: 96px;
+
+						img {
+							width: 100%;
+							height: 100%;
+							object-fit: cover;
+							border-radius: 50%;
+							border: 3px solid rgba(245, 100, 169, 0.2);
+						}
+					}
+
+					.upload-big-box {
+						gap: 12px;
+						align-self: center;
+
+						.labeler {
+							display: inline-flex;
 							align-items: center;
-							gap: 20px;
-							.pagination-box {
-								width: 100%;
-								align-items: center;
+							justify-content: center;
+							padding: 0 20px;
+							height: 38px;
+							cursor: pointer;
+							border-radius: 10px;
+							border: 1.5px solid $pink;
+							transition: background 0.18s ease;
+
+							p {
+								font-family: $font-body;
+								font-size: 13px;
+								font-weight: 600;
+								color: $pink;
 							}
-							.total-result {
-								p {
-									color: #181a20;
-									text-align: center;
-									font-family: $font;
-									font-size: 24px;
-									font-style: normal;
-									font-weight: 275;
-									line-height: 26px;
-								}
+
+							&:hover {
+								background: rgba(245, 100, 169, 0.06);
 							}
 						}
+
+						.upload-text {
+							font-family: $font-body;
+							font-size: 11px;
+							color: $text-muted;
+							line-height: 1.5;
+						}
+					}
+				}
+			}
+
+			// ── Input fields ──────────────────────────
+			.small-input-box {
+				width: 100%;
+				flex-direction: row;
+				flex-wrap: wrap;
+				gap: 20px;
+
+				.input-box {
+					width: calc(50% - 10px);
+					gap: 8px;
+
+					.title {
+						font-family: $font-body;
+						font-size: 12px;
+						font-weight: 600;
+						color: $text-primary;
+						letter-spacing: 0.02em;
+					}
+
+					input {
+						width: 100%;
+						height: 44px;
+						outline: none;
+						padding: 0 14px;
+						border-radius: 10px;
+						border: 1.5px solid $border-soft;
+						font-family: $font-body;
+						font-size: 13px;
+						color: $text-primary;
+						transition: border-color 0.18s ease;
+						box-sizing: border-box;
+
+						&::placeholder {
+							color: $text-dim;
+						}
+
+						&:focus {
+							border-color: $pink;
+						}
+					}
+				}
+			}
+
+			.address-box {
+				gap: 8px;
+
+				.title {
+					font-family: $font-body;
+					font-size: 12px;
+					font-weight: 600;
+					color: $text-primary;
+				}
+
+				input {
+					width: 100%;
+					height: 44px;
+					outline: none;
+					padding: 0 14px;
+					border-radius: 10px;
+					border: 1.5px solid $border-soft;
+					font-family: $font-body;
+					font-size: 13px;
+					color: $text-primary;
+					transition: border-color 0.18s ease;
+					box-sizing: border-box;
+
+					&::placeholder {
+						color: $text-dim;
+					}
+
+					&:focus {
+						border-color: $pink;
+					}
+				}
+			}
+
+			.about-me-box {
+				gap: 8px;
+
+				.title {
+					font-family: $font-body;
+					font-size: 12px;
+					font-weight: 600;
+					color: $text-primary;
+				}
+
+				.about-textarea {
+					width: 100%;
+					height: 120px;
+					padding: 14px;
+					border-radius: 10px;
+					border: 1.5px solid $border-soft;
+					font-family: $font-body;
+					font-size: 13px;
+					color: $text-primary;
+					resize: vertical;
+					transition: border-color 0.18s ease;
+					box-sizing: border-box;
+
+					&:focus {
+						outline: none;
+						border-color: $pink;
+					}
+				}
+
+				.update-button {
+					align-self: flex-end;
+					margin-top: 8px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					padding: 0 24px;
+					height: 40px;
+					border-radius: 10px;
+					background: linear-gradient(120deg, $pink, #ff8dc7);
+					box-shadow: 0 3px 14px rgba(245, 100, 169, 0.3);
+					transition: opacity 0.2s ease, transform 0.15s ease;
+
+					p {
+						color: #fff;
+						font-family: $font-body;
+						font-size: 13px;
+						font-weight: 600;
+					}
+
+					&:hover {
+						opacity: 0.9;
+						transform: translateY(-1px);
+					}
+
+					&:disabled {
+						background: #e0d6da;
+						box-shadow: none;
+						transform: none;
+					}
+				}
+			}
+		}
+
+		.bottom-box {
+			.top-inner-box {
+				gap: 16px;
+
+				.title {
+					font-family: $font-body;
+					font-size: 14px;
+					font-weight: 600;
+					color: $text-primary;
+				}
+
+				.old-password-box {
+					gap: 8px;
+
+					.title {
+						font-family: $font-body;
+						font-size: 12px;
+						font-weight: 600;
+						color: $text-primary;
+					}
+
+					input {
+						width: 50%;
+						height: 44px;
+						outline: none;
+						padding: 0 14px;
+						border-radius: 10px;
+						border: 1.5px solid $border-soft;
+						font-family: $font-body;
+						font-size: 13px;
+						color: $text-primary;
+						transition: border-color 0.18s ease;
+						box-sizing: border-box;
+
+						&::placeholder {
+							color: $text-dim;
+						}
+
+						&:focus {
+							border-color: $pink;
+						}
+					}
+				}
+			}
+
+			.bottom-inner-box {
+				width: 100%;
+				flex-direction: row;
+				gap: 20px;
+
+				.new-password-box {
+					width: 100%;
+					gap: 8px;
+
+					.title {
+						font-family: $font-body;
+						font-size: 12px;
+						font-weight: 600;
+						color: $text-primary;
+					}
+
+					input {
+						width: 100%;
+						height: 44px;
+						outline: none;
+						padding: 0 14px;
+						border-radius: 10px;
+						border: 1.5px solid $border-soft;
+						font-family: $font-body;
+						font-size: 13px;
+						color: $text-primary;
+						transition: border-color 0.18s ease;
+						box-sizing: border-box;
+
+						&::placeholder {
+							color: $text-dim;
+						}
+
+						&:focus {
+							border-color: $pink;
+						}
+					}
+				}
+			}
+
+			.change-password {
+				align-self: flex-end;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 24px;
+				height: 40px;
+				border-radius: 10px;
+				background: linear-gradient(120deg, $pink, #ff8dc7);
+				box-shadow: 0 3px 14px rgba(245, 100, 169, 0.3);
+				transition: opacity 0.2s ease;
+				cursor: pointer;
+
+				p {
+					color: #fff;
+					font-family: $font-body;
+					font-size: 13px;
+					font-weight: 600;
+				}
+
+				&:hover {
+					opacity: 0.9;
+				}
+			}
+		}
+	}
+
+	// ══════════════════════════════════════════════════
+	// WRITE ARTICLE PAGE
+	// ══════════════════════════════════════════════════
+	#write-article-page {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+
+		.main-title-box {
+			.right-box {
+				.main-title {
+					font-family: $font-display;
+					font-size: 30px;
+					font-weight: 400;
+					color: $text-primary;
+				}
+
+				.sub-title {
+					font-size: 13px;
+					color: $text-muted;
+					font-family: $font-body;
+				}
+			}
+		}
+	}
+
+	// ══════════════════════════════════════════════════
+	// ADD PRODUCT PAGE
+	// ══════════════════════════════════════════════════
+	#add-product-page {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+
+		.main-title-box {
+			.main-title {
+				font-family: $font-display;
+				font-size: 30px;
+				font-weight: 400;
+				color: $text-primary;
+			}
+
+			.sub-title {
+				font-size: 13px;
+				color: $text-muted;
+				font-family: $font-body;
+			}
+		}
+
+		.config {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+
+			.description-box {
+				display: flex;
+				flex-direction: column;
+				gap: 20px;
+				background: #fff;
+				padding: 28px;
+				border-radius: 16px;
+				border: 1px solid $border-soft;
+
+				// ── Column / row wrappers ─────────────
+				.config-column {
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
+				}
+
+				.config-row {
+					display: flex;
+					flex-direction: row;
+					gap: 20px;
+					align-items: flex-end;
+					flex-wrap: wrap;
+				}
+
+				.price-year-after-price {
+					flex: 1;
+					min-width: 160px;
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
+					position: relative;
+				}
+
+				// ── Label ─────────────────────────────
+				.title {
+					font-family: $font-body;
+					font-size: 12px;
+					font-weight: 600;
+					color: $text-primary;
+					letter-spacing: 0.02em;
+				}
+
+				// ── Text input ────────────────────────
+				.description-input {
+					width: 100%;
+					height: 44px;
+					outline: none;
+					padding: 0 14px;
+					border-radius: 10px;
+					border: 1.5px solid $border-soft;
+					font-family: $font-body;
+					font-size: 13px;
+					color: $text-primary;
+					transition: border-color 0.18s ease;
+					box-sizing: border-box;
+					background: #fff;
+
+					&::placeholder {
+						color: $text-dim;
+					}
+
+					&:focus {
+						border-color: $pink;
+					}
+				}
+
+				// ── Textarea ──────────────────────────
+				.description-text {
+					width: 100%;
+					padding: 14px;
+					border-radius: 10px;
+					border: 1.5px solid $border-soft;
+					font-family: $font-body;
+					font-size: 13px;
+					color: $text-primary;
+					resize: vertical;
+					transition: border-color 0.18s ease;
+					box-sizing: border-box;
+
+					&:focus {
+						outline: none;
+						border-color: $pink;
+					}
+				}
+
+				// ── Select ────────────────────────────
+				.select-description {
+					width: 100%;
+					height: 44px;
+					outline: none;
+					padding: 0 36px 0 14px;
+					border-radius: 10px;
+					border: 1.5px solid $border-soft;
+					font-family: $font-body;
+					font-size: 13px;
+					color: $text-primary;
+					appearance: none;
+					background: #fff;
+					cursor: pointer;
+					transition: border-color 0.18s ease;
+					box-sizing: border-box;
+
+					&:focus {
+						border-color: $pink;
+					}
+
+					&[multiple] {
+						height: auto;
+						min-height: 100px;
+						padding: 10px 14px;
+
+						option {
+							padding: 4px 6px;
+							border-radius: 4px;
+
+							&:checked {
+								background: rgba(245, 100, 169, 0.12);
+								color: $pink;
+							}
+						}
+					}
+				}
+
+				.divider {
+					display: none; // arrow handled below
+				}
+
+				.arrow-down {
+					position: absolute;
+					right: 12px;
+					bottom: 14px;
+					width: 12px;
+					pointer-events: none;
+					opacity: 0.5;
+				}
+			}
+
+			// ── Upload section ────────────────────────
+			.upload-title {
+				font-family: $font-body;
+				font-size: 14px;
+				font-weight: 600;
+				color: $text-primary;
+				margin-bottom: 4px;
+			}
+
+			.images-box {
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+
+				.upload-box {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					gap: 14px;
+					padding: 40px 24px;
+					border-radius: 16px;
+					border: 2px dashed rgba(245, 100, 169, 0.25);
+					background: rgba(245, 100, 169, 0.03);
+					transition: border-color 0.2s ease, background 0.2s ease;
+
+					&:hover {
+						border-color: rgba(245, 100, 169, 0.5);
+						background: rgba(245, 100, 169, 0.06);
+					}
+
+					.text-box {
+						align-items: center;
+						gap: 6px;
+						text-align: center;
+
+						.drag-title {
+							font-family: $font-body;
+							font-size: 14px;
+							font-weight: 600;
+							color: $text-primary;
+						}
+
+						.format-title {
+							font-family: $font-body;
+							font-size: 12px;
+							color: $text-muted;
+							line-height: 1.5;
+						}
+					}
+
+					.browse-button {
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						padding: 0 20px;
+						height: 40px;
+						border-radius: 10px;
+						border: 1.5px solid $pink;
+						background: transparent;
+						transition: background 0.18s ease;
+
+						.browse-button-text {
+							font-family: $font-body;
+							font-size: 13px;
+							font-weight: 600;
+							color: $pink;
+							text-transform: none;
+						}
+
+						&:hover {
+							background: rgba(245, 100, 169, 0.07);
+						}
+					}
+				}
+
+				.gallery-box {
+					display: flex;
+					flex-direction: row;
+					flex-wrap: wrap;
+					gap: 12px;
+
+					.image-box {
+						width: 96px;
+						height: 96px;
+						border-radius: 10px;
+						overflow: hidden;
+						border: 1px solid $border-soft;
+
+						img {
+							width: 100%;
+							height: 100%;
+							object-fit: cover;
+						}
+					}
+				}
+			}
+
+			// ── Submit row ────────────────────────────
+			.buttons-row {
+				flex-direction: row;
+				justify-content: flex-end;
+
+				.next-button {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					padding: 0 32px;
+					height: 44px;
+					border-radius: 12px;
+					background: linear-gradient(120deg, $pink, #ff8dc7);
+					box-shadow: 0 3px 16px rgba(245, 100, 169, 0.35);
+					transition: opacity 0.2s ease, transform 0.15s ease;
+
+					.next-button-text {
+						color: #fff;
+						font-family: $font-body;
+						font-size: 14px;
+						font-weight: 600;
+						text-transform: none;
+					}
+
+					&:hover {
+						opacity: 0.9;
+						transform: translateY(-1px);
+					}
+
+					&:disabled {
+						background: #e0d6da;
+						box-shadow: none;
+						transform: none;
 					}
 				}
 			}

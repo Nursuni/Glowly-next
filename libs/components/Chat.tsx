@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Avatar, Box, Stack } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import Badge from '@mui/material/Badge';
+
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
 import { useRouter } from 'next/router';

@@ -27,14 +27,14 @@ const tabs = [
 	{ value: 'FREE', label: 'Open Forum', icon: '✦' },
 	{ value: 'RECOMMEND', label: 'Recommendations', icon: '♡' },
 	{ value: 'NEWS', label: 'Beauty News', icon: '◎' },
-	{ value: 'HUMOR', label: 'Lighthearted', icon: '✿' },
+	{ value: 'TUTORIAL', label: 'Lighthearted', icon: '✿' },
 ];
 
 const tabMeta: Record<string, { title: string; sub: string }> = {
 	FREE: { title: 'Open Forum', sub: 'A space to speak freely — no topic is too big or too small.' },
 	RECOMMEND: { title: 'Recommendations', sub: 'Discover what the community loves and trusts.' },
 	NEWS: { title: 'Beauty News', sub: 'The latest launches, trends, and stories worth knowing.' },
-	HUMOR: { title: 'Lighthearted', sub: 'A little laughter goes a long way — share the joy.' },
+	TUTORIAL: { title: 'Lighthearted', sub: 'TUTORIAL.' },
 };
 
 const Community: NextPage = ({ initialInput, ...props }: T) => {
