@@ -14,7 +14,7 @@ import { CREATE_COMMENT, LIKE_TARGET_PRODUCT, ADD_TO_VISITED } from '@/apollo/us
 import { userVar } from '../../apollo/store';
 import { cartVar } from '../../apollo/store';
 import { Direction, Message } from '../../libs/enums/common.enum';
-import { T } from '../../libs/types/common';
+
 import { Comment } from '@/libs/types/comment/comment';
 import { CommentInput, CommentsInquiry } from '@/libs/types/comment/comment.input';
 import { CommentGroup } from '@/libs/enums/comment.enum';
@@ -34,6 +34,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import BasketModal, { CartItem } from '@/libs/components/basket/BasketModal';
 import ShareModal from '@/libs/components/common/ShareModel';
+import { T } from '@/libs/types/common';
 
 SwiperCore.use([Autoplay, Navigation, Pagination]);
 

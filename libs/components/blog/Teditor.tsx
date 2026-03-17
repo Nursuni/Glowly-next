@@ -49,7 +49,7 @@ const TuiEditor = () => {
 			formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
 			formData.append('0', image);
 
-			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}`, formData, {
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/graphql`, formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
 					'apollo-require-preflight': true,

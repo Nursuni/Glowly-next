@@ -170,131 +170,167 @@
 	// PRODUCT CARD (shared: favorites, recently viewed, my products)
 	// ══════════════════════════════════════════════════
 	.product-card-box {
-		flex-direction: row;
-		align-items: center;
-		padding: 14px 16px;
-		border-radius: 14px;
-		border: 1px solid $border-soft;
+		width: 100% !important;
+		max-width: none !important;
+		display: flex !important;
+		flex-direction: column !important;
+		border-radius: 8px;
+		border: 1px solid #ede8e1;
 		background: #fff;
-		gap: 16px;
-		transition: box-shadow 0.2s ease, transform 0.2s ease;
-		margin-bottom: 10px;
+		overflow: hidden;
+		cursor: pointer;
+		transition: box-shadow 0.25s ease, transform 0.25s ease;
 
 		&:hover {
-			box-shadow: 0 4px 20px rgba(245, 100, 169, 0.1);
-			transform: translateY(-1px);
+			box-shadow: 0 8px 24px rgba(245, 100, 169, 0.11);
+			transform: translateY(-3px);
+
+			.image-box img {
+				transform: scale(1.06);
+			}
+			.information-box .name {
+				color: $pink;
+			}
 		}
 
+		// ── Image ───────────────────────────────────────
 		.image-box {
-			width: 72px;
-			height: 72px;
-			border-radius: 10px;
+			width: 100%;
+			aspect-ratio: 3 / 4;
 			overflow: hidden;
+			background: #f5f0ea;
 			flex-shrink: 0;
-			cursor: pointer;
-			background: $warm-off;
 
 			img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
+				display: block;
 				transition: transform 0.35s ease;
-			}
-
-			&:hover img {
-				transform: scale(1.06);
 			}
 		}
 
+		// ── Info ────────────────────────────────────────
 		.information-box {
+			padding: 10px 12px 8px;
+			display: flex;
+			flex-direction: column;
+			gap: 3px;
 			flex: 1;
-			cursor: pointer;
-			gap: 4px;
 
 			.name {
-				font-family: $font-display;
-				font-size: 15px;
-				font-weight: 500;
-				color: $text-primary;
+				font-family: $font-serif;
+				font-size: 13px;
+				font-weight: 400;
+				color: $dark;
 				line-height: 1.3;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				transition: color 0.18s ease;
 			}
 
 			.price {
-				font-family: $font-body;
-				font-size: 14px;
-				color: $text-secondary;
-
-				strong {
-					color: $pink;
-					font-weight: 600;
-				}
+				font-family: $font-serif;
+				font-size: 15px;
+				font-weight: 300;
+				color: $pink;
 			}
-		}
 
-		.date-box {
 			.date {
-				font-family: $font-body;
-				font-size: 12px;
-				color: $text-muted;
+				font-family: $font-sans;
+				font-size: 10px;
+				color: $muted;
+				font-weight: 300;
+				letter-spacing: 0.02em;
 			}
 		}
 
-		.status-box {
-			.coloured-box {
-				padding: 5px 14px;
-				border-radius: 20px;
-				cursor: pointer;
-				transition: opacity 0.2s;
+		// ── Footer ──────────────────────────────────────
+		.card-footer {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 7px 12px 10px;
+			border-top: 1px solid #f5f0ea;
+			gap: 8px;
 
-				&:hover {
-					opacity: 0.8;
+			.footer-right {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+
+				.views-count {
+					font-family: $font-sans;
+					font-size: 10.5px;
+					color: $muted;
+					white-space: nowrap;
 				}
 
-				.status {
-					font-family: $font-body;
-					font-size: 12px;
-					font-weight: 600;
-					letter-spacing: 0.04em;
+				.action-btns {
+					display: flex;
+					gap: 2px;
+				}
+
+				.icon-btn {
+					width: 24px;
+					height: 24px;
+					border-radius: 4px;
+					border: 1px solid $border-soft;
+					padding: 0;
+					transition: background 0.18s, border-color 0.18s;
+
+					&:hover {
+						background: rgba($pink, 0.07);
+						border-color: rgba($pink, 0.3);
+
+						svg {
+							color: $pink;
+						}
+					}
+
+					&--delete:hover {
+						background: rgba(192, 71, 58, 0.07);
+						border-color: rgba(192, 71, 58, 0.3);
+
+						svg {
+							color: #c0473a;
+						}
+					}
 				}
 			}
 		}
 
-		.views-box {
-			.views {
-				font-family: $font-body;
-				font-size: 13px;
-				color: $text-muted;
-				min-width: 40px;
-				text-align: center;
+		// ── Status pill ──────────────────────────────────
+		.status-pill {
+			display: inline-flex;
+			align-items: center;
+			padding: 3px 10px;
+			border-radius: 2px;
+			font-family: $font-sans;
+			font-size: 9px;
+			font-weight: 600;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			white-space: nowrap;
+
+			&--active {
+				background: rgba(90, 154, 106, 0.1);
+				color: #5a9a6a;
 			}
-		}
-
-		.action-box {
-			flex-direction: row;
-			gap: 4px;
-
-			.icon-button {
-				width: 34px;
-				height: 34px;
-				border-radius: 8px;
-				border: 1px solid $border-soft;
-				transition: background 0.18s ease, border-color 0.18s ease;
-
-				&:hover {
-					background: rgba(245, 100, 169, 0.08);
-					border-color: rgba(245, 100, 169, 0.3);
-				}
-
-				.buttons {
-					font-size: 16px;
-					color: $text-muted;
-				}
+			&--sold {
+				background: rgba(192, 71, 58, 0.1);
+				color: #c0473a;
+			}
+			&--reserved {
+				background: rgba(200, 169, 110, 0.1);
+				color: #c8a96e;
 			}
 		}
 	}
 
 	// ══════════════════════════════════════════════════
-	// MY PRODUCTS PAGE
+	// MY PRODUCTS PAGE  (same layout as favorites/visited)
 	// ══════════════════════════════════════════════════
 	#my-product-page {
 		width: 100%;
@@ -324,7 +360,7 @@
 			flex-direction: column;
 			gap: 20px;
 
-			// ── Tab filters ──────────────────────────────
+			// ── Tab filters ───────────────────────────────
 			.tab-name-box {
 				display: flex;
 				flex-direction: row;
@@ -357,57 +393,126 @@
 				}
 			}
 
-			// ── Table list ───────────────────────────────
-			.list-box {
+			// ── Grid — identical to .favorites-list-box ───
+			.products-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 20px;
+
+				> .product-card-box {
+					width: 100% !important;
+					max-width: none !important;
+				}
+			}
+
+			// ── Empty state ───────────────────────────────
+			.no-data {
+				grid-column: 1 / -1;
 				display: flex;
 				flex-direction: column;
-				border-radius: 14px;
+				align-items: center;
+				justify-content: center;
+				padding: 64px 20px;
+				gap: 12px;
+				color: $text-muted;
+				font-family: $font-body;
+				font-size: 14px;
+
+				.no-data-icon {
+					width: 64px;
+					height: 64px;
+					border-radius: 16px;
+					background: rgba(245, 100, 169, 0.07);
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					color: rgba(245, 100, 169, 0.4);
+					margin-bottom: 4px;
+				}
+
+				.no-data-title {
+					font-family: $font-body;
+					font-size: 15px;
+					font-weight: 600;
+					color: $text-secondary;
+					margin: 0;
+				}
+
+				.no-data-sub {
+					font-family: $font-body;
+					font-size: 13px;
+					color: $text-muted;
+					margin: 0;
+					text-align: center;
+				}
+
+				img {
+					opacity: 0.4;
+					width: 40px;
+				}
+			}
+
+			// ── Skeleton — same 3-col grid ────────────────
+			.skeleton-list {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 20px;
+			}
+
+			.skeleton-row {
+				display: flex;
+				flex-direction: column;
+				border-radius: 8px;
 				border: 1px solid $border-soft;
 				overflow: hidden;
 
-				.listing-title-box {
-					display: flex;
-					flex-direction: row;
-					align-items: center;
-					padding: 12px 16px;
-					background: $warm-off;
-					border-bottom: 1px solid $border-soft;
-					gap: 16px;
-
-					.title-text {
-						font-family: $font-body;
-						font-size: 11px;
-						font-weight: 600;
-						letter-spacing: 0.08em;
-						text-transform: uppercase;
-						color: $text-muted;
-						flex: 1;
-					}
+				.skeleton-thumb {
+					width: 100%;
+					aspect-ratio: 3 / 4;
+					background: linear-gradient(90deg, #f5f0ea 25%, #ede6dc 50%, #f5f0ea 75%);
+					background-size: 200% 100%;
+					animation: mp-shimmer 1.4s infinite;
 				}
 
-				.no-data {
+				.skeleton-lines {
+					padding: 12px 14px;
 					display: flex;
 					flex-direction: column;
-					align-items: center;
-					justify-content: center;
-					padding: 64px 20px;
-					gap: 12px;
-					color: $text-muted;
-					font-family: $font-body;
-					font-size: 14px;
+					gap: 8px;
+				}
 
-					img {
-						opacity: 0.4;
-						width: 40px;
+				.skeleton-line {
+					height: 12px;
+					border-radius: 6px;
+					background: linear-gradient(90deg, #f5f0ea 25%, #ede6dc 50%, #f5f0ea 75%);
+					background-size: 200% 100%;
+					animation: mp-shimmer 1.4s infinite;
+
+					&.w70 {
+						width: 70%;
+					}
+					&.w40 {
+						width: 40%;
 					}
 				}
 			}
 
+			@keyframes mp-shimmer {
+				0% {
+					background-position: 200% 0;
+				}
+				100% {
+					background-position: -200% 0;
+				}
+			}
+
+			// ── Pagination — identical to favorites ───────
 			.pagination-config {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
 				gap: 10px;
+				padding-top: 8px;
 
 				.pagination-box {
 					.MuiPaginationItem-root {
@@ -423,7 +528,8 @@
 				}
 
 				.total-result {
-					p {
+					p,
+					.MuiTypography-root {
 						font-family: $font-body;
 						font-size: 13px;
 						color: $text-muted;
@@ -442,6 +548,7 @@
 		flex-direction: column;
 		gap: 28px;
 
+		// ── Header ──────────────────────────────────────
 		.main-title-box {
 			.right-box {
 				.main-title {
@@ -450,7 +557,6 @@
 					font-weight: 400;
 					color: $text-primary;
 				}
-
 				.sub-title {
 					font-size: 13px;
 					color: $text-muted;
@@ -459,42 +565,230 @@
 			}
 		}
 
+		// ── Empty state ──────────────────────────────────
+		.no-data {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			padding: 64px 20px;
+			gap: 12px;
+			color: $text-muted;
+			font-family: $font-body;
+			font-size: 14px;
+
+			img {
+				opacity: 0.4;
+				width: 40px;
+			}
+			p {
+				margin: 0;
+			}
+		}
+
+		// ── 3-column grid (same as favorites) ───────────
 		.article-list-box {
 			display: grid;
-			grid-template-columns: repeat(2, 1fr);
-			gap: 16px;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 20px;
+		}
 
-			.no-data {
-				grid-column: 1 / -1;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				padding: 64px 20px;
-				gap: 12px;
-				color: $text-muted;
-				font-family: $font-body;
-				font-size: 14px;
+		// ── Article card ─────────────────────────────────
+		.article-card {
+			display: flex;
+			flex-direction: column;
+			border-radius: 8px;
+			border: 1px solid #ede8e1;
+			background: #fff;
+			overflow: hidden;
+			cursor: pointer;
+			transition: box-shadow 0.25s ease, transform 0.25s ease;
+
+			&:hover {
+				box-shadow: 0 8px 24px rgba(245, 100, 169, 0.11);
+				transform: translateY(-3px);
+
+				.article-cover-placeholder {
+					width: 100%;
+					height: 100%;
+					background: linear-gradient(135deg, #f5f0ea 0%, #ede0d8 100%);
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					span {
+						font-family: $font-serif;
+						font-size: 48px;
+						font-weight: 300;
+						color: rgba(245, 100, 169, 0.3);
+						text-transform: uppercase;
+					}
+				}
+				.article-cover img {
+					transform: scale(1.05);
+				}
+				.article-title {
+					color: $pink;
+				}
+			}
+
+			// ── Cover image ──────────────────────────────
+			.article-cover {
+				position: relative;
+				width: 100%;
+				aspect-ratio: 4 / 3;
+				overflow: hidden;
+				background: #f5f0ea;
+				flex-shrink: 0;
 
 				img {
-					opacity: 0.4;
-					width: 40px;
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+					display: block;
+					transition: transform 0.35s ease;
+				}
+
+				.article-category {
+					position: absolute;
+					top: 10px;
+					left: 12px;
+					font-family: $font-sans;
+					font-size: 8.5px;
+					font-weight: 600;
+					letter-spacing: 0.16em;
+					text-transform: uppercase;
+					color: #fff;
+					background: rgba(245, 100, 169, 0.85);
+					padding: 3px 9px;
+					border-radius: 2px;
+					backdrop-filter: blur(4px);
+				}
+			}
+
+			// ── Text body ────────────────────────────────
+			.article-body {
+				padding: 12px 14px 10px;
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				flex: 1;
+
+				.article-date {
+					font-family: $font-sans;
+					font-size: 10px;
+					color: $muted;
+					font-weight: 300;
+					letter-spacing: 0.04em;
+					margin: 0;
+				}
+
+				.article-title {
+					font-family: $font-serif;
+					font-size: 15px;
+					font-weight: 400;
+					color: $dark;
+					line-height: 1.35;
+					display: -webkit-box;
+
+					-webkit-box-orient: vertical;
+					overflow: hidden;
+					transition: color 0.18s ease;
+				}
+			}
+
+			// ── Footer: stats + delete ────────────────────
+			.article-footer {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 7px 14px 11px;
+				border-top: 1px solid #f5f0ea;
+				margin-top: auto;
+
+				.article-stats {
+					display: flex;
+					align-items: center;
+					gap: 12px;
+				}
+
+				.stat {
+					display: flex;
+					align-items: center;
+					gap: 4px;
+					font-family: $font-sans;
+					font-size: 10.5px;
+					color: $muted;
+					cursor: default;
+
+					&--like {
+						cursor: pointer;
+						transition: color 0.18s;
+						&:hover,
+						&.liked {
+							color: $pink;
+						}
+					}
+
+					.stat-icon {
+						font-size: 13px !important;
+						color: #b8b0a6;
+
+						&--heart {
+							transition: color 0.18s;
+							&.active {
+								color: $pink;
+							}
+						}
+					}
+
+					&--like:hover .stat-icon--heart:not(.active) {
+						color: $pink;
+					}
+				}
+
+				.article-delete {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					width: 26px;
+					height: 26px;
+					border-radius: 4px;
+					border: 1px solid $border-soft;
+					background: transparent;
+					cursor: pointer;
+					transition: background 0.18s, border-color 0.18s;
+
+					svg {
+						font-size: 14px !important;
+						color: $muted;
+						transition: color 0.18s;
+					}
+
+					&:hover {
+						background: rgba(192, 71, 58, 0.07);
+						border-color: rgba(192, 71, 58, 0.25);
+						svg {
+							color: #c0473a;
+						}
+					}
 				}
 			}
 		}
 
+		// ── Pagination ───────────────────────────────────
 		.pagination-conf {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			gap: 10px;
+			padding-top: 8px;
 
 			.pagination-box {
 				.MuiPaginationItem-root {
 					font-family: $font-body;
 					color: $text-secondary;
 					border-radius: 8px;
-
 					&.Mui-selected {
 						background: $pink;
 						color: #fff;
@@ -503,7 +797,8 @@
 			}
 
 			.total {
-				p {
+				p,
+				.MuiTypography-root {
 					font-family: $font-body;
 					font-size: 13px;
 					color: $text-muted;
@@ -623,7 +918,6 @@
 			}
 		}
 
-		// ── Section card shared style ─────────────────
 		.top-box,
 		.bottom-box {
 			width: 100%;
@@ -638,7 +932,6 @@
 		}
 
 		.top-box {
-			// ── Photo upload ──────────────────────────
 			.photo-box {
 				gap: 16px;
 
@@ -706,7 +999,6 @@
 				}
 			}
 
-			// ── Input fields ──────────────────────────
 			.small-input-box {
 				width: 100%;
 				flex-direction: row;
@@ -741,7 +1033,6 @@
 						&::placeholder {
 							color: $text-dim;
 						}
-
 						&:focus {
 							border-color: $pink;
 						}
@@ -775,7 +1066,6 @@
 					&::placeholder {
 						color: $text-dim;
 					}
-
 					&:focus {
 						border-color: $pink;
 					}
@@ -882,7 +1172,6 @@
 						&::placeholder {
 							color: $text-dim;
 						}
-
 						&:focus {
 							border-color: $pink;
 						}
@@ -922,7 +1211,6 @@
 						&::placeholder {
 							color: $text-dim;
 						}
-
 						&:focus {
 							border-color: $pink;
 						}
@@ -985,6 +1273,288 @@
 	}
 
 	// ══════════════════════════════════════════════════
+	// FOLLOWERS & FOLLOWINGS PAGE
+	// ══════════════════════════════════════════════════
+	#member-follows-page {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+
+		.main-title-box {
+			.right-box {
+				.main-title {
+					font-family: $font-display;
+					font-size: 30px;
+					font-weight: 400;
+					color: $text-primary;
+				}
+
+				.sub-title {
+					font-size: 13px;
+					color: $text-muted;
+					font-family: $font-body;
+				}
+			}
+		}
+
+		.follows-list-box {
+			display: flex;
+			flex-direction: column;
+			gap: 0;
+
+			// ── Column header row ─────────────────────────
+			.listing-title-box {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				padding: 10px 20px;
+				background: $warm-off;
+				border-radius: 10px 10px 0 0;
+				border: 1px solid $border-soft;
+				border-bottom: none;
+				gap: 0;
+
+				.title-text {
+					font-family: $font-body;
+					font-size: 10.5px;
+					font-weight: 600;
+					letter-spacing: 0.1em;
+					text-transform: uppercase;
+					color: $text-muted;
+					flex: 1;
+
+					&:last-child {
+						flex: 0.6;
+						text-align: right;
+					}
+				}
+			}
+
+			// ── Empty state ───────────────────────────────
+			.no-data {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 64px 20px;
+				gap: 12px;
+				color: $text-muted;
+				font-family: $font-body;
+				font-size: 14px;
+				border: 1px solid $border-soft;
+				border-radius: 0 0 10px 10px;
+
+				img {
+					opacity: 0.4;
+					width: 40px;
+				}
+
+				p {
+					margin: 0;
+				}
+			}
+
+			// ── Each follow row ───────────────────────────
+			.follows-card-box {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				padding: 16px 20px;
+				border: 1px solid $border-soft;
+				border-top: none;
+				background: #fff;
+				transition: background 0.18s ease;
+
+				&:last-of-type {
+					border-radius: 0 0 10px 10px;
+				}
+
+				&:hover {
+					background: rgba(245, 100, 169, 0.02);
+				}
+
+				// ── Avatar + name ─────────────────────────
+				.info {
+					flex: 1;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					gap: 14px;
+					cursor: pointer;
+					min-width: 0;
+
+					.image-box {
+						width: 44px;
+						height: 44px;
+						border-radius: 50%;
+						overflow: hidden;
+						flex-shrink: 0;
+						border: 2px solid rgba(245, 100, 169, 0.15);
+						background: #f5f0ea;
+
+						img {
+							width: 100%;
+							height: 100%;
+							object-fit: cover;
+							display: block;
+						}
+					}
+
+					.information-box {
+						min-width: 0;
+
+						.name {
+							font-family: $font-serif;
+							font-size: 15px;
+							font-weight: 400;
+							color: $text-primary;
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							transition: color 0.18s ease;
+						}
+					}
+
+					&:hover .name {
+						color: $pink;
+					}
+				}
+
+				// ── Stats ─────────────────────────────────
+				.details-box {
+					flex: 1;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					gap: 24px;
+
+					.info-box {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						gap: 4px;
+
+						p {
+							font-family: $font-sans;
+							font-size: 11px;
+							color: $text-muted;
+							font-weight: 400;
+							margin: 0;
+						}
+
+						span {
+							font-family: $font-sans;
+							font-size: 11px;
+							color: $muted;
+							font-weight: 300;
+						}
+
+						// Like icon
+						svg {
+							font-size: 16px !important;
+							cursor: pointer;
+							transition: color 0.18s ease, transform 0.18s ease;
+							color: #c9bdb5;
+
+							&[data-testid='FavoriteIcon'] {
+								color: $pink;
+							}
+
+							&:hover {
+								color: $pink;
+								transform: scale(1.15);
+							}
+						}
+					}
+				}
+
+				// ── Follow / Unfollow ─────────────────────
+				.action-box {
+					flex: 0.6;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: flex-end;
+					gap: 8px;
+
+					// "Following" label
+					.MuiTypography-root {
+						font-family: $font-sans;
+						font-size: 11px;
+						color: $text-muted;
+						font-weight: 400;
+					}
+
+					// Buttons — override MUI defaults
+					.MuiButton-root {
+						font-family: $font-body !important;
+						font-size: 11px !important;
+						font-weight: 600 !important;
+						border-radius: 20px !important;
+						padding: 5px 16px !important;
+						min-width: unset !important;
+						text-transform: none !important;
+						box-shadow: none !important;
+						letter-spacing: 0.04em !important;
+
+						&.MuiButton-contained {
+							background: rgba(90, 154, 106, 0.12) !important;
+							color: #5a9a6a !important;
+							border: 1px solid rgba(90, 154, 106, 0.25) !important;
+
+							&:hover {
+								background: rgba(90, 154, 106, 0.2) !important;
+							}
+						}
+
+						&.MuiButton-outlined {
+							background: rgba(192, 71, 58, 0.08) !important;
+							color: #c0473a !important;
+							border: 1px solid rgba(192, 71, 58, 0.2) !important;
+
+							&:hover {
+								background: rgba(192, 71, 58, 0.14) !important;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// ── Pagination ────────────────────────────────────
+		.pagination-config {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 10px;
+			padding-top: 8px;
+
+			.pagination-box {
+				.MuiPaginationItem-root {
+					font-family: $font-body;
+					color: $text-secondary;
+					border-radius: 8px;
+
+					&.Mui-selected {
+						background: $pink;
+						color: #fff;
+					}
+				}
+			}
+
+			.total-result {
+				p,
+				.MuiTypography-root {
+					font-family: $font-body;
+					font-size: 13px;
+					color: $text-muted;
+				}
+			}
+		}
+	}
+
+	// ══════════════════════════════════════════════════
 	// ADD PRODUCT PAGE
 	// ══════════════════════════════════════════════════
 	#add-product-page {
@@ -1022,7 +1592,6 @@
 				border-radius: 16px;
 				border: 1px solid $border-soft;
 
-				// ── Column / row wrappers ─────────────
 				.config-column {
 					display: flex;
 					flex-direction: column;
@@ -1046,7 +1615,6 @@
 					position: relative;
 				}
 
-				// ── Label ─────────────────────────────
 				.title {
 					font-family: $font-body;
 					font-size: 12px;
@@ -1055,7 +1623,6 @@
 					letter-spacing: 0.02em;
 				}
 
-				// ── Text input ────────────────────────
 				.description-input {
 					width: 100%;
 					height: 44px;
@@ -1073,13 +1640,11 @@
 					&::placeholder {
 						color: $text-dim;
 					}
-
 					&:focus {
 						border-color: $pink;
 					}
 				}
 
-				// ── Textarea ──────────────────────────
 				.description-text {
 					width: 100%;
 					padding: 14px;
@@ -1098,7 +1663,6 @@
 					}
 				}
 
-				// ── Select ────────────────────────────
 				.select-description {
 					width: 100%;
 					height: 44px;
@@ -1137,7 +1701,7 @@
 				}
 
 				.divider {
-					display: none; // arrow handled below
+					display: none;
 				}
 
 				.arrow-down {
@@ -1150,7 +1714,6 @@
 				}
 			}
 
-			// ── Upload section ────────────────────────
 			.upload-title {
 				font-family: $font-body;
 				font-size: 14px;
@@ -1248,7 +1811,6 @@
 				}
 			}
 
-			// ── Submit row ────────────────────────────
 			.buttons-row {
 				flex-direction: row;
 				justify-content: flex-end;

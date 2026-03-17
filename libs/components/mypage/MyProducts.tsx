@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { T } from '../../types/common';
+
 import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
 import { UPDATE_PRODUCT } from '../../../apollo/user/mutation';
@@ -13,6 +13,7 @@ import { ProductStatus } from '../../enums/product.enum';
 import { toastError, toastWarning } from '../../toast';
 import { ProductCard } from './ProductCard';
 import { GET_BRAND_PRODUCTS } from '@/apollo/user/query';
+import { T } from '@/libs/types/common';
 
 const STATUS_TABS = [
 	{ label: 'On Sale', value: ProductStatus.ACTIVE },
@@ -78,23 +79,15 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 
 	return (
 		<div id="my-product-page">
-			{/* ── Header ───────────────────────────────── */}
+			{/* ── Header ── */}
 			<Stack className="main-title-box">
 				<Stack className="right-box">
 					<Typography className="main-title">My Products</Typography>
 					<Typography className="sub-title">Manage and track your listed products</Typography>
 				</Stack>
-
-				{/* Quick stats */}
-				<Stack className="header-stats">
-					<div className="stat-pill">
-						<span className="stat-dot active" />
-						<span className="stat-label">{total} listed</span>
-					</div>
-				</Stack>
 			</Stack>
 
-			{/* ── Product list ─────────────────────────── */}
+			{/* ── Content ── */}
 			<Stack className="product-list-box">
 				{/* Tab filter */}
 				<Stack className="tab-name-box">
@@ -109,80 +102,73 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 					))}
 				</Stack>
 
-				{/* Table */}
-				<Stack className="list-box">
-					{/* Column headers */}
-					<Stack className="listing-title-box">
-						<Typography className="title-text col-product">Product</Typography>
-						<Typography className="title-text col-date">Published</Typography>
-						<Typography className="title-text col-status">Status</Typography>
-						<Typography className="title-text col-views">Views</Typography>
-						{activeStatus === ProductStatus.ACTIVE && <Typography className="title-text col-action">Action</Typography>}
-					</Stack>
-
-					{/* Rows */}
-					{loading ? (
-						<Stack className="skeleton-list">
-							{Array.from({ length: 4 }).map((_, i) => (
-								<div key={i} className="skeleton-row">
-									<div className="skeleton-thumb" />
-									<div className="skeleton-lines">
-										<div className="skeleton-line w70" />
-										<div className="skeleton-line w40" />
-									</div>
-									<div className="skeleton-line w30" />
-									<div className="skeleton-line w20" />
-									<div className="skeleton-line w20" />
+				{/* Skeleton */}
+				{loading && (
+					<div className="skeleton-list">
+						{Array.from({ length: 6 }).map((_, i) => (
+							<div key={i} className="skeleton-row">
+								<div className="skeleton-thumb" />
+								<div className="skeleton-lines">
+									<div className="skeleton-line w70" />
+									<div className="skeleton-line w40" />
 								</div>
-							))}
-						</Stack>
-					) : brandProducts.length === 0 ? (
-						<div className="no-data">
-							<div className="no-data-icon">
-								<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-									<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-									<polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-									<line x1="12" y1="22.08" x2="12" y2="12" />
-								</svg>
 							</div>
-							<p className="no-data-title">No products yet</p>
-							<p className="no-data-sub">
-								{activeStatus === ProductStatus.ACTIVE
-									? 'Add your first product to start selling'
-									: 'Sold products will appear here'}
-							</p>
+						))}
+					</div>
+				)}
+
+				{/* Empty */}
+				{!loading && brandProducts.length === 0 && (
+					<div className="no-data">
+						<div className="no-data-icon">
+							<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+								<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+								<polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+								<line x1="12" y1="22.08" x2="12" y2="12" />
+							</svg>
 						</div>
-					) : (
-						brandProducts.map((product: Product) => (
+						<p className="no-data-title">No products yet</p>
+						<p className="no-data-sub">
+							{activeStatus === ProductStatus.ACTIVE
+								? 'Add your first product to start selling'
+								: 'Sold products will appear here'}
+						</p>
+					</div>
+				)}
+
+				{/* Grid — same structure as favorites */}
+				{!loading && brandProducts.length > 0 && (
+					<div className="products-grid">
+						{brandProducts.map((product: Product) => (
 							<ProductCard
 								key={product._id}
 								product={product}
 								deleteProductHandler={deleteProductHandler}
 								updateProductHandler={updateProductHandler}
 							/>
-						))
-					)}
+						))}
+					</div>
+				)}
 
-					{/* Pagination */}
-					{brandProducts.length > 0 && totalPages > 0 && (
-						<Stack className="pagination-config">
-							<Stack className="pagination-box">
-								<Pagination
-									count={totalPages}
-									page={searchFilter.page}
-									shape="circular"
-									color="primary"
-									onChange={paginationHandler}
-								/>
-							</Stack>
-							<Stack className="total-result">
-								<Typography>
-									Showing {brandProducts.length} of {total} product{total !== 1 ? 's' : ''}
-								</Typography>
-							</Stack>
+				{/* Pagination */}
+				{!loading && brandProducts.length > 0 && totalPages > 0 && (
+					<Stack className="pagination-config">
+						<Stack className="pagination-box">
+							<Pagination
+								count={totalPages}
+								page={searchFilter.page}
+								shape="circular"
+								color="primary"
+								onChange={paginationHandler}
+							/>
 						</Stack>
-					)}
-				</Stack>
+						<Stack className="total-result">
+							<Typography>
+								{total} product{total !== 1 ? 's' : ''} available
+							</Typography>
+						</Stack>
+					</Stack>
+				)}
 			</Stack>
 		</div>
 	);
@@ -191,7 +177,7 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 MyProducts.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 5,
+		limit: 6,
 		sort: 'createdAt',
 		search: { productStatus: ProductStatus.ACTIVE },
 	},

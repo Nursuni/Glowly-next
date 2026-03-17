@@ -2,169 +2,230 @@
 	#member-page {
 		#member-products-page {
 			width: 100%;
+
+			// ── Page header ────────────────────────────────────────
 			.main-title-box {
-				width: auto;
-				height: auto;
 				flex-direction: row;
 				justify-content: space-between;
+				align-items: flex-end;
+				padding-bottom: 18px;
+				border-bottom: 1px solid #f0ebe4;
+
 				.right-box {
-					width: 315px;
+					display: flex;
+					flex-direction: column;
+					gap: 4px;
+
 					.main-title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 30px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-						letter-spacing: 0.6px;
-						text-transform: capitalize;
+						font-family: $font-serif;
+						font-size: 26px;
+						font-weight: 300;
+						color: $dark;
+						letter-spacing: 0.01em;
+						line-height: 1.1;
 					}
 				}
 			}
+
+			// ── Products grid ──────────────────────────────────────
 			.products-list-box {
-				margin-top: 85px;
+				margin-top: 24px;
+
 				.list-box {
-					.listing-title-box {
-						width: 100%;
-						height: auto;
-						flex-direction: row;
-						gap: 110px;
-						padding: 18px 15px 18px 33px;
-						border-radius: 12px;
-						background: #f6f6f6;
-						.title-text {
-							color: #181a20;
-							font-family: $font;
-							font-size: 15px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
+					display: flex;
+					flex-direction: column;
+					gap: 0;
+
+					// ── Empty state ──────────────────────────
+					.no-data {
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						justify-content: center;
+						padding: 60px 0;
+						gap: 12px;
+
+						img {
+							width: 32px;
+							height: 32px;
+							opacity: 0.3;
 						}
-						:first-child {
-							margin-right: 138px;
+
+						p {
+							font-family: $font-serif;
+							font-size: 15px;
+							font-weight: 300;
+							font-style: italic;
+							color: $muted;
+							margin: 0;
 						}
 					}
-					.product-card-box {
+
+					// ── 4-column grid ─────────────────────────
+					.products-grid {
+						display: grid;
+						grid-template-columns: repeat(4, 1fr);
+						gap: 14px;
 						width: 100%;
-						height: auto;
-						flex-direction: row;
-						align-items: center;
-						margin-top: 30px;
-						padding-bottom: 30px;
-						border-bottom: 1px solid #ddd;
+					}
+
+					// ── Card ──────────────────────────────────
+					.product-card-box {
+						display: flex;
+						flex-direction: column;
+						border-radius: 8px;
+						border: 1px solid #ede8e1;
+						background: #fff;
+						overflow: hidden;
+						cursor: pointer;
+						transition: box-shadow 0.25s ease, transform 0.25s ease;
+
+						&:hover {
+							box-shadow: 0 8px 24px rgba(245, 100, 169, 0.11);
+							transform: translateY(-3px);
+
+							.image-box img {
+								transform: scale(1.06);
+							}
+
+							.information-box .name {
+								color: $pink;
+							}
+						}
+
+						// ── Image ─────────────────────────────
 						.image-box {
-							width: 115px;
-							height: 90px;
+							width: 100%;
+							aspect-ratio: 3 / 4;
 							overflow: hidden;
-							margin-right: 25px;
-							padding-top: 1px;
-							cursor: pointer;
+							background: #f5f0ea;
+							flex-shrink: 0;
+							position: relative;
+
 							img {
 								width: 100%;
 								height: 100%;
-								object-fit: contain;
-								border-radius: 12px;
+								object-fit: cover;
+								transition: transform 0.35s ease;
 							}
 						}
+
+						// ── Info ──────────────────────────────
 						.information-box {
-							width: 210px;
-							height: auto;
-							padding: 5px 0px;
-							cursor: pointer;
+							padding: 10px 12px 8px;
+							display: flex;
+							flex-direction: column;
+							gap: 3px;
+
 							.name {
-								margin-bottom: 8px;
-								color: #181a20;
-								font-family: $font;
+								font-family: $font-serif;
 								font-size: 13px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-							}
-							.address {
-								margin-bottom: 13px;
-								color: #717171;
-								font-family: $font;
-								font-size: 11px;
-								font-style: normal;
 								font-weight: 400;
-								line-height: normal;
+								color: $dark;
+								line-height: 1.3;
+								white-space: nowrap;
+								overflow: hidden;
+								text-overflow: ellipsis;
+								transition: color 0.18s ease;
 							}
+
 							.price {
-								color: #181a20;
-								font-family: $font;
+								font-family: $font-serif;
 								font-size: 15px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: normal;
+								font-weight: 300;
+								color: $pink;
+							}
+
+							.address {
+								font-family: $font-sans;
+								font-size: 10px;
+								color: $muted;
+								font-weight: 300;
+								white-space: nowrap;
+								overflow: hidden;
+								text-overflow: ellipsis;
 							}
 						}
-						.date-box {
-							width: 140px;
-							height: 100%;
+
+						// ── Bottom row: views ─────────────────
+						.card-footer {
+							display: flex;
 							align-items: center;
-							justify-content: center;
-							margin-right: 77px;
-							.date {
-								color: #181a20;
-								font-family: $font;
-								font-size: 12px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-							}
-						}
-						.status-box {
-							width: 100px;
-							height: 100%;
-							align-items: center;
-							justify-content: center;
-							margin-right: 70px;
-							.coloured-box {
-								width: 93px;
-								height: 36px;
+							justify-content: space-between;
+							padding: 6px 12px 10px;
+							border-top: 1px solid #f5f0ea;
+
+							.views-box {
+								display: flex;
 								align-items: center;
-								justify-content: center;
-								border-radius: 60px;
-								.status {
-									font-family: $font;
-									font-size: 12px;
-									font-style: normal;
-									font-weight: 400;
-									line-height: 26px;
+								gap: 4px;
+
+								svg {
+									width: 12px;
+									height: 12px;
+									color: #b8b0a6;
+								}
+
+								.views {
+									font-family: $font-sans;
+									font-size: 10.5px;
+									color: $muted;
+								}
+							}
+
+							.date-box {
+								.date {
+									font-family: $font-sans;
+									font-size: 10px;
+									color: $muted;
+									font-weight: 300;
 								}
 							}
 						}
-						.views-box {
-							width: 35px;
-							height: 100%;
-							align-items: center;
-							justify-content: center;
-							margin-right: 75px;
-							.views {
-								color: #181a20;
-								font-family: $font;
+					}
+
+					// ── Pagination ───────────────────────────
+					.pagination-config {
+						display: flex;
+						flex-direction: row;
+						justify-content: space-between;
+						align-items: center;
+						margin-top: 24px;
+						padding-top: 16px;
+						border-top: 1px solid #f0ebe4;
+
+						.pagination-box {
+							.MuiPaginationItem-root {
+								font-family: $font-sans;
 								font-size: 12px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
+								color: $muted;
+								border-radius: 2px;
+								transition: background 0.2s, color 0.2s;
+
+								&.Mui-selected {
+									background: $dark;
+									color: #fff;
+
+									&:hover {
+										background: $pink;
+									}
+								}
+
+								&:hover:not(.Mui-selected) {
+									background: rgba($pink, 0.07);
+									color: $pink;
+								}
 							}
 						}
-					}
-					.pagination-config {
-						width: 100%;
-						height: auto;
-						justify-content: center;
-						align-items: center;
-						margin-top: 30px;
+
 						.total-result {
-							p {
-								color: #181a20;
-								text-align: center;
-								font-family: $font;
-								font-size: 14px;
-								font-style: normal;
+							p,
+							.MuiTypography-root {
+								font-family: $font-sans;
+								font-size: 11px;
+								color: $muted;
 								font-weight: 400;
-								line-height: 26px;
+								letter-spacing: 0.06em;
 							}
 						}
 					}

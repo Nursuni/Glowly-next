@@ -1,100 +1,305 @@
+// =========================================================
+// COMMUNITY DETAIL PAGE
+// Add this block inside #pc-wrap { ... } in _community.scss
+// =========================================================
+
 #pc-wrap {
 	#community-detail-page {
+		min-height: 100vh;
+
 		.container {
-			padding-bottom: 80px;
-			flex-direction: column;
-			gap: 40px;
 			max-width: 1200px;
 			margin: 0 auto;
-			padding: 0 40px;
+			padding: 0 40px 80px;
+			display: flex;
+			flex-direction: column;
+			gap: 40px;
 		}
 
-		/* SAME CARD STYLE */
-		.community-card {
-			width: 100%;
-			flex-direction: row !important;
-			background: #fff;
-			border: 1px solid $border;
-			border-radius: 8px;
-			box-shadow: 0 4px 24px rgba(42, 37, 32, 0.07);
-			overflow: hidden;
-			align-items: stretch;
+		// Hero — reuses .community-hero styles from list page automatically.
+		// Only override if needed:
+		.community-hero .hero-title {
+			font-size: clamp(32px, 4vw, 56px); // slightly smaller for article titles
 		}
 
-		/* SIDEBAR SAME AS BLOG PAGE */
-		.card-sidebar {
-			width: 220px;
-			border-right: 1px solid $border;
-			padding: 28px 0;
-			background: #fdfcfb;
+		// The two-panel card reuses .community-card, .card-sidebar, etc.
+		// Only add detail-specific overrides below:
 
-			.sidebar-brand {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				padding: 0 20px 20px;
-				border-bottom: 1px solid $border;
+		// ── Article body area ────────────────────────────────────
+		.article-body-wrap {
+			padding: 32px 32px 24px;
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
 
-				img {
-					width: 36px;
-					height: 36px;
+			.article-cover-img {
+				width: 100%;
+				max-height: 420px;
+				object-fit: cover;
+				border-radius: 8px;
+				margin-bottom: 8px;
+			}
+
+			.article-loading {
+				color: $muted;
+				font-family: $font-sans;
+				font-size: 14px;
+				padding: 20px 0;
+			}
+
+			// ✅ Rich-text HTML content — style all tags injected by the editor
+			.article-content-html {
+				font-family: $font-serif;
+				font-size: 17px;
+				line-height: 1.75;
+				color: $dark;
+
+				p {
+					margin: 0 0 16px;
+					&:last-child {
+						margin-bottom: 0;
+					}
 				}
 
-				.brand-label {
+				img {
+					max-width: 100%;
+					border-radius: 8px;
+					margin: 12px 0;
+					display: block;
+				}
+
+				h1,
+				h2,
+				h3 {
 					font-family: $font-serif;
-					font-size: 16px;
+					font-weight: 400;
 					color: $dark;
+					margin: 24px 0 10px;
+				}
+
+				strong {
+					font-weight: 600;
+				}
+				em {
+					font-style: italic;
+				}
+
+				a {
+					color: $pink;
+					text-decoration: underline;
+					&:hover {
+						opacity: 0.8;
+					}
+				}
+
+				ul,
+				ol {
+					padding-left: 20px;
+					margin-bottom: 16px;
+
+					li {
+						margin-bottom: 6px;
+					}
+				}
+
+				blockquote {
+					border-left: 3px solid $pink;
+					padding-left: 16px;
+					margin: 16px 0;
+					color: $muted;
+					font-style: italic;
+				}
+			}
+
+			// Like / views row
+			.article-actions {
+				display: flex;
+				align-items: center;
+				gap: 16px;
+				padding-top: 20px;
+				border-top: 1px solid $border;
+				margin-top: 8px;
+
+				.like-btn {
+					display: flex;
+					align-items: center;
+					gap: 6px;
+					height: 34px;
+					padding: 0 18px;
+					border: 1px solid rgba($pink, 0.35);
+					border-radius: 20px;
+					background: transparent;
+					color: $pink;
+					font-family: $font-sans;
+					font-size: 13px;
+					font-weight: 500;
+					cursor: pointer;
+					transition: background 0.2s, border-color 0.2s;
+
+					&:hover {
+						background: rgba($pink, 0.06);
+						border-color: $pink;
+					}
+				}
+
+				.view-count {
+					font-family: $font-sans;
+					font-size: 13px;
+					color: $muted;
 				}
 			}
 		}
 
-		/* ARTICLE CONTENT */
-		.card-content {
-			flex: 1;
-			padding: 32px;
+		// ── Comments ─────────────────────────────────────────────
+		.comments-section {
+			padding: 0 32px 36px;
 			display: flex;
 			flex-direction: column;
-			gap: 24px;
+			gap: 16px;
+			border-top: 1px solid $border;
 
-			.article-meta {
-				display: flex;
-				align-items: center;
-				gap: 12px;
+			.comments-heading {
+				font-family: $font-serif;
+				font-size: 22px;
+				font-weight: 400;
+				color: $dark;
+				padding-top: 24px;
+			}
+
+			.comment-login-note {
 				font-family: $font-sans;
 				font-size: 13px;
 				color: $muted;
+			}
 
-				img {
-					width: 36px;
-					height: 36px;
-					border-radius: 50%;
+			// Comment compose row
+			.comment-write {
+				display: flex;
+				gap: 12px;
+				align-items: flex-start;
+
+				.comment-textarea {
+					flex: 1;
+					border: 1px solid $border;
+					border-radius: 6px;
+					padding: 12px 14px;
+					font-family: $font-sans;
+					font-size: 13px;
+					color: $dark;
+					resize: vertical;
+					outline: none;
+					background: $bg;
+					transition: border-color 0.2s;
+
+					&:focus {
+						border-color: rgba($pink, 0.5);
+					}
+				}
+
+				.comment-submit-btn {
+					height: 44px;
+					padding: 0 20px;
+					background: $pink !important;
+					color: #fff !important;
+					border-radius: 4px;
+					font-family: $font-sans;
+					font-size: 12px;
+					font-weight: 500;
+					letter-spacing: 0.05em;
+					text-transform: uppercase;
+					white-space: nowrap;
+					transition: background 0.2s;
+
+					&:hover {
+						background: darken($pink, 8%) !important;
+					}
 				}
 			}
 
-			.article-content {
-				font-family: $font-serif;
-				font-size: 18px;
-				line-height: 1.7;
-				color: $dark;
-			}
-		}
+			// Comment list
+			.comment-list {
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
 
-		/* COMMENT AREA */
-		.comments-section {
-			border-top: 1px solid $border;
-			padding-top: 24px;
+				.comment-item {
+					background: $bg;
+					border: 1px solid $border;
+					border-radius: 6px;
+					padding: 16px 18px;
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
 
-			.comment-input {
-				width: 100%;
-				border: 1px solid $border;
-				padding: 14px;
-				border-radius: 6px;
-			}
+					.comment-item-header {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
 
-			.comment-button {
-				background: $pink;
-				color: white;
-				margin-top: 10px;
+						.comment-author {
+							font-family: $font-sans;
+							font-size: 13px;
+							font-weight: 600;
+							color: $dark;
+						}
+
+						.comment-date {
+							font-family: $font-sans;
+							font-size: 11px;
+							color: rgba($muted, 0.7);
+						}
+					}
+
+					.comment-content {
+						font-family: $font-sans;
+						font-size: 13.5px;
+						line-height: 1.65;
+						color: $dark;
+						margin: 0;
+					}
+
+					.comment-owner-actions {
+						display: flex;
+						gap: 8px;
+					}
+
+					.comment-edit-mode {
+						display: flex;
+						flex-direction: column;
+						gap: 8px;
+
+						.comment-textarea {
+							width: 100%;
+							border: 1px solid $border;
+							border-radius: 6px;
+							padding: 10px 12px;
+							font-family: $font-sans;
+							font-size: 13px;
+							color: $dark;
+							resize: vertical;
+							outline: none;
+							background: #fff;
+
+							&:focus {
+								border-color: rgba($pink, 0.5);
+							}
+						}
+
+						.comment-edit-actions {
+							display: flex;
+							gap: 8px;
+						}
+					}
+				}
+
+				.no-comments {
+					font-family: $font-serif;
+					font-size: 15px;
+					font-style: italic;
+					color: $muted;
+					text-align: center;
+					padding: 24px 0;
+				}
 			}
 		}
 	}

@@ -13,13 +13,14 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../../apollo/user/query';
 import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
-import { T } from '../../libs/types/common';
+
 import { toastError, toastSuccess } from '@/libs/toast';
 import { SORT_OPTIONS } from '../brand';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ProductCard from '@/libs/components/product/CatalogProductCard';
+import { T } from '@/libs/types/common';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {

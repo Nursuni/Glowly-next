@@ -13,7 +13,7 @@ import { toastError, toastInfo, toastSuccess } from '../../libs/toast';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import MyMenu from '../../libs/components/mypage/MyMenu';
 import AddProduct from '../../libs/components/mypage/AddNewProduct';
-import MyProducts from '../../libs/components/member/MemberProducts';
+import MyProducts from '../../libs/components/mypage/MyProducts';
 import MyFavorites from '../../libs/components/mypage/MyFavorites';
 import RecentlyVisited from '../../libs/components/mypage/RecentlyVisited';
 import WriteArticle from '../../libs/components/mypage/WriteArticle';
@@ -123,7 +123,7 @@ const MyPage: NextPage = () => {
 							<Stack className="main-config" mb={'76px'}>
 								<Stack className={'list-config'}>
 									{category === 'addProduct' && <AddProduct />}
-									{category === 'myProducts' && <MyProducts initialInput={undefined} />}
+									{category === 'myProducts' && <MyProducts />}
 									{category === 'myOrder' && <MyOrders />}
 									{category === 'myFavorites' && <MyFavorites />}
 									{category === 'recentlyVisited' && <RecentlyVisited />}

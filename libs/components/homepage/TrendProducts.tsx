@@ -11,11 +11,12 @@ import TrendProductCard from './TrendProductCard';
 import { ProductCard } from '../mypage/ProductCard';
 
 import { GET_PRODUCTS } from '../../../apollo/user/query';
-import { T } from '../../types/common';
+
 import { useQuery, useMutation } from '@apollo/client';
 import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 import { Direction, Message } from '../../enums/common.enum';
 import { toastError, toastSuccess } from '@/libs/toast';
+import { T } from '@/libs/types/common';
 
 interface TrendProductsProps {
 	initialInput: ProductsInquiry;

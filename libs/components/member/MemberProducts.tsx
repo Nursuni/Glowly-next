@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import { Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
@@ -57,51 +57,50 @@ const MemberProducts: NextPage<MemberProductsProps> = ({ initialInput, likeMembe
 
 	if (device === 'mobile') return <div>Glowly MOBILE</div>;
 
+	const totalPages = Math.ceil(total / searchFilter.limit);
+
 	return (
 		<div id="member-products-page">
+			{/* ── Header ── */}
 			<Stack className="main-title-box">
 				<Stack className="right-box">
 					<Typography className="main-title">Products</Typography>
 				</Stack>
 			</Stack>
 
+			{/* ── Grid ── */}
 			<Stack className="products-list-box">
 				<Stack className="list-box">
-					{brandProducts.length > 0 && (
-						<Stack className="listing-title-box">
-							<Typography className="title-text">Product title</Typography>
-							<Typography className="title-text">Date Published</Typography>
-							<Typography className="title-text">Status</Typography>
-							<Typography className="title-text">View</Typography>
-						</Stack>
-					)}
-
-					{brandProducts.length === 0 && (
+					{brandProducts.length === 0 ? (
 						<div className="no-data">
 							<img src="/img/icons/icoAlert.svg" alt="no products" />
-							<p>You haven't added any beauty products yet.</p>
+							<p>No beauty products listed yet.</p>
 						</div>
-					)}
+					) : (
+						<>
+							<div className="products-grid">
+								{brandProducts.map((product: Product) => (
+									<ProductCard product={product} memberPage key={product?._id} />
+								))}
+							</div>
 
-					{brandProducts.map((product: Product) => (
-						<ProductCard product={product} memberPage key={product?._id} />
-					))}
-
-					{brandProducts.length > 0 && (
-						<Stack className="pagination-config">
-							<Stack className="pagination-box">
-								<Pagination
-									count={Math.ceil(total / searchFilter.limit)}
-									page={searchFilter.page}
-									shape="circular"
-									color="primary"
-									onChange={paginationHandler}
-								/>
-							</Stack>
-							<Stack className="total-result">
-								<Typography>{total} products available</Typography>
-							</Stack>
-						</Stack>
+							{totalPages > 1 && (
+								<Stack className="pagination-config">
+									<Stack className="pagination-box">
+										<Pagination
+											count={totalPages}
+											page={searchFilter.page}
+											shape="circular"
+											color="primary"
+											onChange={paginationHandler}
+										/>
+									</Stack>
+									<Stack className="total-result">
+										<Typography>{total} products available</Typography>
+									</Stack>
+								</Stack>
+							)}
+						</>
 					)}
 				</Stack>
 			</Stack>
@@ -112,11 +111,10 @@ const MemberProducts: NextPage<MemberProductsProps> = ({ initialInput, likeMembe
 MemberProducts.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 5,
+		limit: 8,
 		sort: 'createdAt',
 		search: {
 			memberId: '',
-
 			productTypeList: [],
 		},
 	},

@@ -2,19 +2,23 @@ import React, { useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Pagination, Stack, Typography, Button } from '@mui/material';
+import { Pagination, Stack, Typography } from '@mui/material';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 
-import { T } from '../../types/common';
 import { BoardArticle } from '../../types/board-article/board-article';
-
 import { GET_BOARD_ARTICLES } from '../../../apollo/user/query';
 import { LIKE_TARGET_BOARD_ARTICLE, REMOVE_BOARD_ARTICLE } from '../../../apollo/user/mutation';
-
 import { Messages } from '../../config';
 import { toastError, toastSuccess } from '../../toast';
 import { Direction } from '@/libs/enums/common.enum';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import dayjs from 'dayjs';
+import { NEXT_PUBLIC_API_URL } from '../../config';
+import { T } from '@/libs/types/common';
 
 const MyArticles: NextPage = ({ initialInput }: T) => {
 	const router = useRouter();
@@ -35,8 +39,8 @@ const MyArticles: NextPage = ({ initialInput }: T) => {
 	const { refetch } = useQuery(GET_BOARD_ARTICLES, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchCommunity },
-
 		onCompleted(data: T) {
+			console.log('article data:', data?.getBoardArticles?.list?.[0]);
 			setBoardArticles(data?.getBoardArticles?.list);
 			setTotalCount(data?.getBoardArticles?.metaCounter[0]?.total);
 		},
@@ -49,13 +53,8 @@ const MyArticles: NextPage = ({ initialInput }: T) => {
 	const likeHandler = async (e: any, id: string) => {
 		try {
 			e.stopPropagation();
-
 			if (!user?._id) throw new Error(Messages.LOGIN_REQUIRED);
-
-			await likeTargetBoardArticle({
-				variables: { articleId: id },
-			});
-
+			await likeTargetBoardArticle({ variables: { input: id } });
 			await refetch();
 			toastSuccess('Liked!');
 		} catch (err: any) {
@@ -66,81 +65,123 @@ const MyArticles: NextPage = ({ initialInput }: T) => {
 	const deleteHandler = async (e: any, id: string) => {
 		try {
 			e.stopPropagation();
+			if (!window.confirm('Are you sure you want to delete this article?')) return;
 
-			const confirmDelete = window.confirm('Are you sure you want to delete this article?');
+			await removeBoardArticle({ variables: { articleId: id } });
 
-			if (!confirmDelete) return;
+			// ✅ Remove instantly from local state — don't rely on refetch
+			setBoardArticles((prev) => prev.filter((a) => a._id !== id));
+			setTotalCount((prev) => prev - 1);
 
-			await removeBoardArticle({
-				variables: { articleId: id },
-			});
-
-			await refetch();
-
-			toastSuccess('Article deleted successfully!');
+			toastSuccess('Article deleted!');
 		} catch (err: any) {
 			toastError(err.message);
 		}
 	};
+	const openArticle = (id: string) =>
+		router.push({
+			pathname: '/blog/detail',
+			query: { articleId: id },
+		});
 
-	const openArticle = (id: string) => {
-		router.push(`/blog/detail?id=${id}`);
-	};
-
-	if (device === 'mobile') return <>ARTICLE PAGE MOBILE</>;
+	if (device === 'mobile') return <div>ARTICLE PAGE MOBILE</div>;
 
 	return (
 		<div id="my-articles-page">
+			{/* ── Header ── */}
 			<Stack className="main-title-box">
-				<Typography variant="h4">My Articles</Typography>
+				<Stack className="right-box">
+					<Typography className="main-title">My Articles</Typography>
+					<Typography className="sub-title">Your published stories & beauty tips</Typography>
+				</Stack>
 			</Stack>
 
-			<Stack spacing={3}>
-				{boardArticles?.length > 0 ? (
-					boardArticles.map((article: BoardArticle) => (
-						<Stack
-							key={article._id}
-							sx={{
-								border: '1px solid #ddd',
-								padding: '20px',
-								borderRadius: '10px',
-								cursor: 'pointer',
-							}}
-							onClick={() => openArticle(article._id)}
-						>
-							<Typography fontWeight="bold" fontSize="18px">
-								{article.articleTitle}
-							</Typography>
+			{/* ── Grid ── */}
+			{boardArticles?.length === 0 ? (
+				<div className="no-data">
+					<img src="/img/icons/icoAlert.svg" alt="no articles" />
+					<p>You haven't written any articles yet.</p>
+				</div>
+			) : (
+				<div className="article-list-box">
+					{boardArticles.map((article: BoardArticle) => {
+						const cover = article?.articleImage ? `${NEXT_PUBLIC_API_URL}/${article.articleImage}` : null;
 
-							<Typography fontSize="14px">{new Date(article.createdAt).toLocaleDateString()}</Typography>
+						const isLiked = article?.meLiked?.[0]?.myFavorite;
+						const isMine = article.memberId === user?._id;
 
-							<Stack direction="row" spacing={2} mt={2}>
-								<Button size="small" variant="outlined" onClick={(e) => likeHandler(e, article._id)}>
-									❤️ {article.articleLikes}
-								</Button>
+						return (
+							<div key={article._id} className="article-card" onClick={() => openArticle(article._id)}>
+								{/* Cover image */}
+								<div className="article-cover">
+									{cover ? (
+										<img src={cover} alt={article.articleTitle} />
+									) : (
+										<div className="article-cover-placeholder">
+											<span>{article.articleTitle?.[0] ?? '✦'}</span>
+										</div>
+									)}
+									<span className="article-category">{article.articleCategory ?? 'Beauty'}</span>
+								</div>
+								{/* Body */}
+								<div className="article-body">
+									<p className="article-date">{dayjs(article.createdAt).format('DD MMM, YYYY')}</p>
+									<strong className="article-title">{article.articleTitle}</strong>
 
-								{article.memberId === user?._id && (
-									<Button size="small" color="error" variant="contained" onClick={(e) => deleteHandler(e, article._id)}>
-										Delete
-									</Button>
-								)}
-							</Stack>
-						</Stack>
-					))
-				) : (
-					<Typography>No Articles found!</Typography>
-				)}
-			</Stack>
+									{/* Footer */}
+									<div className="article-footer">
+										<div className="article-stats">
+											{/* Views */}
+											<span className="stat">
+												<RemoveRedEyeIcon className="stat-icon" />
+												{article.articleViews ?? 0}
+											</span>
 
+											{/* Likes */}
+											<span
+												className={`stat stat--like ${isLiked ? 'liked' : ''}`}
+												onClick={(e) => likeHandler(e, article._id)}
+											>
+												{isLiked ? (
+													<FavoriteIcon className="stat-icon stat-icon--heart active" />
+												) : (
+													<FavoriteBorderIcon className="stat-icon stat-icon--heart" />
+												)}
+												{article.articleLikes ?? 0}
+											</span>
+										</div>
+
+										{/* Delete — only owner */}
+										{isMine && (
+											<button className="article-delete" onClick={(e) => deleteHandler(e, article._id)}>
+												<DeleteOutlineIcon />
+											</button>
+										)}
+									</div>
+								</div>
+							</div>
+						);
+					})}
+				</div>
+			)}
+
+			{/* ── Pagination ── */}
 			{boardArticles?.length > 0 && (
-				<Stack mt={5} alignItems="center">
-					<Pagination
-						count={Math.ceil(totalCount / searchCommunity.limit)}
-						page={searchCommunity.page}
-						onChange={paginationHandler}
-					/>
-
-					<Typography mt={2}>Total {totalCount ?? 0} article(s)</Typography>
+				<Stack className="pagination-conf">
+					<Stack className="pagination-box">
+						<Pagination
+							count={Math.ceil(totalCount / searchCommunity.limit)}
+							page={searchCommunity.page}
+							onChange={paginationHandler}
+							shape="circular"
+							color="primary"
+						/>
+					</Stack>
+					<Stack className="total">
+						<Typography>
+							Total {totalCount ?? 0} article{totalCount !== 1 ? 's' : ''}
+						</Typography>
+					</Stack>
 				</Stack>
 			)}
 		</div>

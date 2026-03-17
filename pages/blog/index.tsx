@@ -6,7 +6,7 @@ import CommunityCard from '../../libs/components/common/CommunityCard';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { BoardArticle } from '../../libs/types/board-article/board-article';
-import { T } from '../../libs/types/common';
+
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { BoardArticlesInquiry } from '../../libs/types/board-article/board-article.input';
 import { BoardArticleCategory } from '../../libs/enums/board-article.enum';
@@ -16,6 +16,7 @@ import { LIKE_TARGET_BOARD_ARTICLE } from '@/apollo/user/mutation';
 
 import { toastError, toastSuccess } from '@/libs/toast';
 import { Direction, Message } from '@/libs/enums/common.enum';
+import { T } from '@/libs/types/common';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -43,8 +44,6 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 	const { query } = router;
 	const articleCategory = query?.articleCategory as string;
 	const [searchCommunity, setSearchCommunity] = useState<BoardArticlesInquiry>(initialInput);
-	const [boardArticles, setBoardArticles] = useState<BoardArticle[]>([]);
-	const [totalCount, setTotalCount] = useState<number>(0);
 
 	if (articleCategory) initialInput.search.articleCategory = articleCategory;
 
@@ -53,18 +52,20 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 
 	const {
 		loading: getBoardArticlesLoading,
-		data: getBoardArticlesData,
+		data: getBoardArticlesData, // ← consume data directly
 		error: getBoardArticlesError,
 		refetch: getBoardArticlesRefetch,
 	} = useQuery(GET_BOARD_ARTICLES, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: searchCommunity },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setBoardArticles(data?.getBoardArticles?.list);
-			setTotalCount(data?.getBoardArticles?.metaCounter[0]?.total);
-		},
+		// ✅ onCompleted REMOVED — setting state inside onCompleted causes the
+		//    Apollo warning and can trigger infinite re-render loops.
 	});
+
+	// ✅ Derive state directly from the query data instead
+	const boardArticles: BoardArticle[] = getBoardArticlesData?.getBoardArticles?.list ?? [];
+	const totalCount: number = getBoardArticlesData?.getBoardArticles?.metaCounter[0]?.total ?? 0;
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -106,10 +107,11 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 			await toastSuccess('success');
 		} catch (err) {
 			const errorMessage = err instanceof Error ? err.message : String(err);
-			console.log('errors, likeProperrtyMember:', errorMessage);
+			console.log('errors, likeArticleHandler:', errorMessage);
 			toastError(errorMessage);
 		}
 	};
+
 	const paginationHandler = (e: T, value: number) => setSearchCommunity({ ...searchCommunity, page: value });
 
 	const currentTab = searchCommunity.search.articleCategory;
@@ -239,7 +241,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 
 					{/* RIGHT: article feed */}
 					<Stack className="card-content">
-						{/* Content header with Compose button on top-left */}
+						{/* Content header */}
 						<Stack className="content-header">
 							<Stack className="content-header-left">
 								<div className="content-header-meta">
@@ -287,7 +289,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 							)}
 						</Stack>
 
-						{/* Pagination inside card */}
+						{/* Pagination */}
 						{totalCount > 0 && (
 							<Stack className="card-pagination scroll-reveal">
 								<Pagination

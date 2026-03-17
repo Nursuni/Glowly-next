@@ -153,10 +153,10 @@ const Top = () => {
 				search: {},
 			},
 		},
-		skip: !user,
+		skip: !user?._id,
 	});
 
-	const { data: unreadData } = useQuery(GET_UNREAD_COUNT, { skip: !user });
+	const { data: unreadData } = useQuery(GET_UNREAD_COUNT, { skip: !user?._id });
 
 	const [markRead] = useMutation(MARK_NOTIFICATION_READ);
 	const [markAllRead] = useMutation(MARK_ALL_NOTIFICATIONS_READ);
