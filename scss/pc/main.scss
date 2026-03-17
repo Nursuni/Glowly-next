@@ -2,6 +2,7 @@
 @import '/scss/variables.scss';
 @import '/scss/pc/general.scss';
 @import '/scss/components/sharemodel.scss';
+@import '/scss/components/SectionDivider.scss';
 
 // PAGES
 @import '/scss/pc/homepage/homepage';
@@ -137,6 +138,78 @@ body::-webkit-scrollbar {
 						align-items: center;
 						gap: 8px;
 						margin-left: auto;
+					}
+					.notification-panel {
+						position: absolute;
+						top: 40px;
+						right: 0;
+						width: 320px;
+						max-height: 400px;
+						background: #fff;
+						border: 1px solid #ddd;
+						border-radius: 8px;
+						box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+						overflow-y: auto;
+						z-index: 1000;
+
+						.np-header {
+							display: flex;
+							justify-content: space-between;
+							padding: 8px 12px;
+							border-bottom: 1px solid #eee;
+							font-weight: 600;
+						}
+
+						.np-list {
+							.np-item {
+								display: flex;
+								justify-content: space-between;
+								align-items: center;
+								padding: 8px 12px;
+								cursor: pointer;
+
+								&.unread {
+									background-color: #f9f9ff;
+								}
+
+								.np-item-left {
+									display: flex;
+									align-items: center;
+									gap: 8px;
+
+									.np-avatar {
+										width: 36px;
+										height: 36px;
+										border-radius: 50%;
+										object-fit: cover;
+									}
+
+									.np-content {
+										font-size: 13px;
+									}
+
+									.np-date {
+										font-size: 11px;
+										color: gray;
+									}
+								}
+
+								.np-item-right button {
+									background: none;
+									border: none;
+									cursor: pointer;
+									font-size: 14px;
+									margin-left: 4px;
+								}
+							}
+
+							.np-empty {
+								padding: 12px;
+								text-align: center;
+								color: gray;
+								font-size: 13px;
+							}
+						}
 					}
 
 					.lan-box {

@@ -2,7 +2,7 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import { toast } from 'react-toastify';
 import { Box, Stack, Typography, TextField, Button } from '@mui/material';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.REACT_APP_API_GRAPHQL_URL;
 
 export default function SubscribeSection() {
 	const [email, setEmail] = useState('');
@@ -21,37 +21,41 @@ export default function SubscribeSection() {
 		}
 
 		setLoading(true);
+		console.log('Sending request to:', API_URL);
 
 		try {
 			const res = await fetch(API_URL!, {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					query: `
-            mutation SubscribeNewsletter($email: String!) {
-              subscribeNewsletter(email: $email) {
-                _id
-                email
-                createdAt
-              }
-            }
-          `,
+					mutation SubscribeNewsletter($email: String!) {
+						subscribeNewsletter(email: $email) {
+							_id
+							email
+							createdAt
+						}
+					}
+				`,
 					variables: { email },
 				}),
 			});
 
 			const result = await res.json();
+			console.log('GraphQL response:', result);
 
-			if (result.data) {
+			if (result.errors && result.errors.length > 0) {
+				toast.error(result.errors[0].message);
+			} else if (result.data?.subscribeNewsletter) {
 				toast.success('Successfully subscribed!');
 				setEmail('');
 			} else {
-				toast.error(result.errors?.[0]?.message || 'Something went wrong.');
+				toast.error('Something went wrong.');
 			}
-		} catch (error: any) {
-			toast.error(error.message || 'Server error.');
+		} catch (error) {
+			console.error('Subscribe Error:', error);
+			const message = error instanceof Error ? error.message : JSON.stringify(error);
+			toast.error(message || 'Server error.');
 		} finally {
 			setLoading(false);
 		}

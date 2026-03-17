@@ -9,14 +9,11 @@ import { Product } from '../../types/product/product';
 import { ProductsInquiry } from '../../types/product/product.input';
 import TrendProductCard from './TrendProductCard';
 import { ProductCard } from '../mypage/ProductCard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { T } from '../../types/common';
 import { useQuery, useMutation } from '@apollo/client';
-
 import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
-
 import { Direction, Message } from '../../enums/common.enum';
 import { toastError, toastSuccess } from '@/libs/toast';
 
@@ -37,7 +34,6 @@ const TrendProducts = (props: TrendProductsProps) => {
 		notifyOnNetworkStatusChange: true,
 	});
 
-	// Update state when API data changes
 	useEffect(() => {
 		if (getProductsData?.getProducts?.list) {
 			setTrendProducts(getProductsData.getProducts.list);
@@ -49,20 +45,16 @@ const TrendProducts = (props: TrendProductsProps) => {
 		try {
 			if (!id) return;
 			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
-			//execute likeTargetProduct
-			await likeTargetProduct({
-				variables: { input: id },
-			});
+			await likeTargetProduct({ variables: { input: id } });
 			await getProductsRefetch({ input: initialInput });
-			//execute getProductsRefetch
 			await toastSuccess('success');
 		} catch (err) {
 			const errorMessage = err instanceof Error ? err.message : String(err);
-			console.log('errors, likeProductHandler:', errorMessage);
 			toastError(errorMessage);
 		}
 	};
 
+	/** MOBILE **/
 	if (device === 'mobile') {
 		return (
 			<Stack className="trend-products">
@@ -76,10 +68,11 @@ const TrendProducts = (props: TrendProductsProps) => {
 						) : (
 							<Swiper
 								className="trend-product-swiper"
-								slidesPerView="auto"
+								slidesPerView={1.3}
 								centeredSlides={true}
-								spaceBetween={15}
+								spaceBetween={12}
 								modules={[Autoplay]}
+								autoplay={{ delay: 3500, disableOnInteraction: false }}
 							>
 								{trendProducts.map((product: Product) => (
 									<SwiperSlide key={product._id} className="trend-product-slide">
@@ -94,6 +87,7 @@ const TrendProducts = (props: TrendProductsProps) => {
 		);
 	}
 
+	/** DESKTOP **/
 	return (
 		<Stack className="trend-products">
 			<Stack className="container">
@@ -129,15 +123,29 @@ const TrendProducts = (props: TrendProductsProps) => {
 						</Box>
 					) : (
 						<Swiper
-							slidesPerView="auto"
+							slidesPerView={4}
 							spaceBetween={20}
-							modules={[Autoplay, Navigation, Pagination]} // <--- include Autoplay here
+							breakpoints={{
+								// ≥ 1280px → 5 cards
+								1280: { slidesPerView: 5, spaceBetween: 20 },
+								// 1024–1279px → 4 cards
+								1024: { slidesPerView: 4, spaceBetween: 18 },
+								// 768–1023px → 3 cards
+								768: { slidesPerView: 3, spaceBetween: 16 },
+							}}
+							modules={[Autoplay, Navigation, Pagination]}
 							autoplay={{ delay: 4000, disableOnInteraction: false }}
-							navigation={{ nextEl: '.swiper-trend-next', prevEl: '.swiper-trend-prev' }}
-							pagination={{ el: '.swiper-trend-pagination', clickable: true }}
+							navigation={{
+								nextEl: '.swiper-trend-next',
+								prevEl: '.swiper-trend-prev',
+							}}
+							pagination={{
+								el: '.swiper-trend-pagination',
+								clickable: true,
+							}}
 						>
 							{trendProducts.map((product: Product) => (
-								<SwiperSlide key={product._id}>
+								<SwiperSlide key={product._id} className="trend-product-slide">
 									<TrendProductCard product={product} likeProductHandler={likeProductHandler} />
 								</SwiperSlide>
 							))}
@@ -152,7 +160,7 @@ const TrendProducts = (props: TrendProductsProps) => {
 TrendProducts.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 8,
+		limit: 10,
 		sort: 'productLikes',
 		direction: Direction.DESC,
 		search: {},

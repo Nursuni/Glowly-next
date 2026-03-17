@@ -14,6 +14,8 @@ import TrendProductCard from '@/libs/components/homepage/TrendProducts';
 import Hero from '@/libs/components/homepage/Hero';
 import BoardArticles from '@/libs/components/homepage/BoardArticles';
 import HomeFeaturesSection from '@/libs/components/homepage/Homefeaturessection';
+import SubscribeSection from '@/libs/components/common/SubscribeSection';
+import SectionDivider from '@/libs/components/common/SectionDivider';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -30,15 +32,19 @@ const Home: NextPage = () => {
 		return (
 			<Stack className={'home-page'}>
 				<Hero />
+				<SectionDivider variant="dark" />
 				<HomeFeaturesSection />
 				<ShopByCategories />
+				<SectionDivider variant="dark" />
 				<TopProducts />
-
-				<TrendProductCard />
-				<Advertisement />
 				<TopBrandsCarousel initialInput={undefined} />
+				<SectionDivider variant="pink" />
+				<TrendProductCard />
 
 				<BoardArticles />
+				<SectionDivider variant="dark" />
+				<Advertisement />
+				<SubscribeSection />
 			</Stack>
 		);
 	}

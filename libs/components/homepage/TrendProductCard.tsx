@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Box, Divider, Typography } from '@mui/material';
+import { Stack, Box, Divider } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -10,7 +10,6 @@ import { NEXT_PUBLIC_API_URL } from '../../config';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { toastError, toastSuccess } from '@/libs/toast';
 
 interface TrendProductCardProps {
@@ -25,25 +24,16 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 	const user = useReactiveVar(userVar);
 
 	const redirectHandler = (productId: string) => {
-		console.log('productId value:', productId);
-		console.log('productId type:', typeof productId);
-
-		if (!productId) {
-			console.log('productId is empty or undefined');
-			return;
-		}
-
+		if (!productId) return;
 		router.push({
 			pathname: '/catalog/detail',
-			query: { productId: productId },
+			query: { productId },
 		});
 	};
 
-	// Add product to basket
 	const addToBasketHandler = (product: Product) => {
 		const basket = JSON.parse(localStorage.getItem('basket') || '[]');
 		const exists = basket.find((item: Product) => item._id === product._id);
-
 		if (!exists) {
 			basket.push({ ...product, quantity: 1 });
 			localStorage.setItem('basket', JSON.stringify(basket));
@@ -52,61 +42,66 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 			toastError('Product already in basket!');
 		}
 	};
+
 	const firstImage = product?.productImages?.[0];
+	const secondImage = product?.productImages?.[1] ?? product?.productImages?.[0];
 
 	const formattedPrice = product?.productPrice ? `$${Number(product.productPrice).toLocaleString()}` : '';
 
 	const isLiked = product?.meLiked && product?.meLiked[0]?.myFavorite;
 
 	return (
-		<Stack
-			className="trend-card-box"
-			onClick={(e) => {
-				e.stopPropagation();
-				redirectHandler(product._id);
-			}}
-		>
-			{/* Image Section */}
-			<Box className="card-img-wrap" onClick={() => product?._id && redirectHandler(product._id)}>
+		<Stack className="trend-card-box" onClick={() => product?._id && redirectHandler(product._id)}>
+			{/* ── Image ── */}
+			<Box className="card-img-wrap">
 				<Box
-					className="card-img"
+					className="card-img card-img--primary"
 					style={{
 						backgroundImage: firstImage ? `url(${NEXT_PUBLIC_API_URL}/${firstImage})` : 'none',
 					}}
-				>
-					{/* Hover overlay */}
-					<Box className="card-overlay" />
-
-					{/* Price badge */}
-					{formattedPrice && <span className="card-price">{formattedPrice}</span>}
-
-					{/* Quick action */}
-					<Box className="card-quick-view">
-						<span>View Details</span>
-					</Box>
+				/>
+				<Box
+					className="card-img card-img--secondary"
+					style={{
+						backgroundImage: secondImage ? `url(${NEXT_PUBLIC_API_URL}/${secondImage})` : 'none',
+					}}
+				/>
+				<Box className="card-overlay" />
+				<span className="card-badge">new</span>
+				{formattedPrice && <span className="card-price">{formattedPrice}</span>}
+				<Box className="card-quick-view">
+					<span>View Details</span>
 				</Box>
 			</Box>
 
-			{/* Info Section */}
+			{/* ── Info ── */}
 			<Box className="card-info">
-				{/* Title */}
 				<strong className="card-title">{product.productTitle ?? 'Product Name'}</strong>
 
-				{/* Description */}
-				<p className="card-desc">{product.productDesc ?? 'No description available.'}</p>
+				{/* Clamped to 2 lines — inline style guarantees it regardless of SCSS load order */}
+				<p
+					className="card-desc"
+					style={{
+						display: '-webkit-box',
+						WebkitLineClamp: 2,
+						WebkitBoxOrient: 'vertical',
+						overflow: 'hidden',
+						textOverflow: 'ellipsis',
+						whiteSpace: 'normal',
+					}}
+				>
+					{product.productDesc ?? 'No description available.'}
+				</p>
 
 				<Divider className="card-divider" />
 
-				{/* Bottom row */}
 				<Box className="card-bottom">
 					<Box className="card-stats">
-						{/* Views */}
 						<Box className="stat-item">
 							<RemoveRedEyeIcon className="stat-icon" />
 							<span className="stat-count">{product?.productViews ?? 0}</span>
 						</Box>
 
-						{/* Likes */}
 						<Box className="stat-item">
 							<IconButton
 								className={`like-btn ${isLiked ? 'liked' : ''}`}
@@ -122,7 +117,7 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 						</Box>
 					</Box>
 
-					<Box className="card-arrow">→</Box>
+					<span className="card-arrow">→</span>
 				</Box>
 			</Box>
 		</Stack>

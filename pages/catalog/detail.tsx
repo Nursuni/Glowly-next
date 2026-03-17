@@ -360,10 +360,6 @@ const ProductDetail: NextPage = () => {
 								<span className="pd-meta-key">Type</span>
 								<span className="pd-meta-val">{product.ingredientType ?? '—'}</span>
 							</div>
-							<div className="pd-meta-row">
-								<span className="pd-meta-key">Likes</span>
-								<span className="pd-meta-val">{product.productLikes ?? 0}</span>
-							</div>
 						</div>
 					</div>
 				</div>

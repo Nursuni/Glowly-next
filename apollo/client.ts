@@ -4,10 +4,10 @@ import { ApolloClient, ApolloLink, InMemoryCache, split, from, NormalizedCacheOb
 import { createUploadLink } from 'apollo-upload-client';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { onError } from '@apollo/client/link/error';
 import { getJwtToken } from '../libs/auth';
 import { socketVar } from './store';
-import { toastError } from '../libs/toast';
+import { onError } from '@apollo/client/link/error';
+import { toastError } from '@/libs/toast';
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
@@ -78,13 +78,19 @@ function createIsomorphicLink() {
 
 	// Error handling
 	const errorLink = onError(({ graphQLErrors, networkError }) => {
-		if (graphQLErrors) {
-			graphQLErrors.forEach(({ message, locations, path }) => {
-				console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
-				toastError(message);
+		if (graphQLErrors && graphQLErrors.length > 0) {
+			graphQLErrors.forEach((err) => {
+				const msg = err.message || 'An unknown GraphQL error occurred';
+				toastError(msg);
+				console.log(`[GraphQL error]: Message: ${msg}`, err);
 			});
 		}
-		if (networkError) console.log(`[Network error]:`, networkError);
+
+		if (networkError) {
+			const msg = 'message' in networkError ? networkError.message : 'A network error occurred';
+			toastError(msg);
+			console.log(`[Network error]:`, networkError);
+		}
 	});
 
 	return from([errorLink, splitLink]);

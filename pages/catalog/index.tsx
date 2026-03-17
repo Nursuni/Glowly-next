@@ -9,13 +9,11 @@ import { Product } from '../../libs/types/product/product';
 import { ProductsInquiry } from '../../libs/types/product/product.input';
 import { Direction, Message } from '../../libs/enums/common.enum';
 
-import SubscribeSection from '../../libs/components/common/SubscribeSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../../apollo/user/query';
-import { T } from '../../libs/types/common';
 import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
+import { T } from '../../libs/types/common';
 import { toastError, toastSuccess } from '@/libs/toast';
 import { SORT_OPTIONS } from '../brand';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
@@ -36,18 +34,15 @@ interface GetProductsData {
 	};
 }
 
-/* CLEAN GRAPHQL INPUT */
-const cleanSearchFilter = (input: ProductsInquiry): ProductsInquiry => {
-	return {
-		...input,
-		search: {
-			text: input.search?.text ?? '',
-			pricesRange: input.search?.pricesRange ?? { start: 0, end: 500 },
-			skinType: input.search?.skinType ?? [],
-			productTypeList: input.search?.productTypeList ?? [],
-		},
-	};
-};
+const cleanSearchFilter = (input: ProductsInquiry): ProductsInquiry => ({
+	...input,
+	search: {
+		text: input.search?.text ?? '',
+		pricesRange: input.search?.pricesRange ?? { start: 0, end: 500 },
+		skinType: input.search?.skinType ?? [],
+		productTypeList: input.search?.productTypeList ?? [],
+	},
+});
 
 const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput }) => {
 	const device = useDeviceDetect();
@@ -60,15 +55,12 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 	const [products, setProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
-	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [sortingOpen, setSortingOpen] = useState(false);
+	const [viewMode, setViewMode] = useState<'small' | 'medium' | 'large'>('small');
 	const [filterSortName, setFilterSortName] = useState('New');
 	const [searchText, setSearchText] = useState('');
-	const [viewMode, setViewMode] = useState<'small' | 'medium' | 'large'>('small');
 
 	/* APOLLO */
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
-
 	const { data, refetch } = useQuery<GetProductsData>(GET_PRODUCTS, {
 		fetchPolicy: 'network-only',
 		variables: { input: cleanSearchFilter(searchFilter) },
@@ -97,10 +89,8 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 	/* PAGINATION */
 	const handlePaginationChange = async (_: ChangeEvent<unknown>, value: number) => {
 		const updatedFilter = { ...searchFilter, page: value };
-
 		setSearchFilter(updatedFilter);
 		setCurrentPage(value);
-
 		await router.push({ pathname: '/catalog', query: { input: JSON.stringify(updatedFilter) } }, undefined, {
 			scroll: false,
 		});
@@ -113,63 +103,42 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 			page: 1,
 			search: { ...searchFilter.search, text: searchText },
 		};
-
 		setSearchFilter(updatedFilter);
 		setCurrentPage(1);
-
 		await router.push({ pathname: '/catalog', query: { input: JSON.stringify(updatedFilter) } }, undefined, {
 			scroll: false,
 		});
 	};
-
 	const handleSearchKeyDown = (e: React.KeyboardEvent) => {
 		if (e.key === 'Enter') handleSearchSubmit();
 	};
 
 	/* SORTING */
-	const sortingClickHandler = (e: MouseEvent<HTMLElement>) => {
-		setAnchorEl(e.currentTarget);
-		setSortingOpen(true);
-	};
-
-	const sortingCloseHandler = () => {
-		setSortingOpen(false);
-		setAnchorEl(null);
-	};
-
 	const sortingHandler = async (e: React.MouseEvent<HTMLLIElement>) => {
 		const updatedFilter = { ...searchFilter };
-
 		switch (e.currentTarget.id) {
 			case 'new':
 				updatedFilter.sort = 'createdAt';
 				updatedFilter.direction = Direction.DESC;
 				setFilterSortName('New');
 				break;
-
 			case 'lowest':
 				updatedFilter.sort = 'productPrice';
 				updatedFilter.direction = Direction.ASC;
 				setFilterSortName('Lowest Price');
 				break;
-
 			case 'highest':
 				updatedFilter.sort = 'productPrice';
 				updatedFilter.direction = Direction.DESC;
 				setFilterSortName('Highest Price');
 				break;
 		}
-
 		updatedFilter.page = 1;
-
 		setSearchFilter(updatedFilter);
 		setCurrentPage(1);
-
 		await router.push({ pathname: '/catalog', query: { input: JSON.stringify(updatedFilter) } }, undefined, {
 			scroll: false,
 		});
-
-		sortingCloseHandler();
 	};
 
 	/* LIKE */
@@ -177,15 +146,11 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 		try {
 			if (!id) return;
 			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
-
 			await likeTargetProduct({ variables: { input: id } });
-
 			await refetch({ input: cleanSearchFilter(searchFilter) });
-
 			toastSuccess('Product liked!');
 		} catch (err) {
-			const errorMessage = err instanceof Error ? err.message : String(err);
-			toastError(errorMessage);
+			toastError(err instanceof Error ? err.message : String(err));
 		}
 	};
 
@@ -193,6 +158,7 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 
 	return (
 		<div id="product-list-page">
+			{/* HERO */}
 			<div className="hero-box">
 				<div className="product-main-info">
 					<span className="product-eyebrow">Our catalog</span>
@@ -203,10 +169,10 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 				</div>
 			</div>
 
+			{/* TOOLBAR */}
 			<div className="toolbar-box">
 				<div className="toolbar-container">
 					<div className="toolbar-left">
-						{/* View Mode Buttons */}
 						<button className={`sort-btn ${viewMode === 'small' ? 'active' : ''}`} onClick={() => setViewMode('small')}>
 							<ViewModuleIcon />
 						</button>
@@ -222,7 +188,6 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 					</div>
 
 					<div className="toolbar-right">
-						{/* Sort Dropdown */}
 						<select
 							value={filterSortName}
 							onChange={(e) => {
@@ -253,6 +218,7 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 				</div>
 			</div>
 
+			{/* PRODUCT LIST & FILTER */}
 			<div className="container">
 				<div className="product-page">
 					<div className="filter-config">
@@ -266,27 +232,26 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 								<p>No products available for now</p>
 							</div>
 						) : (
-							products.map((product: Product) => (
-								<ProductCard product={product} key={product._id} likeProductHandler={likeProductHandler} />
+							products.map((product) => (
+								<ProductCard key={product._id} product={product} likeProductHandler={likeProductHandler} />
 							))
+						)}
+
+						{/* PAGINATION UNDER LIST / NO-DATA */}
+						{total > 0 && (
+							<div className="pagination-box">
+								<Pagination
+									page={currentPage}
+									count={Math.ceil(total / (searchFilter.limit ?? 9))}
+									onChange={handlePaginationChange}
+									shape="circular"
+									color="primary"
+								/>
+							</div>
 						)}
 					</div>
 				</div>
 			</div>
-
-			{products.length > 0 && (
-				<div className="pagination-box">
-					<Pagination
-						page={currentPage}
-						count={Math.ceil(total / (searchFilter.limit ?? 9))}
-						onChange={handlePaginationChange}
-						shape="circular"
-						color="primary"
-					/>
-				</div>
-			)}
-
-			<SubscribeSection />
 		</div>
 	);
 };
@@ -300,9 +265,7 @@ ProductList.defaultProps = {
 		search: {
 			text: '',
 			skinType: [],
-
 			pricesRange: { start: 0, end: 500 },
-
 			productTypeList: [],
 		},
 	},

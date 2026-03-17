@@ -635,3 +635,31 @@ export const GET_ORDER = gql`
 		}
 	}
 `;
+
+export const GET_UNREAD_COUNT = gql`
+	query GetUnreadCount {
+		getUnreadCount
+	}
+`;
+
+export const GET_NOTIFICATIONS = gql`
+	query GetNotifications($input: NotificationsInquiry!) {
+		getNotifications(input: $input) {
+			list {
+				_id
+
+				notificationStatus
+				createdAt
+				authorData {
+					_id
+					memberNick
+					memberImage
+				}
+				notificationGroup
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;

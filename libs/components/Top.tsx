@@ -16,13 +16,14 @@ import { Logout } from '@mui/icons-material';
 import { CaretDown } from 'phosphor-react';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
-import { useReactiveVar } from '@apollo/client';
-import { userVar } from '../../apollo/store';
-import { cartVar } from '../../apollo/store';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { userVar, cartVar } from '../../apollo/store';
 import { NEXT_PUBLIC_API_URL } from '../config';
 import Image from 'next/image';
 import BasketModal from './basket/BasketModal';
 import AnnouncementBar from './AnnouncementBar';
+import { DELETE_NOTIFICATION, MARK_ALL_NOTIFICATIONS_READ, MARK_NOTIFICATION_READ } from '@/apollo/user/mutation';
+import { GET_NOTIFICATIONS, GET_UNREAD_COUNT } from '@/apollo/user/query';
 
 const StyledMenu = styled((props: MenuProps) => (
 	<Menu
@@ -59,7 +60,7 @@ const StyledMenu = styled((props: MenuProps) => (
 const Top = () => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
-	const cartItems = useReactiveVar(cartVar); // ✅ global cart state
+	const cartItems = useReactiveVar(cartVar);
 	const { t } = useTranslation('common');
 	const router = useRouter();
 
@@ -69,7 +70,7 @@ const Top = () => {
 		document.body.style.overflow = basketOpen ? 'hidden' : 'auto';
 	}, [basketOpen]);
 
-	// ── Cart handlers ──────────────────────────────────────
+	// ── Cart handlers ──
 	const handleQtyChange = (id: string, delta: number) => {
 		cartVar(
 			cartVar().map((item) => (item._id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item)),
@@ -80,19 +81,28 @@ const Top = () => {
 		cartVar(cartVar().filter((item) => item._id !== id));
 	};
 
-	// ── Other state ────────────────────────────────────────
+	// ── Language dropdown ──
 	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
 	const [lang, setLang] = useState<string>(router.locale || 'en');
 	const drop = Boolean(anchorEl2);
 
+	const langClick = (e: React.MouseEvent<HTMLButtonElement>) => setAnchorEl2(e.currentTarget);
+	const langClose = () => setAnchorEl2(null);
+	const langChoice = useCallback(
+		async (e: React.MouseEvent<HTMLLIElement>) => {
+			const id = (e.currentTarget as HTMLElement).id;
+			setLang(id);
+			localStorage.setItem('locale', id);
+			setAnchorEl2(null);
+			router.push(router.asPath, undefined, { locale: id });
+		},
+		[router],
+	);
+
+	// ── Navbar scroll & background ──
 	const [scrolled, setScrolled] = useState(false);
 	const [bgColor, setBgColor] = useState(false);
 	const [navReady, setNavReady] = useState(false);
-
-	const [userDropOpen, setUserDropOpen] = useState(false);
-	const userDropRef = useRef<HTMLDivElement>(null);
-
-	const avatar = user?.memberImage ? `${NEXT_PUBLIC_API_URL}/${user.memberImage}` : '/img/profile/user.svg';
 
 	useEffect(() => {
 		setNavReady(false);
@@ -119,6 +129,9 @@ const Top = () => {
 		return () => window.removeEventListener('scroll', onScroll);
 	}, []);
 
+	// ── User dropdown ──
+	const [userDropOpen, setUserDropOpen] = useState(false);
+	const userDropRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
 		const handler = (e: MouseEvent) => {
 			if (userDropRef.current && !userDropRef.current.contains(e.target as Node)) {
@@ -129,92 +142,95 @@ const Top = () => {
 		return () => document.removeEventListener('mousedown', handler);
 	}, []);
 
-	const langClick = (e: React.MouseEvent<HTMLButtonElement>) => setAnchorEl2(e.currentTarget);
-	const langClose = () => setAnchorEl2(null);
-	const langChoice = useCallback(
-		async (e: React.MouseEvent<HTMLLIElement>) => {
-			const id = (e.currentTarget as HTMLElement).id;
-			setLang(id);
-			localStorage.setItem('locale', id);
-			setAnchorEl2(null);
-			router.push(router.asPath, undefined, { locale: id });
+	const avatar = user?.memberImage ? `${NEXT_PUBLIC_API_URL}/${user.memberImage}` : '/img/profile/user.svg';
+
+	// ── Notifications ──
+	const { data: notifData, refetch: refetchNotifs } = useQuery(GET_NOTIFICATIONS, {
+		variables: {
+			input: {
+				page: 1,
+				limit: 20,
+				search: {},
+			},
 		},
-		[router],
-	);
+		skip: !user,
+	});
 
-	const isActive = (path: string) => {
-		if (path === '/') return router.pathname === '/';
-		return router.pathname.startsWith(path);
-	};
+	const { data: unreadData } = useQuery(GET_UNREAD_COUNT, { skip: !user });
 
-	/* ─── MOBILE ─── */
+	const [markRead] = useMutation(MARK_NOTIFICATION_READ);
+	const [markAllRead] = useMutation(MARK_ALL_NOTIFICATIONS_READ);
+	const [deleteNotification] = useMutation(DELETE_NOTIFICATION);
+
+	const [notifOpen, setNotifOpen] = useState(false);
+	const notifRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const handler = (e: MouseEvent) => {
+			if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+				setNotifOpen(false);
+			}
+		};
+		document.addEventListener('mousedown', handler);
+		return () => document.removeEventListener('mousedown', handler);
+	}, []);
+
+	const unreadCount = unreadData?.getUnreadCount || 0;
+
+	// ── Mobile ──
 	if (device === 'mobile') {
 		return (
 			<Stack className={'top'}>
-				<Link href={'/'}>
-					<div>{t('home')}</div>
-				</Link>
-				<Link href={'/catalog'}>
-					<div>{t('catalog')}</div>
-				</Link>
-				<Link href={'/brand'}>
-					<div>{t('brands')}</div>
-				</Link>
-				<Link href={'/blog?articleCategory=FREE'}>
-					<div>{t('blog')}</div>
-				</Link>
-				<Link href={'/support'}>
-					<div>{t('support')}</div>
-				</Link>
-				<Link href={'/about'}>
-					<div>{t('about')}</div>
-				</Link>
+				<Link href={'/'}>{t('home')}</Link>
+				<Link href={'/catalog'}>{t('catalog')}</Link>
+				<Link href={'/brand'}>{t('brands')}</Link>
+				<Link href={'/blog?articleCategory=FREE'}>{t('blog')}</Link>
+				<Link href={'/support'}>{t('support')}</Link>
+				<Link href={'/about'}>{t('about')}</Link>
 			</Stack>
 		);
 	}
 
-	/* ─── DESKTOP ─── */
+	// ── Desktop ──
 	return (
 		<>
 			<AnnouncementBar navReady={navReady} />
 			<div className={`navbar${navReady ? ' nb-ready' : ''}`}>
 				<div className={`navbar-main${bgColor ? ' transparent' : ''}${scrolled ? ' scrolled' : ''}`}>
 					<div className="container">
-						{/* ── LOGO ── */}
+						{/* Logo */}
 						<div className="logo-box nb-item">
 							<Link href="/">
 								<Image src="/img/logo/glowly.svg" alt="Glowly" width={120} height={40} />
 							</Link>
 						</div>
 
-						{/* ── NAV LINKS ── */}
+						{/* Nav Links */}
 						<div className="router-box">
-							<Link href="/" className={isActive('/') ? 'active' : ''}>
+							<Link href="/" className={router.pathname === '/' ? 'active' : ''}>
 								{t('home')}
 							</Link>
-							<div>
-								<Link href="/catalog" className={isActive('/catalog') ? 'active' : ''}>
-									{t('catalog')}
-								</Link>
-							</div>
-							<Link href="/brand" className={isActive('/brand') ? 'active' : ''}>
+							<Link href="/catalog" className={router.pathname.startsWith('/catalog') ? 'active' : ''}>
+								{t('catalog')}
+							</Link>
+							<Link href="/brand" className={router.pathname.startsWith('/brand') ? 'active' : ''}>
 								{t('brands')}
 							</Link>
-							<Link href="/blog?articleCategory=FREE" className={isActive('/blog') ? 'active' : ''}>
+							<Link href="/blog?articleCategory=FREE" className={router.pathname.startsWith('/blog') ? 'active' : ''}>
 								{t('blog')}
 							</Link>
-							<Link href="/support" className={isActive('/support') ? 'active' : ''}>
+							<Link href="/support" className={router.pathname.startsWith('/support') ? 'active' : ''}>
 								{t('support')}
 							</Link>
-							<Link href="/about" className={isActive('/about') ? 'active' : ''}>
+							<Link href="/about" className={router.pathname.startsWith('/about') ? 'active' : ''}>
 								{t('about')}
 							</Link>
 						</div>
 
-						{/* ── USER BOX ── */}
+						{/* User Box */}
 						<div className="user-box">
 							{/* Basket */}
-							<button className="icon-btn basket-btn" onClick={() => setBasketOpen(true)} aria-label="Basket">
+							<button className="icon-btn basket-btn" onClick={() => setBasketOpen(true)}>
 								<img src="/img/icons/basket.svg" alt="basket" />
 								{cartItems.length > 0 && <span className="cart-count">{cartItems.length}</span>}
 							</button>
@@ -226,15 +242,77 @@ const Top = () => {
 								onRemove={handleRemove}
 							/>
 
-							{/* Notifications — logged-in only */}
+							{/* Notifications */}
 							{user && (
-								<button className="icon-btn notification-btn" aria-label="Notifications">
-									<NotificationsOutlinedIcon />
-									<span className="unread-dot" />
-								</button>
+								<div className="notif-wrap" ref={notifRef}>
+									<button
+										className="icon-btn notification-btn"
+										onClick={() => setNotifOpen((v) => !v)}
+										aria-label="Notifications"
+									>
+										<NotificationsOutlinedIcon />
+										{unreadCount > 0 && <span className="unread-dot">{unreadCount}</span>}
+									</button>
+
+									{notifOpen && (
+										<div className="notification-panel">
+											<div className="np-header">
+												<span>Notifications</span>
+												<button
+													onClick={async () => {
+														await markAllRead();
+														refetchNotifs();
+													}}
+												>
+													Mark All Read
+												</button>
+											</div>
+											<div className="np-list">
+												{notifData?.getNotifications?.list?.map((n: any) => (
+													<div key={n._id} className={`np-item ${n.notificationStatus === 'UNREAD' ? 'unread' : ''}`}>
+														<div className="np-item-left">
+															<img
+																src={n.authorData?.avatar || '/img/default-avatar.png'}
+																alt="avatar"
+																className="np-avatar"
+															/>
+															<div>
+																<div className="np-content">{n.content}</div>
+																<div className="np-date">{new Date(n.createdAt).toLocaleString()}</div>
+															</div>
+														</div>
+														<div className="np-item-right">
+															{n.notificationStatus === 'UNREAD' && (
+																<button
+																	onClick={async () => {
+																		await markRead({ variables: { notificationId: n._id } });
+																		refetchNotifs();
+																	}}
+																>
+																	✔
+																</button>
+															)}
+															<button
+																onClick={async () => {
+																	await deleteNotification({ variables: { notificationId: n._id } });
+																	refetchNotifs();
+																}}
+															>
+																🗑
+															</button>
+														</div>
+													</div>
+												))}
+												{notifData?.getNotifications?.list?.length === 0 && (
+													<div className="np-empty">No notifications</div>
+												)}
+											</div>
+										</div>
+									)}
+								</div>
 							)}
 
-							{/* User dropdown */}
+							{/* User Dropdown */}
 							<div className="user-drop-wrap" ref={userDropRef}>
 								<button
 									className={`icon-btn user-btn${userDropOpen ? ' active' : ''}`}
@@ -313,7 +391,7 @@ const Top = () => {
 								)}
 							</div>
 
-							{/* Language selector */}
+							{/* Language Selector */}
 							<Button
 								disableRipple
 								onClick={langClick}

@@ -198,6 +198,26 @@ export const UPDATE_PRODUCT = gql`
 		}
 	}
 `;
+export const MARK_NOTIFICATION_READ = gql`
+	mutation MarkNotificationRead($notificationId: String!) {
+		markNotificationRead(notificationId: $notificationId) {
+			_id
+			notificationStatus
+		}
+	}
+`;
+
+export const MARK_ALL_NOTIFICATIONS_READ = gql`
+	mutation MarkAllNotificationsRead {
+		markAllNotificationsRead
+	}
+`;
+
+export const DELETE_NOTIFICATION = gql`
+	mutation DeleteNotification($notificationId: String!) {
+		deleteNotification(notificationId: $notificationId)
+	}
+`;
 
 export const LIKE_TARGET_PRODUCT = gql`
 	mutation LikeTargetProduct($input: String!) {

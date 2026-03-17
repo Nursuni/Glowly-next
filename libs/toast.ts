@@ -1,4 +1,5 @@
 import { toast, Id, ToastOptions } from 'react-toastify';
+import { ApolloError } from '@apollo/client';
 
 /** Default global options */
 const defaultOptions: ToastOptions = {
@@ -11,23 +12,44 @@ const defaultOptions: ToastOptions = {
 	theme: 'colored',
 };
 
+/** Helper: get string message from any error type */
+const getErrorMessage = (err: unknown): string => {
+	if (!err) return 'Unknown error';
+	if (typeof err === 'string') return err;
+	if (err instanceof Error) return err.message;
+	if (err instanceof ApolloError) {
+		// GraphQL errors take priority
+		if (err.graphQLErrors?.length > 0) return err.graphQLErrors[0].message;
+		if (err.networkError) return (err.networkError as any).message || 'Network error';
+		return err.message || 'Apollo error occurred';
+	}
+	// Fallback: stringify unknown objects
+	try {
+		return JSON.stringify(err);
+	} catch {
+		return String(err);
+	}
+};
+
 /** SUCCESS */
-export const toastSuccess = (msg: string, options?: ToastOptions) =>
-	toast.success(msg, { ...defaultOptions, ...options });
+export const toastSuccess = (msg: string | Error | unknown, options?: ToastOptions) =>
+	toast.success(getErrorMessage(msg), { ...defaultOptions, ...options });
 
 /** ERROR */
-export const toastError = (msg: string, options?: ToastOptions) => toast.error(msg, { ...defaultOptions, ...options });
+export const toastError = (msg: string | Error | unknown, options?: ToastOptions) =>
+	toast.error(getErrorMessage(msg), { ...defaultOptions, ...options });
 
 /** INFO */
-export const toastInfo = (msg: string, options?: ToastOptions) => toast.info(msg, { ...defaultOptions, ...options });
+export const toastInfo = (msg: string | Error | unknown, options?: ToastOptions) =>
+	toast.info(getErrorMessage(msg), { ...defaultOptions, ...options });
 
 /** WARNING */
-export const toastWarning = (msg: string, options?: ToastOptions) =>
-	toast.warning(msg, { ...defaultOptions, ...options });
+export const toastWarning = (msg: string | Error | unknown, options?: ToastOptions) =>
+	toast.warning(getErrorMessage(msg), { ...defaultOptions, ...options });
 
 /** LOADING */
-export const toastLoading = (msg: string, options?: ToastOptions): Id =>
-	toast.loading(msg, { ...defaultOptions, autoClose: false, ...options });
+export const toastLoading = (msg: string | Error | unknown, options?: ToastOptions): Id =>
+	toast.loading(getErrorMessage(msg), { ...defaultOptions, autoClose: false, ...options });
 
 /** DISMISS */
 export const toastDismiss = (id?: Id) => toast.dismiss(id);
@@ -35,12 +57,12 @@ export const toastDismiss = (id?: Id) => toast.dismiss(id);
 /** UPDATE (useful after loading) */
 export const toastUpdate = (
 	id: Id,
-	msg: string,
+	msg: string | Error | unknown,
 	type: 'success' | 'error' | 'info' | 'warning' = 'success',
 	options?: ToastOptions,
 ) => {
 	toast.update(id, {
-		render: msg,
+		render: getErrorMessage(msg),
 		type,
 		isLoading: false,
 		autoClose: 3000,
@@ -49,22 +71,18 @@ export const toastUpdate = (
 };
 
 /** PROMISE */
-export const toastPromise = <T>(
+export const toastPromiseSafe = async <T>(
 	promise: Promise<T>,
-	messages: {
-		pending: string;
-		success: string;
-		error: string;
-	},
+	messages: { pending: string; success: string; error?: string },
 	options?: ToastOptions,
 ) => {
-	return toast.promise(
-		promise,
-		{
-			pending: messages.pending,
-			success: messages.success,
-			error: messages.error,
-		},
-		{ ...defaultOptions, ...options },
-	);
+	const id = toastLoading(messages.pending, options);
+	try {
+		const result = await promise;
+		toastUpdate(id, messages.success, 'success', options);
+		return result;
+	} catch (err) {
+		toastUpdate(id, getErrorMessage(err), 'error', options);
+		throw err;
+	}
 };
