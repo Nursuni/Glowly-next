@@ -1,12 +1,14 @@
 // VARIABLES & GENERAL
 @import '/scss/variables.scss';
 @import '/scss/pc/general.scss';
+@import '/scss/components/sharemodel.scss';
 
 // PAGES
 @import '/scss/pc/homepage/homepage';
 @import '/scss/pc/about/about.scss';
 @import '/scss/pc/catalog/catalog.scss';
 @import '/scss/pc/catalog/detail.scss';
+@import '/scss/pc/catalog/product.scss';
 @import '/scss/pc/order/basket.scss';
 @import '/scss/pc/order/order-success.scss';
 

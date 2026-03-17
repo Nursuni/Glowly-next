@@ -153,8 +153,7 @@ export const CREATE_PRODUCT = gql`
 			productStatus
 			productTitle
 			productPrice
-			discountType
-			discountValue
+
 			volume
 			volumeUnit
 			skinType
@@ -181,8 +180,7 @@ export const UPDATE_PRODUCT = gql`
 			productStatus
 			productTitle
 			productPrice
-			discountType
-			discountValue
+
 			volume
 			volumeUnit
 			skinType
@@ -209,8 +207,7 @@ export const LIKE_TARGET_PRODUCT = gql`
 			productStatus
 			productTitle
 			productPrice
-			discountType
-			discountValue
+
 			volume
 			volumeUnit
 			skinType

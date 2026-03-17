@@ -2,14 +2,17 @@ import React from 'react';
 import { Stack, Box } from '@mui/material';
 import useDeviceDetect from '@/libs/hooks/useDeviceDetect';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation, Pagination } from 'swiper';
+import { Autoplay, Navigation } from 'swiper';
 import TopBrandCard from './TopBrandCard';
 import { Member } from '@/libs/types/member/member';
 import { BrandsInquiry } from '@/libs/types/member/member.input';
 import { GET_BRANDS } from '@/apollo/user/query';
-import { useQuery } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { Direction } from '@/libs/enums/common.enum';
+import Link from 'next/link';
+import { userVar } from '@/apollo/store';
 
 interface TopBrandsProps {
 	initialInput: BrandsInquiry;
@@ -17,8 +20,8 @@ interface TopBrandsProps {
 
 const TopBrandsCarousel = ({ initialInput }: TopBrandsProps) => {
 	const device = useDeviceDetect();
+	const user = useReactiveVar(userVar);
 
-	/** APOLLO QUERY **/
 	const { data } = useQuery(GET_BRANDS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
@@ -27,15 +30,16 @@ const TopBrandsCarousel = ({ initialInput }: TopBrandsProps) => {
 
 	const topBrands: Member[] = data?.getBrands?.list ?? [];
 
-	/** MOBILE **/
 	if (device === 'mobile') {
 		return (
 			<Stack className={'top-brands'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Top Brands</span>
+						<Box className={'left'}>
+							<span>Top Brands</span>
+							<p>Discover the most loved skincare brands</p>
+						</Box>
 					</Stack>
-
 					<Stack className={'wrapper'}>
 						<Swiper
 							className={'top-brands-swiper'}
@@ -57,24 +61,36 @@ const TopBrandsCarousel = ({ initialInput }: TopBrandsProps) => {
 		);
 	}
 
-	/** DESKTOP **/
 	return (
 		<Stack className={'top-brands'}>
 			<Stack className={'container'}>
+				{/* Header */}
 				<Stack className={'info-box'}>
 					<Box className={'left'}>
-						<span>Top Brands</span>
-						<p>Discover the most loved skincare brands</p>
+						<span className="section-eyebrow">★ featured</span>
+						<p className="section-title">
+							Top <em>Brands</em>
+						</p>
+						<span className="section-sub">Discover the most loved skincare brands</span>
 					</Box>
 
 					<Box className={'right'}>
-						<div className={'more-box'}>
+						<Link href="/brand" className="more-box">
 							<span>See All Brands</span>
-							<img src="/img/icons/rightup.svg" alt="" />
-						</div>
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+								<path
+									d="M2 12L12 2M12 2H5M12 2V9"
+									stroke="currentColor"
+									strokeWidth="1.5"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								/>
+							</svg>
+						</Link>
 					</Box>
 				</Stack>
 
+				{/* Swiper */}
 				<Stack className={'wrapper'}>
 					<Box className={'switch-btn swiper-brands-prev'}>
 						<ArrowBackIosNewIcon />
@@ -85,8 +101,8 @@ const TopBrandsCarousel = ({ initialInput }: TopBrandsProps) => {
 							className={'top-brands-swiper'}
 							slidesPerView={'auto'}
 							spaceBetween={24}
-							modules={[Autoplay, Navigation, Pagination]}
-							autoplay={{ delay: 3000 }}
+							modules={[Autoplay, Navigation]}
+							autoplay={{ delay: 3000, disableOnInteraction: false }}
 							navigation={{
 								nextEl: '.swiper-brands-next',
 								prevEl: '.swiper-brands-prev',
@@ -101,7 +117,7 @@ const TopBrandsCarousel = ({ initialInput }: TopBrandsProps) => {
 					</Box>
 
 					<Box className={'switch-btn swiper-brands-next'}>
-						<ArrowBackIosNewIcon />
+						<ArrowForwardIosIcon />
 					</Box>
 				</Stack>
 			</Stack>

@@ -2,15 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import {
-	ProductType,
-	VolumeUnit,
-	SkinType,
-	ProductTarget,
-	DiscountType,
-	IngredientType,
-	AgeRange,
-} from '../../enums/product.enum';
+import { ProductType, VolumeUnit, SkinType, ProductTarget, IngredientType, AgeRange } from '../../enums/product.enum';
 import { NEXT_PUBLIC_API_URL } from '../../config';
 import { ProductInput } from '../../types/product/product.input';
 import axios from 'axios';
@@ -60,8 +52,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 			productTitle: p.productTitle ?? '',
 			productPrice: p.productPrice ?? 0,
 			productType: p.productType ?? '',
-			discountType: p.discountType ?? '',
-			discountValue: p.discountValue ?? 0,
+
 			volume: p.volume ?? 0,
 			volumeUnit: p.volumeUnit ?? '',
 			skinType: p.skinType ?? [],
@@ -246,47 +237,6 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 								<div className="divider" />
 								<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
 							</Stack>
-						</Stack>
-
-						{/* ── Discount (fully optional, value only appears when type is chosen) ── */}
-						<Stack className="config-row">
-							<Stack className="price-year-after-price">
-								<Typography className="title">
-									Discount Type <span className="optional-label">(optional)</span>
-								</Typography>
-								<select
-									className="select-description"
-									value={(insertProductData.discountType as string) || 'none'}
-									onChange={({ target: { value } }) => set('discountType', value === 'none' ? '' : value)}
-								>
-									<option value="none">None</option>
-									{Object.values(DiscountType).map((type) => (
-										<option value={type} key={type}>
-											{type}
-										</option>
-									))}
-								</select>
-								<div className="divider" />
-								<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
-							</Stack>
-
-							{/* Discount value only shown when a type is selected */}
-							{!!insertProductData.discountType && (
-								<Stack className="price-year-after-price">
-									<Typography className="title">Discount Value</Typography>
-									<input
-										type="number"
-										className="description-input"
-										placeholder={
-											(insertProductData.discountType as string) === DiscountType.PERCENTAGE
-												? 'e.g. 15 (%)'
-												: 'e.g. 5000 (fixed)'
-										}
-										value={insertProductData.discountValue || ''}
-										onChange={({ target: { value } }) => set('discountValue', parseFloat(value) || 0)}
-									/>
-								</Stack>
-							)}
 						</Stack>
 
 						{/* ══════════════════════════════════════════
@@ -560,8 +510,7 @@ AddProduct.defaultProps = {
 		productTitle: '',
 		productPrice: 0,
 		productType: '',
-		discountType: '',
-		discountValue: 0,
+
 		volume: 0,
 		volumeUnit: '',
 		skinType: [],

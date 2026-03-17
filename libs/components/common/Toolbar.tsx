@@ -52,7 +52,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 					<FavoriteBorderRoundedIcon />
 				</Button>
 
-				<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler}>
+				<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} disableScrollLock>
 					{sortOptions.map((item) => (
 						<MenuItem
 							key={item.id}

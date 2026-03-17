@@ -8,8 +8,7 @@ export interface ProductInput {
 	productTarget: string;
 	volume: string | number | readonly string[];
 	volumeUnit: string;
-	discountValue: string | number | readonly string[];
-	discountType: string;
+
 	productType: ProductType;
 	productTitle: string;
 	productPrice: number;

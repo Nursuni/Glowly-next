@@ -76,8 +76,7 @@ export const GET_ALL_PRODUCTS_BY_ADMIN = gql`
 				productStatus
 				productTitle
 				productPrice
-				discountType
-				discountValue
+
 				volume
 				volumeUnit
 				skinType

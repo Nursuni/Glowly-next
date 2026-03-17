@@ -1,6 +1,5 @@
 import {
 	AgeRange,
-	DiscountType,
 	IngredientType,
 	ProductStatus,
 	ProductTarget,
@@ -28,9 +27,6 @@ export interface Product {
 	productTitle: string;
 	productPrice: number;
 
-	// ✅ added missing schema fields
-	discountType?: DiscountType;
-	discountValue?: number;
 	volume?: number;
 	volumeUnit?: VolumeUnit;
 	skinType?: SkinType[];

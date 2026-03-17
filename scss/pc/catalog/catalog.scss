@@ -60,79 +60,63 @@
 			}
 		}
 		.toolbar-box {
-			margin-top: 25px;
-			margin-bottom: 10px;
+			display: flex;
+			justify-content: center; // center the toolbar
+			margin: 0 auto;
+			padding: 0 20px;
 
-			.toolbar {
+			.toolbar-container {
+				max-width: 1200px; // less than 1300px
+				width: 100%;
 				display: flex;
-				align-items: center;
 				justify-content: space-between;
-				width: 1300px;
-				margin: 0 auto;
-				padding-left: 150px;
+				align-items: center;
+				gap: 10px;
+			}
 
-				.toolbar-left {
+			.toolbar-left {
+				display: flex;
+				gap: 6px;
+
+				.sort-btn {
 					display: flex;
 					align-items: center;
-					gap: 10px;
+					justify-content: center;
+					padding: 6px;
+					border: 1px solid #e8d8e0;
+					border-radius: 6px;
+					background: #fff;
+					cursor: pointer;
+					transition: all 0.2s;
 
-					.sort-label {
-						font-size: 13px;
-						color: #999;
-						letter-spacing: 0.04em;
-					}
-
-					.sort-btn {
-						display: flex;
-						align-items: center;
-						justify-content: center;
-						padding: 4px;
-
+					&.active {
+						border-color: #d4789a;
+						background: #fce4ec;
 						svg {
-							font-size: 20px;
 							color: #d4789a;
 						}
 					}
+
+					svg {
+						font-size: 18px;
+						color: #bbb;
+					}
 				}
+			}
 
-				.toolbar-right {
-					display: flex;
-					align-items: center;
+			.toolbar-right {
+				select.sort-select {
+					font-size: 13px;
+					border: 1px solid #e8d8e0;
+					border-radius: 6px;
+					padding: 4px 8px;
+					background: #fff;
+					color: #333;
+					cursor: pointer;
 
-					padding-bottom: 0;
-
-					.search-input {
-						display: flex;
-						align-items: center;
-						gap: 8px;
-						border-bottom: 1.5px solid #e8d8e0;
-						padding-bottom: 3px;
-
-						&:focus-within {
-							border-bottom-color: #d4789a;
-						}
-
-						input {
-							border: none;
-							outline: none;
-							font-size: 13px;
-							width: 200px;
-							background: transparent;
-
-							&::placeholder {
-								color: #bbb;
-							}
-						}
-
-						svg {
-							font-size: 20px;
-							color: #bbb;
-							cursor: pointer;
-
-							&:hover {
-								color: #d4789a;
-							}
-						}
+					&:focus {
+						outline: none;
+						border-color: #d4789a;
 					}
 				}
 			}

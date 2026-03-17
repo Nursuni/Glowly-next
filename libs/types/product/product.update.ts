@@ -1,6 +1,5 @@
 import {
 	AgeRange,
-	DiscountType,
 	IngredientType,
 	ProductStatus,
 	ProductTarget,
@@ -17,8 +16,6 @@ export interface ProductUpdate {
 	productTitle?: string;
 	productPrice?: number;
 
-	discountType?: DiscountType;
-	discountValue?: number;
 	volume?: number;
 	volumeUnit?: VolumeUnit;
 	skinType?: SkinType[];

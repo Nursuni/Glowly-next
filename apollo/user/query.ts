@@ -92,8 +92,7 @@ export const GET_PRODUCT = gql`
 			productStatus
 			productTitle
 			productPrice
-			discountType
-			discountValue
+
 			volume
 			volumeUnit
 			skinType
@@ -125,8 +124,7 @@ export const GET_PRODUCTS = gql`
 				productStatus
 				productTitle
 				productPrice
-				discountType
-				discountValue
+
 				volume
 				volumeUnit
 				skinType
@@ -186,8 +184,7 @@ export const GET_BRAND_PRODUCTS = gql`
 				productStatus
 				productTitle
 				productPrice
-				discountType
-				discountValue
+
 				volume
 				volumeUnit
 				skinType
@@ -219,8 +216,7 @@ export const GET_FAVORITES = gql`
 				productStatus
 				productTitle
 				productPrice
-				discountType
-				discountValue
+
 				volume
 				volumeUnit
 				skinType
@@ -279,8 +275,7 @@ export const GET_VISITED_PRODUCTS = gql`
 				productStatus
 				productTitle
 				productPrice
-				discountType
-				discountValue
+
 				volume
 				volumeUnit
 				skinType

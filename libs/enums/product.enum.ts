@@ -43,11 +43,6 @@ export enum AgeRange {
 	FIFTY_PLUS = 'FIFTY_PLUS',
 }
 
-export enum DiscountType {
-	PERCENTAGE = 'PERCENTAGE',
-	FIXED = 'FIXED',
-}
-
 export enum VolumeUnit {
 	ML = 'ML', // Milliliters
 	L = 'L', // Liters

@@ -1,0 +1,127 @@
+// ── Share Modal ────────────────────────────────────────────
+// Paste inside your global SCSS or component SCSS file
+
+.share-modal {
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 20px 24px 16px;
+		border-bottom: 1px solid $border-soft;
+
+		font-family: $font-display;
+	}
+
+	&__title {
+		font-family: $font-display;
+		font-size: 20px;
+		font-weight: 400;
+		color: $text-primary;
+	}
+
+	&__close {
+		color: $text-muted !important;
+
+		&:hover {
+			color: $pink !important;
+			background: rgba($pink, 0.06) !important;
+		}
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 8px;
+		padding: 20px 24px;
+	}
+
+	&__channel {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		padding: 14px 8px;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		border-radius: 12px;
+		transition: background 0.2s ease;
+
+		&:hover {
+			background: rgba($pink, 0.05);
+		}
+	}
+
+	&__icon {
+		width: 52px;
+		height: 52px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+
+		.share-modal__channel:hover & {
+			transform: scale(1.08);
+			box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+		}
+	}
+
+	&__label {
+		font-family: $font-body;
+		font-size: 12px;
+		color: $text-secondary;
+		text-align: center;
+	}
+
+	&__copy-row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin: 0 24px 24px;
+		padding: 12px 14px;
+		background: $bg;
+		border: 1px solid $border-soft;
+		border-radius: 10px;
+	}
+
+	&__url {
+		flex: 1;
+		font-family: $font-body;
+		font-size: 12px;
+		color: $text-muted;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__copy-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+		padding: 6px 14px;
+		border-radius: 8px;
+		border: 1px solid $border-soft;
+		background: #fff;
+		font-family: $font;
+		font-size: 12px;
+		font-weight: 500;
+		color: $text-secondary;
+		cursor: pointer;
+		white-space: nowrap;
+		transition: all 0.2s ease;
+		flex-shrink: 0;
+
+		&:hover {
+			border-color: $pink;
+			color: $pink;
+		}
+
+		&.copied {
+			background: rgba($pink, 0.08);
+			border-color: $pink;
+			color: $pink;
+		}
+	}
+}

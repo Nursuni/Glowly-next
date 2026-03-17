@@ -8,10 +8,9 @@ import Filter from '../../libs/components/product/Filter';
 import { Product } from '../../libs/types/product/product';
 import { ProductsInquiry } from '../../libs/types/product/product.input';
 import { Direction, Message } from '../../libs/enums/common.enum';
-import { ProductCard } from '../../libs/components/mypage/ProductCard';
+
 import SubscribeSection from '../../libs/components/common/SubscribeSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Toolbar from '../../libs/components/common/Toolbar';
 
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../../apollo/user/query';
@@ -19,6 +18,10 @@ import { T } from '../../libs/types/common';
 import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { toastError, toastSuccess } from '@/libs/toast';
 import { SORT_OPTIONS } from '../brand';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
+import GridViewIcon from '@mui/icons-material/GridView';
+import ProductCard from '@/libs/components/product/CatalogProductCard';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -61,6 +64,7 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 	const [sortingOpen, setSortingOpen] = useState(false);
 	const [filterSortName, setFilterSortName] = useState('New');
 	const [searchText, setSearchText] = useState('');
+	const [viewMode, setViewMode] = useState<'small' | 'medium' | 'large'>('small');
 
 	/* APOLLO */
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
@@ -200,20 +204,52 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 			</div>
 
 			<div className="toolbar-box">
-				<div className="container">
-					<Toolbar
-						searchText={searchText}
-						setSearchText={setSearchText}
-						onSearchSubmit={handleSearchSubmit}
-						onSearchKeyDown={handleSearchKeyDown}
-						sortingClickHandler={sortingClickHandler}
-						sortingHandler={sortingHandler}
-						sortingCloseHandler={sortingCloseHandler}
-						anchorEl={anchorEl}
-						sortingOpen={sortingOpen}
-						filterSortName={filterSortName}
-						sortOptions={SORT_OPTIONS}
-					/>
+				<div className="toolbar-container">
+					<div className="toolbar-left">
+						{/* View Mode Buttons */}
+						<button className={`sort-btn ${viewMode === 'small' ? 'active' : ''}`} onClick={() => setViewMode('small')}>
+							<ViewModuleIcon />
+						</button>
+						<button
+							className={`sort-btn ${viewMode === 'medium' ? 'active' : ''}`}
+							onClick={() => setViewMode('medium')}
+						>
+							<ViewQuiltIcon />
+						</button>
+						<button className={`sort-btn ${viewMode === 'large' ? 'active' : ''}`} onClick={() => setViewMode('large')}>
+							<GridViewIcon />
+						</button>
+					</div>
+
+					<div className="toolbar-right">
+						{/* Sort Dropdown */}
+						<select
+							value={filterSortName}
+							onChange={(e) => {
+								const selected = SORT_OPTIONS.find((opt) => opt.label === e.target.value);
+								if (!selected) return;
+								const updatedFilter = {
+									...searchFilter,
+									sort: selected.sort,
+									direction: selected.direction,
+									page: 1,
+								};
+								setSearchFilter(updatedFilter);
+								setFilterSortName(selected.label);
+								setCurrentPage(1);
+								router.push({ pathname: '/catalog', query: { input: JSON.stringify(updatedFilter) } }, undefined, {
+									scroll: false,
+								});
+							}}
+							className="sort-select"
+						>
+							{SORT_OPTIONS.map((opt) => (
+								<option key={opt.id} value={opt.label}>
+									{opt.label}
+								</option>
+							))}
+						</select>
+					</div>
 				</div>
 			</div>
 

@@ -11,7 +11,6 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { Logout } from '@mui/icons-material';
 import { CaretDown } from 'phosphor-react';
@@ -19,6 +18,7 @@ import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
+import { cartVar } from '../../apollo/store';
 import { NEXT_PUBLIC_API_URL } from '../config';
 import Image from 'next/image';
 import BasketModal from './basket/BasketModal';
@@ -59,14 +59,28 @@ const StyledMenu = styled((props: MenuProps) => (
 const Top = () => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
+	const cartItems = useReactiveVar(cartVar); // ✅ global cart state
 	const { t } = useTranslation('common');
 	const router = useRouter();
 
 	const [basketOpen, setBasketOpen] = useState(false);
+
 	useEffect(() => {
 		document.body.style.overflow = basketOpen ? 'hidden' : 'auto';
 	}, [basketOpen]);
 
+	// ── Cart handlers ──────────────────────────────────────
+	const handleQtyChange = (id: string, delta: number) => {
+		cartVar(
+			cartVar().map((item) => (item._id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item)),
+		);
+	};
+
+	const handleRemove = (id: string) => {
+		cartVar(cartVar().filter((item) => item._id !== id));
+	};
+
+	// ── Other state ────────────────────────────────────────
 	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
 	const [lang, setLang] = useState<string>(router.locale || 'en');
 	const drop = Boolean(anchorEl2);
@@ -199,24 +213,28 @@ const Top = () => {
 
 						{/* ── USER BOX ── */}
 						<div className="user-box">
-							{/* Basket — always visible */}
+							{/* Basket */}
 							<button className="icon-btn basket-btn" onClick={() => setBasketOpen(true)} aria-label="Basket">
 								<img src="/img/icons/basket.svg" alt="basket" />
-								<span className="cart-count">{2}</span>
+								{cartItems.length > 0 && <span className="cart-count">{cartItems.length}</span>}
 							</button>
-							<BasketModal open={basketOpen} onClose={() => setBasketOpen(false)} />
+							<BasketModal
+								open={basketOpen}
+								onClose={() => setBasketOpen(false)}
+								items={cartItems}
+								onQtyChange={handleQtyChange}
+								onRemove={handleRemove}
+							/>
 
-							{/* Notifications + Chat — logged-in only */}
+							{/* Notifications — logged-in only */}
 							{user && (
-								<>
-									<button className="icon-btn notification-btn" aria-label="Notifications">
-										<NotificationsOutlinedIcon />
-										<span className="unread-dot" />
-									</button>
-								</>
+								<button className="icon-btn notification-btn" aria-label="Notifications">
+									<NotificationsOutlinedIcon />
+									<span className="unread-dot" />
+								</button>
 							)}
 
-							{/* ── User icon — always visible ── */}
+							{/* User dropdown */}
 							<div className="user-drop-wrap" ref={userDropRef}>
 								<button
 									className={`icon-btn user-btn${userDropOpen ? ' active' : ''}`}
@@ -229,7 +247,6 @@ const Top = () => {
 								{userDropOpen && (
 									<div className="user-dropdown">
 										{user?._id ? (
-											/* ── Logged in ── */
 											<>
 												<div className="ud-header">
 													<img
@@ -274,7 +291,6 @@ const Top = () => {
 												</button>
 											</>
 										) : (
-											/* ── Guest: login + register only ── */
 											<>
 												<div className="ud-header ud-header--guest">
 													<PersonOutlineOutlinedIcon className="ud-guest-icon" />
@@ -297,7 +313,7 @@ const Top = () => {
 								)}
 							</div>
 
-							{/* ── Language selector ── */}
+							{/* Language selector */}
 							<Button
 								disableRipple
 								onClick={langClick}
@@ -343,20 +359,16 @@ const Top = () => {
 
 							<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose}>
 								<MenuItem id="en" onClick={langChoice}>
-									<img src="/img/flag/langen.png" width="16" style={{ marginRight: 8 }} alt="en" />
-									English
+									<img src="/img/flag/langen.png" width="16" style={{ marginRight: 8 }} alt="en" /> English
 								</MenuItem>
 								<MenuItem id="kr" onClick={langChoice}>
-									<img src="/img/flag/langkr.png" width="16" style={{ marginRight: 8 }} alt="kr" />
-									한국어
+									<img src="/img/flag/langkr.png" width="16" style={{ marginRight: 8 }} alt="kr" /> 한국어
 								</MenuItem>
 								<MenuItem id="ru" onClick={langChoice}>
-									<img src="/img/flag/langru.png" width="16" style={{ marginRight: 8 }} alt="ru" />
-									Русский
+									<img src="/img/flag/langru.png" width="16" style={{ marginRight: 8 }} alt="ru" /> Русский
 								</MenuItem>
 								<MenuItem id="uz" onClick={langChoice}>
-									<img src="/img/flag/languz.png" width="16" style={{ marginRight: 8 }} alt="uz" />
-									O'zbek
+									<img src="/img/flag/languz.png" width="16" style={{ marginRight: 8 }} alt="uz" /> O'zbek
 								</MenuItem>
 							</StyledMenu>
 						</div>

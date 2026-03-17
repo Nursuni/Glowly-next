@@ -46,8 +46,7 @@ export const UPDATE_PRODUCT_BY_ADMIN = gql`
 			productStatus
 			productTitle
 			productPrice
-			discountType
-			discountValue
+
 			volume
 			volumeUnit
 			skinType
@@ -74,8 +73,7 @@ export const REMOVE_PRODUCT_BY_ADMIN = gql`
 			productStatus
 			productTitle
 			productPrice
-			discountType
-			discountValue
+
 			volume
 			volumeUnit
 			skinType
