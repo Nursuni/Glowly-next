@@ -2,7 +2,7 @@ import React from 'react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Stack, Box, Typography } from '@mui/material';
 import Link from 'next/link';
-import { REACT_APP_API_URL } from '../../config';
+import { NEXT_PUBLIC_API_URL } from '../../config';
 import IconButton from '@mui/material/IconButton';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -20,17 +20,16 @@ const BrandCard = (props: BrandCard) => {
 
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
-	const imagePath: string = brand?.memberImage ? `${REACT_APP_API_URL}/${brand?.memberImage}` : '/img/profile/user.svg';
+	const imagePath: string = brand?.memberImage
+		? `${NEXT_PUBLIC_API_URL}/${brand?.memberImage}`
+		: '/img/profile/user.svg';
+
+	const isLiked = brand?.meLiked?.[0]?.myFavorite;
 
 	if (device === 'mobile') {
 		return (
 			<Stack className="brand-general-card">
-				<Link
-					href={{
-						pathname: '/brand/detail',
-						query: { brandId: brand?._id },
-					}}
-				>
+				<Link href={{ pathname: '/brand/detail', query: { brandId: brand?._id } }}>
 					<Box
 						component={'div'}
 						className={'brand-img'}
@@ -41,18 +40,13 @@ const BrandCard = (props: BrandCard) => {
 							backgroundRepeat: 'no-repeat',
 						}}
 					>
-						<div>{brand?.memberProducts} products</div>
+						<span className="brand-img__badge">{brand?.memberProducts} products</span>
 					</Box>
 				</Link>
 
 				<Stack className={'brand-desc'}>
 					<Box component={'div'} className={'brand-info'}>
-						<Link
-							href={{
-								pathname: '/brand/detail',
-								query: { brandId: brand?._id },
-							}}
-						>
+						<Link href={{ pathname: '/brand/detail', query: { brandId: brand?._id } }}>
 							<strong>{brand?.memberFullName ?? brand?.memberNick}</strong>
 						</Link>
 						<span>brand</span>
@@ -63,10 +57,10 @@ const BrandCard = (props: BrandCard) => {
 							<Typography className="view-cnt">{brand?.memberViews}</Typography>
 						</Box>
 						<Box className={'stat-item'} onClick={() => likeMemberHandler(user, brand?._id)}>
-							{brand?.meLiked && brand?.meLiked[0]?.myFavorite ? (
-								<FavoriteIcon color={'primary'} fontSize="small" />
+							{isLiked ? (
+								<FavoriteIcon fontSize="small" style={{ color: '#f564a9' }} />
 							) : (
-								<FavoriteBorderIcon fontSize="small" />
+								<FavoriteBorderIcon fontSize="small" style={{ color: '#f564a9' }} />
 							)}
 							<Typography className="view-cnt">{brand?.memberLikes}</Typography>
 						</Box>
@@ -77,12 +71,7 @@ const BrandCard = (props: BrandCard) => {
 	} else {
 		return (
 			<Stack className="brand-general-card">
-				<Link
-					href={{
-						pathname: '/brand/detail',
-						query: { brandId: brand?._id },
-					}}
-				>
+				<Link href={{ pathname: '/brand/detail', query: { brandId: brand?._id } }}>
 					<Box
 						component={'div'}
 						className={'brand-img'}
@@ -93,18 +82,13 @@ const BrandCard = (props: BrandCard) => {
 							backgroundRepeat: 'no-repeat',
 						}}
 					>
-						<div>{brand?.memberProducts} products</div>
+						<span className="brand-img__badge">{brand?.memberProducts} products</span>
 					</Box>
 				</Link>
 
 				<Stack className={'brand-desc'}>
 					<Box component={'div'} className={'brand-info'}>
-						<Link
-							href={{
-								pathname: '/brand/detail',
-								query: { brandId: brand?._id },
-							}}
-						>
+						<Link href={{ pathname: '/brand/detail', query: { brandId: brand?._id } }}>
 							<strong>{brand?.memberFullName ?? brand?.memberNick}</strong>
 						</Link>
 						<span>brand</span>
@@ -115,10 +99,10 @@ const BrandCard = (props: BrandCard) => {
 						</IconButton>
 						<Typography className="view-cnt">{brand?.memberViews}</Typography>
 						<IconButton color={'default'} onClick={() => likeMemberHandler(user, brand?._id)}>
-							{brand?.meLiked && brand?.meLiked[0]?.myFavorite ? (
-								<FavoriteIcon color={'primary'} />
+							{isLiked ? (
+								<FavoriteIcon style={{ color: '#f564a9' }} />
 							) : (
-								<FavoriteBorderIcon />
+								<FavoriteBorderIcon style={{ color: '#f564a9' }} />
 							)}
 						</IconButton>
 						<Typography className="view-cnt">{brand?.memberLikes}</Typography>

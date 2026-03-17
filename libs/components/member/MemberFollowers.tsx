@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { FollowInquiry } from '../../types/follow/follow.input';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Follower } from '../../types/follow/follow';
-import { REACT_APP_API_URL } from '../../config';
+import { NEXT_PUBLIC_API_URL } from '../../config';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { userVar } from '../../../apollo/store';
@@ -109,7 +109,7 @@ const MemberFollowers = ({
 
 				{memberFollowers.map((follower: Follower) => {
 					const imagePath = follower?.followerData?.memberImage
-						? `${REACT_APP_API_URL}/${follower.followerData.memberImage}`
+						? `${NEXT_PUBLIC_API_URL}/${follower.followerData.memberImage}`
 						: '/img/profile/user.svg';
 
 					return (

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
-import { REACT_APP_API_URL } from '../../config';
+import { NEXT_PUBLIC_API_URL } from '../../config';
 import { logOut } from '../../auth';
 import { toastInfo } from '../../toast';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
@@ -209,7 +209,7 @@ const MyMenu = () => {
 
 	if (device === 'mobile') return <div>MY MENU</div>;
 
-	const avatarSrc = user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/user.svg';
+	const avatarSrc = user?.memberImage ? `${NEXT_PUBLIC_API_URL}/${user.memberImage}` : '/img/profile/user.svg';
 	const isBrand = user?.memberType === 'BRAND';
 	const isAdmin = user?.memberType === 'ADMIN';
 

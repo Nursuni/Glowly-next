@@ -6,7 +6,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Product } from '../../types/product/product';
 import Link from 'next/link';
 import { formatterStr } from '../../utils';
-import { REACT_APP_API_URL } from '../../config';
+import { NEXT_PUBLIC_API_URL } from '../../config';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import IconButton from '@mui/material/IconButton';
@@ -24,7 +24,7 @@ const ProductCard = (props: ProductCardType) => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const imagePath: string = product?.productImages[0]
-		? `${REACT_APP_API_URL}/${product?.productImages[0]}`
+		? `${NEXT_PUBLIC_API_URL}/${product?.productImages[0]}`
 		: '/img/banner/header1.svg';
 
 	if (device === 'mobile') {
@@ -36,17 +36,12 @@ const ProductCard = (props: ProductCardType) => {
 					<Link
 						href={{
 							pathname: '/catalog/detail',
-							query: { id: product?._id },
+							query: { productId: product?._id },
 						}}
 					>
 						<img src={imagePath} alt="" />
 					</Link>
-					{product && product?.productRank > 0 && (
-						<Box component={'div'} className={'top-badge'}>
-							<img src="/img/icons/electricity.svg" alt="" />
-							<Typography>TOP</Typography>
-						</Box>
-					)}
+
 					<Box component={'div'} className={'price-box'}>
 						<Typography>${formatterStr(product?.productPrice)}</Typography>
 					</Box>
@@ -57,7 +52,7 @@ const ProductCard = (props: ProductCardType) => {
 							<Link
 								href={{
 									pathname: '/catalog/detail',
-									query: { id: product?._id },
+									query: { productId: product?._id },
 								}}
 							>
 								<Typography>title</Typography>

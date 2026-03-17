@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation, useReactiveVar } from '@apollo/client';
-import { Box, Stack, Typography, Button, Pagination, TextField } from '@mui/material';
+import { Stack, Typography, Button, Pagination, TextField } from '@mui/material';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -16,35 +16,19 @@ import { CREATE_COMMENT, UPDATE_COMMENT, LIKE_TARGET_BOARD_ARTICLE } from '../..
 import { CommentStatus } from '../../libs/enums/comment.enum';
 import { toastError, toastSuccess } from '@/libs/toast';
 
-interface BoardArticle {
-	_id: string;
-	articleTitle: string;
-	articleContent: string;
-	articleLikes: number;
-	articleViews: number;
-	articleComments: number;
-	meLiked?: { myFavorite: boolean }[];
-	memberData?: { _id: string; memberNick?: string; memberImage?: string };
-}
-
-interface CommentType {
-	_id: string;
-	commentContent: string;
-	memberId: string;
-	memberData?: { _id: string; memberNick?: string; memberImage?: string };
-}
-
-const CommunityDetail: NextPage = () => {
+const BlogDetail: NextPage = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
+
 	const articleId = router.query.articleId as string;
 
-	const [boardArticle, setBoardArticle] = useState<BoardArticle>();
-	const [memberImage, setMemberImage] = useState('/img/community/articleImg.png');
-
-	const [comments, setComments] = useState<CommentType[]>([]);
+	const [boardArticle, setBoardArticle] = useState<any>();
+	const [comments, setComments] = useState<any[]>([]);
 	const [total, setTotal] = useState(0);
+
+	const [commentInput, setCommentInput] = useState('');
+	const [editingComments, setEditingComments] = useState<Record<string, string>>({});
 
 	const [searchFilter, setSearchFilter] = useState({
 		page: 1,
@@ -52,30 +36,23 @@ const CommunityDetail: NextPage = () => {
 		search: { commentRefId: '' },
 	});
 
-	const [commentInput, setCommentInput] = useState('');
-	const [editingComments, setEditingComments] = useState<Record<string, string>>({});
-	const [likeLoading, setLikeLoading] = useState(false);
-
-	/** MUTATIONS **/
 	const [createComment] = useMutation(CREATE_COMMENT);
 	const [updateComment] = useMutation(UPDATE_COMMENT);
 	const [likeTargetBoardArticle] = useMutation(LIKE_TARGET_BOARD_ARTICLE);
 
-	/** GET ARTICLE **/
-	const { data: boardArticleData, refetch: boardArticleRefetch } = useQuery(GET_BOARD_ARTICLE, {
-		fetchPolicy: 'network-only',
+	const { data: articleData, refetch: articleRefetch } = useQuery(GET_BOARD_ARTICLE, {
 		variables: { input: articleId },
 		skip: !articleId,
+		fetchPolicy: 'network-only',
 	});
 
-	/** GET COMMENTS **/
-	const { data: commentsData, refetch: getCommentsRefetch } = useQuery(GET_COMMENTS, {
-		fetchPolicy: 'network-only',
+	const { data: commentsData, refetch: commentsRefetch } = useQuery(GET_COMMENTS, {
 		variables: { input: searchFilter },
 		skip: !searchFilter.search.commentRefId,
+		fetchPolicy: 'network-only',
 	});
 
-	/** LIFECYCLE **/
+	/* LIFECYCLE */
 
 	useEffect(() => {
 		if (articleId) {
@@ -87,55 +64,37 @@ const CommunityDetail: NextPage = () => {
 	}, [articleId]);
 
 	useEffect(() => {
-		if (searchFilter.search.commentRefId) {
-			getCommentsRefetch({ input: searchFilter });
+		if (articleData?.getBoardArticle) {
+			setBoardArticle(articleData.getBoardArticle);
 		}
-	}, [searchFilter]);
+	}, [articleData]);
 
 	useEffect(() => {
-		if (!boardArticleData) return;
-
-		const article = boardArticleData?.getBoardArticle;
-		setBoardArticle(article);
-
-		if (article?.memberData?.memberImage) {
-			setMemberImage(`${process.env.REACT_APP_API_URL}/${article.memberData.memberImage}`);
+		if (commentsData?.getComments) {
+			setComments(commentsData.getComments.list || []);
+			setTotal(commentsData.getComments.metaCounter?.[0]?.total || 0);
 		}
-	}, [boardArticleData]);
-
-	useEffect(() => {
-		if (!commentsData) return;
-
-		setComments(commentsData?.getComments?.list ?? []);
-		setTotal(commentsData?.getComments?.metaCounter?.[0]?.total ?? 0);
 	}, [commentsData]);
 
-	/** HANDLERS **/
+	/* HANDLERS */
 
-	const likeBoArticleHandler = async (user: any, id: string) => {
+	const likeHandler = async () => {
 		try {
-			if (likeLoading) return;
-			if (!user?._id) throw new Error('Please login first');
+			if (!user?._id) throw new Error('Please login');
 
-			setLikeLoading(true);
+			await likeTargetBoardArticle({
+				variables: { input: boardArticle._id },
+			});
 
-			await likeTargetBoardArticle({ variables: { input: id } });
-
-			await boardArticleRefetch({ input: articleId });
-
-			toastSuccess('Success!');
+			await articleRefetch();
 		} catch (err: any) {
-			console.log(err.message);
 			toastError(err.message);
-		} finally {
-			setLikeLoading(false);
 		}
 	};
 
 	const createCommentHandler = async () => {
 		try {
-			if (!user?._id) throw new Error('Please login first');
-			if (!commentInput.trim()) return;
+			if (!user?._id) throw new Error('Login required');
 
 			await createComment({
 				variables: {
@@ -148,43 +107,31 @@ const CommunityDetail: NextPage = () => {
 			});
 
 			setCommentInput('');
-
-			await getCommentsRefetch({ input: searchFilter });
-			await boardArticleRefetch({ input: articleId });
-
+			await commentsRefetch();
 			toastSuccess('Comment added!');
 		} catch (err: any) {
 			toastError(err.message);
 		}
 	};
 
-	const updateButtonHandler = async (commentId: string, commentStatus?: CommentStatus.DELETED) => {
+	const updateCommentHandler = async (id: string, status?: CommentStatus.DELETED) => {
 		try {
-			if (!user?._id) throw new Error('Please login first');
+			if (!user?._id) throw new Error('Login required');
 
-			const content = commentStatus ? '' : editingComments[commentId] || '';
-
-			if (!content && !commentStatus) return;
-
-			const confirmed = window.confirm('Do you want to delete this comment?');
-
+			const confirmed = window.confirm('Are you sure?');
 			if (!confirmed) return;
 
 			await updateComment({
 				variables: {
 					input: {
-						_id: commentId,
-						commentContent: content,
-						commentStatus,
+						_id: id,
+						commentContent: editingComments[id],
+						commentStatus: status,
 					},
 				},
 			});
 
-			setEditingComments((prev) => ({ ...prev, [commentId]: '' }));
-
-			await getCommentsRefetch({ input: searchFilter });
-
-			toastSuccess(commentStatus ? 'Deleted!' : 'Updated!');
+			await commentsRefetch();
 		} catch (err: any) {
 			toastError(err.message);
 		}
@@ -194,82 +141,50 @@ const CommunityDetail: NextPage = () => {
 		setSearchFilter({ ...searchFilter, page: value });
 	};
 
-	if (device === 'mobile') return <div>COMMUNITY DETAIL MOBILE</div>;
+	if (device === 'mobile') return <div>MOBILE BLOG DETAIL</div>;
 
 	return (
-		<Stack className="community-detail-page">
-			<Stack className="container">
-				<Box className="article-box">
-					<img src={memberImage} alt="author" />
+		<div id="community-detail-page">
+			<div className="container">
+				{/* Hero like community page */}
+				<Stack className="community-hero scroll-reveal">
+					<div className="hero-inner">
+						<span className="hero-eyebrow">✦ Glowly Community</span>
+						<Typography className="hero-title">{boardArticle?.articleTitle}</Typography>
+						<Typography className="hero-sub">Shared by {boardArticle?.memberData?.memberNick}</Typography>
+					</div>
+				</Stack>
 
-					<Typography variant="h5">{boardArticle?.articleTitle}</Typography>
+				{/* Same card layout as community page */}
+				<Stack className="community-card scroll-reveal">
+					{/* LEFT SIDEBAR */}
+					<Stack className="card-sidebar">
+						<div className="sidebar-brand">
+							<img src="/img/logo/glowly.svg" />
+							<span className="brand-label">Community</span>
+						</div>
 
-					<Typography>{boardArticle?.articleContent}</Typography>
-
-					<Stack direction="row" spacing={2}>
-						<Button onClick={() => likeBoArticleHandler(user, boardArticle?._id || '')}>
-							{boardArticle?.meLiked?.[0]?.myFavorite ? <ThumbUpAltIcon /> : <ThumbUpOffAltIcon />}
-							<Typography>{boardArticle?.articleLikes}</Typography>
-						</Button>
-
-						<Typography>
-							<VisibilityIcon /> {boardArticle?.articleViews}
-						</Typography>
-
-						<Typography>
-							<ChatBubbleOutlineRoundedIcon /> {boardArticle?.articleComments}
-						</Typography>
+						<nav className="sidebar-tabs">
+							<button className="sidebar-tab-btn">Open Forum</button>
+							<button className="sidebar-tab-btn">Recommendations</button>
+							<button className="sidebar-tab-btn">Beauty News</button>
+							<button className="sidebar-tab-btn">Tutorial</button>
+						</nav>
 					</Stack>
-				</Box>
 
-				<Stack className="comment-section">
-					<Typography>Comments ({total})</Typography>
+					{/* RIGHT CONTENT */}
+					<Stack className="card-content">
+						<div className="article-meta">
+							<p>{boardArticle?.memberData?.memberNick}</p>
+							<span>{new Date(boardArticle?.createdAt).toLocaleDateString()}</span>
+						</div>
 
-					{comments.map((c) => (
-						<Box key={c._id} className="comment-box">
-							{user?._id === c.memberId ? (
-								<TextField
-									fullWidth
-									value={editingComments[c._id] ?? c.commentContent}
-									onChange={(e) =>
-										setEditingComments((prev) => ({
-											...prev,
-											[c._id]: e.target.value.slice(0, 100),
-										}))
-									}
-								/>
-							) : (
-								<p>{c.commentContent}</p>
-							)}
-
-							{user?._id === c.memberId && (
-								<Stack direction="row" spacing={1}>
-									<Button onClick={() => updateButtonHandler(c._id)}>Update</Button>
-									<Button onClick={() => updateButtonHandler(c._id, CommentStatus.DELETED)}>Delete</Button>
-								</Stack>
-							)}
-						</Box>
-					))}
-
-					<Pagination
-						page={searchFilter.page}
-						count={Math.ceil(total / searchFilter.limit) || 1}
-						onChange={paginationHandler}
-					/>
-
-					<Stack className="create-comment">
-						<textarea
-							value={commentInput}
-							onChange={(e) => setCommentInput(e.target.value.slice(0, 100))}
-							placeholder="Leave a comment"
-						/>
-
-						<Button onClick={createCommentHandler}>Add Comment</Button>
+						<Typography className="article-content">{boardArticle?.articleContent}</Typography>
 					</Stack>
 				</Stack>
-			</Stack>
-		</Stack>
+			</div>
+		</div>
 	);
 };
 
-export default withLayoutBasic(CommunityDetail);
+export default withLayoutBasic(BlogDetail);

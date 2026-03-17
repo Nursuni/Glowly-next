@@ -12,12 +12,13 @@ import { ProductCard } from '../../libs/components/mypage/ProductCard';
 import SubscribeSection from '../../libs/components/common/SubscribeSection';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Toolbar from '../../libs/components/common/Toolbar';
-import { SORT_OPTIONS } from '@/libs/types/common';
+
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { toastError, toastSuccess } from '@/libs/toast';
+import { SORT_OPTIONS } from '../brand';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {

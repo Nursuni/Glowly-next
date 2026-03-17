@@ -9,6 +9,7 @@ import { Product } from '../../types/product/product';
 import { ProductsInquiry } from '../../types/product/product.input';
 import TrendProductCard from './TrendProductCard';
 import { ProductCard } from '../mypage/ProductCard';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { T } from '../../types/common';
@@ -128,26 +129,15 @@ const TrendProducts = (props: TrendProductsProps) => {
 						</Box>
 					) : (
 						<Swiper
-							className="trend-product-swiper"
 							slidesPerView="auto"
 							spaceBetween={20}
-							modules={[Autoplay, Navigation, Pagination]}
-							navigation={{
-								nextEl: '.swiper-trend-next',
-								prevEl: '.swiper-trend-prev',
-							}}
-							pagination={{
-								el: '.swiper-trend-pagination',
-								clickable: true,
-							}}
-							autoplay={{
-								delay: 4000,
-								disableOnInteraction: false,
-								pauseOnMouseEnter: true,
-							}}
+							modules={[Autoplay, Navigation, Pagination]} // <--- include Autoplay here
+							autoplay={{ delay: 4000, disableOnInteraction: false }}
+							navigation={{ nextEl: '.swiper-trend-next', prevEl: '.swiper-trend-prev' }}
+							pagination={{ el: '.swiper-trend-pagination', clickable: true }}
 						>
 							{trendProducts.map((product: Product) => (
-								<SwiperSlide key={product._id} className="trend-product-slide">
+								<SwiperSlide key={product._id}>
 									<TrendProductCard product={product} likeProductHandler={likeProductHandler} />
 								</SwiperSlide>
 							))}

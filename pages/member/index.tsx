@@ -27,6 +27,8 @@ export const getStaticProps = async ({ locale }: any) => ({
 const MemberPage: NextPage = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+
+	const memberId = typeof router.query.memberId === 'string' ? router.query.memberId : undefined;
 	const category: any = router.query?.category;
 	const user = useReactiveVar(userVar);
 
@@ -129,7 +131,20 @@ const MemberPage: NextPage = () => {
 							</Stack>
 							<Stack className="main-config" mb={'76px'}>
 								<Stack className={'list-config'}>
-									{category === 'products' && <MemberProducts likeMemberHandler={likeMemberHandler} />}
+									{category === 'products' && memberId && (
+										<MemberProducts
+											likeMemberHandler={likeMemberHandler}
+											initialInput={{
+												page: 1,
+												limit: 9,
+												sort: 'createdAt',
+												search: {
+													memberId,
+													productTypeList: [],
+												},
+											}}
+										/>
+									)}
 									{category === 'followers' && (
 										<MemberFollowers
 											subscribeHandler={subscribeHandler}

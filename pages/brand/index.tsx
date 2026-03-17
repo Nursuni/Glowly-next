@@ -23,9 +23,9 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const SORT_OPTIONS = [
-	{ id: 'recent', label: 'Recent', sort: 'createdAt', direction: Direction.ASC },
-	{ id: 'old', label: 'Oldest', sort: 'createdAt', direction: Direction.DESC },
+export const SORT_OPTIONS = [
+	{ id: 'new', label: 'Newest', sort: 'createdAt', direction: Direction.DESC },
+	{ id: 'old', label: 'Oldest', sort: 'createdAt', direction: Direction.ASC },
 	{ id: 'likes', label: 'Likes', sort: 'memberLikes', direction: Direction.DESC },
 	{ id: 'views', label: 'Views', sort: 'memberViews', direction: Direction.DESC },
 ];
@@ -35,31 +35,42 @@ const BrandList: NextPage<{ initialInput: T }> = ({ initialInput }) => {
 	const router = useRouter();
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [filterSortName, setFilterSortName] = useState('Recent');
+	const [filterSortName, setFilterSortName] = useState('Newest');
 	const [sortingOpen, setSortingOpen] = useState(false);
 
-	const [searchFilter, setSearchFilter] = useState<any>(
-		router?.query?.input ? JSON.parse(router.query.input as string) : initialInput,
-	);
+	const [searchFilter, setSearchFilter] = useState<any>(initialInput);
 	const [brands, setBrands] = useState<Member[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [searchText, setSearchText] = useState<string>('');
+	const isSorting = React.useRef(false);
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
 
-	const { refetch: getBrandsRefetch } = useQuery(GET_BRANDS, {
+	const { data, refetch: getBrandsRefetch } = useQuery(GET_BRANDS, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setBrands(data?.getBrands?.list ?? []);
-			setTotal(data?.getBrands?.metaCounter?.[0]?.total ?? 0);
-		},
 	});
 
+	useEffect(() => {
+		if (data) {
+			setBrands(data?.getBrands?.list ?? []);
+			setTotal(data?.getBrands?.metaCounter?.[0]?.total ?? 0);
+		}
+	}, [data]);
+
 	/** SEARCH **/
+	useEffect(() => {
+		if (!router.isReady) return;
+
+		if (router.query.input) {
+			setSearchFilter(JSON.parse(router.query.input as string));
+		} else {
+			router.replace(`/brand?input=${JSON.stringify(initialInput)}`);
+		}
+	}, [router.isReady]);
+
 	const handleSearchSubmit = async () => {
 		const updatedFilter = {
 			...searchFilter,
@@ -79,14 +90,18 @@ const BrandList: NextPage<{ initialInput: T }> = ({ initialInput }) => {
 
 	/** LIFECYCLE **/
 	useEffect(() => {
+		if (!router.isReady) return;
+		if (isSorting.current) {
+			isSorting.current = false;
+			return;
+		}
+
 		if (router.query.input) {
 			const inputObj = JSON.parse(router.query.input as string);
 			setSearchFilter(inputObj);
-		} else {
-			router.replace(`/brand?input=${JSON.stringify(searchFilter)}`, `/brand?input=${JSON.stringify(searchFilter)}`);
+			setCurrentPage(inputObj.page ?? 1);
 		}
-		setCurrentPage(searchFilter.page ?? 1);
-	}, [router]);
+	}, [router.query.input]);
 
 	/** SORTING **/
 	const sortingClickHandler = (e: MouseEvent<HTMLElement>) => {
@@ -101,24 +116,31 @@ const BrandList: NextPage<{ initialInput: T }> = ({ initialInput }) => {
 
 	const sortingHandler = (e: React.MouseEvent<HTMLLIElement>) => {
 		const option = SORT_OPTIONS.find((o) => o.id === e.currentTarget.id);
-		if (option) {
-			const updatedFilter = { ...searchFilter, sort: option.sort, direction: option.direction };
-			setSearchFilter(updatedFilter);
-			setFilterSortName(option.label);
-			router.push({ pathname: '/brand', query: { input: JSON.stringify(updatedFilter) } }, undefined, {
-				scroll: false,
-			});
-		}
-		sortingCloseHandler();
+		if (!option || !option.sort) return;
+
+		const updatedFilter = {
+			...searchFilter,
+			sort: option.sort,
+			direction: option.direction,
+		};
+
+		setSearchFilter(updatedFilter);
+		setFilterSortName(option.label);
+		setSortingOpen(false);
+		setAnchorEl(null);
+		isSorting.current = true;
+
+		router.push({ pathname: '/brand', query: { input: JSON.stringify(updatedFilter) } }, undefined, {
+			scroll: false,
+			shallow: true,
+		});
 	};
 
 	/** PAGINATION **/
 	const paginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
 		const updatedFilter = { ...searchFilter, page: value };
 		window.scrollTo({ top: 0, behavior: 'smooth' });
-
 		await router.push(`/brand?input=${JSON.stringify(updatedFilter)}`, undefined, { scroll: false });
-
 		setSearchFilter(updatedFilter);
 		setCurrentPage(value);
 	};
@@ -128,13 +150,11 @@ const BrandList: NextPage<{ initialInput: T }> = ({ initialInput }) => {
 		try {
 			if (!id) return;
 			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
-
 			await likeTargetMember({ variables: { input: id } });
 			await getBrandsRefetch({ input: searchFilter });
 			toastSuccess('Success');
 		} catch (err) {
 			toastError(err instanceof Error ? err.message : String(err));
-			console.log('likeMemberHandler error:', err);
 		}
 	};
 
@@ -172,7 +192,7 @@ const BrandList: NextPage<{ initialInput: T }> = ({ initialInput }) => {
 				/>
 
 				{/* Brand cards */}
-				<Stack className="card-wrap">
+				<Stack className="card-wrap" flexDirection="row" flexWrap="wrap">
 					{brands.length === 0 ? (
 						<div className="no-data">
 							<span className="no-data-icon">✦</span>
@@ -207,7 +227,7 @@ const BrandList: NextPage<{ initialInput: T }> = ({ initialInput }) => {
 };
 
 BrandList.defaultProps = {
-	initialInput: { page: 1, limit: 10, sort: 'createdAt', direction: -1, search: {} },
+	initialInput: { page: 1, limit: 10, sort: 'createdAt', direction: Direction.DESC, search: {} },
 };
 
 export default withLayoutBasic(BrandList);

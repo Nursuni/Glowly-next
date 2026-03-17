@@ -13,7 +13,7 @@ interface ToolbarProps {
 	sortingCloseHandler: () => void;
 	anchorEl: HTMLElement | null;
 	sortingOpen: boolean;
-	sortOptions: { id: string; label: string }[];
+	sortOptions: { id: string; label: string; sort: string; direction: number }[];
 	filterSortName: string;
 }
 

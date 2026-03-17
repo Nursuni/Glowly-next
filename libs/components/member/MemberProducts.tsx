@@ -12,7 +12,7 @@ import { ProductCard } from '../mypage/ProductCard';
 
 interface MemberProductsProps {
 	initialInput: ProductsInquiry;
-	likeMemberHandler?: (id: string) => void;
+	likeMemberHandler: (id: string, refetch?: any, query?: any) => void;
 }
 
 const MemberProducts: NextPage<MemberProductsProps> = ({ initialInput, likeMemberHandler }) => {

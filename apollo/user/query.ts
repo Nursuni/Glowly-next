@@ -85,8 +85,8 @@ export const GET_MEMBER = gql(`
  *************************/
 
 export const GET_PRODUCT = gql`
-	query GetProduct($input: String!) {
-		getProduct(productId: $input) {
+	query GetProduct($productId: String!) {
+		getProduct(productId: $productId) {
 			_id
 			productType
 			productStatus
@@ -99,42 +99,19 @@ export const GET_PRODUCT = gql`
 			skinType
 			productTarget
 			ingredientType
+			ageRange
 			productViews
 			productLikes
 			productComments
 			productImages
 			productDesc
 			memberId
+			soldAt
+			manufacturedAt
+			expiresAt
 			deletedAt
 			createdAt
 			updatedAt
-			memberData {
-				_id
-				memberType
-				memberStatus
-				memberAuthType
-				memberPhone
-				memberNick
-				memberFullName
-				memberImage
-				memberAddress
-				memberDesc
-				memberGender
-				memberWarnings
-				memberBlocks
-				memberPoints
-				memberLikes
-				memberViews
-				deletedAt
-				createdAt
-				updatedAt
-				accessToken
-			}
-			meLiked {
-				memberId
-				likeRefId
-				myFavorite
-			}
 		}
 	}
 `;
@@ -622,9 +599,9 @@ export const GET_MY_ORDERS = gql`
 
 				productData {
 					_id
-					productName
-					productPrice
+					productTitle
 					productImages
+					productPrice
 				}
 			}
 		}

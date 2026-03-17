@@ -124,6 +124,11 @@ const TopProducts = (props: TopProductsProps) => {
 				slidesPerView="auto"
 				spaceBetween={spaceBetween}
 				modules={[Autoplay, Navigation, Pagination]}
+				autoplay={{
+					delay: 4000,
+					disableOnInteraction: false,
+					pauseOnMouseEnter: true,
+				}}
 				navigation={{
 					nextEl: '.swiper-top-next',
 					prevEl: '.swiper-top-prev',

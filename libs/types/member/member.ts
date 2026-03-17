@@ -3,6 +3,7 @@ import { MeLiked, TotalCounter } from '../product/product';
 import { MeFollowed } from '../follow/follow';
 
 export interface Member {
+	memberName: string;
 	_id: string;
 	memberType: MemberType;
 	memberStatus: MemberStatus;

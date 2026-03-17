@@ -19,7 +19,7 @@ import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
-import { REACT_APP_API_URL } from '../config';
+import { NEXT_PUBLIC_API_URL } from '../config';
 import Image from 'next/image';
 import BasketModal from './basket/BasketModal';
 import AnnouncementBar from './AnnouncementBar';
@@ -78,7 +78,7 @@ const Top = () => {
 	const [userDropOpen, setUserDropOpen] = useState(false);
 	const userDropRef = useRef<HTMLDivElement>(null);
 
-	const avatar = user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/user.svg';
+	const avatar = user?.memberImage ? `${NEXT_PUBLIC_API_URL}/${user.memberImage}` : '/img/profile/user.svg';
 
 	useEffect(() => {
 		setNavReady(false);
@@ -234,7 +234,7 @@ const Top = () => {
 												<div className="ud-header">
 													<img
 														src={
-															user.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/user.svg'
+															user.memberImage ? `${NEXT_PUBLIC_API_URL}/${user.memberImage}` : '/img/profile/user.svg'
 														}
 														className="ud-avatar"
 														alt="avatar"
@@ -247,10 +247,18 @@ const Top = () => {
 												<Link href="/mypage" className="ud-item" onClick={() => setUserDropOpen(false)}>
 													<PersonOutlineOutlinedIcon /> My Page
 												</Link>
-												<Link href="/mypage?tab=wishlist" className="ud-item" onClick={() => setUserDropOpen(false)}>
+												<Link
+													href="/mypage?category=myFavorites"
+													className="ud-item"
+													onClick={() => setUserDropOpen(false)}
+												>
 													<FavoriteBorderOutlinedIcon /> Wishlist
 												</Link>
-												<Link href="/mypage?tab=orders" className="ud-item" onClick={() => setUserDropOpen(false)}>
+												<Link
+													href="/mypage?category=myOrder"
+													className="ud-item"
+													onClick={() => setUserDropOpen(false)}
+												>
 													<LocalShippingOutlinedIcon /> Track Orders
 												</Link>
 												<div className="ud-divider" />

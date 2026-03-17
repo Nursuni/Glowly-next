@@ -1,4 +1,13 @@
-import { ProductStatus, ProductType, SkinType } from '../../enums/product.enum';
+import {
+	AgeRange,
+	DiscountType,
+	IngredientType,
+	ProductStatus,
+	ProductTarget,
+	ProductType,
+	SkinType,
+	VolumeUnit,
+} from '../../enums/product.enum';
 import { Member } from '../member/member';
 
 export interface MeLiked {
@@ -13,28 +22,37 @@ export interface TotalCounter {
 
 export interface Product {
 	_id: string;
-	productCategory: string;
 
 	productType: ProductType;
 	productStatus: ProductStatus;
 	productTitle: string;
 	productPrice: number;
 
+	// ✅ added missing schema fields
+	discountType?: DiscountType;
+	discountValue?: number;
+	volume?: number;
+	volumeUnit?: VolumeUnit;
+	skinType?: SkinType[];
+	productTarget?: ProductTarget;
+	ingredientType?: IngredientType[];
+	ageRange?: AgeRange[];
+
 	productViews: number;
 	productLikes: number;
 	productComments: number;
-	productRank: number;
 	productImages: string[];
 	productDesc?: string;
-	skinType?: SkinType[];
 
 	memberId: string;
 	soldAt?: Date;
+	manufacturedAt?: Date; // ✅ added
+	expiresAt?: Date; // ✅ added
 	deletedAt?: Date;
 
 	createdAt: Date;
 	updatedAt: Date;
-	/** from aggregation **/
+
 	meLiked?: MeLiked[];
 	memberData?: Member;
 }

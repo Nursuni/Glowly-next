@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Comment } from '../../types/comment/comment';
-import { REACT_APP_API_URL } from '../../config';
+import { NEXT_PUBLIC_API_URL } from '../../config';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
@@ -18,7 +18,7 @@ const Review: React.FC<ReviewProps> = ({ comment }) => {
 	const user = useReactiveVar(userVar);
 
 	const imagePath: string = comment?.memberData?.memberImage
-		? `${REACT_APP_API_URL}/${comment?.memberData?.memberImage}`
+		? `${NEXT_PUBLIC_API_URL}/${comment?.memberData?.memberImage}`
 		: '/img/profile/user.svg';
 
 	/** HANDLERS **/

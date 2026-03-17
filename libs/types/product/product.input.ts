@@ -1,26 +1,32 @@
+import { AgeRange, ProductStatus, ProductTarget, ProductType, SkinType } from '../../enums/product.enum';
 import { Direction } from '../../enums/common.enum';
-import { ProductStatus, ProductType, SkinType } from '../../enums/product.enum';
 
 export interface ProductInput {
+	ageRange: any[];
+	ingredientType: any[];
+	skinType: any[];
+	productTarget: string;
+	volume: string | number | readonly string[];
+	volumeUnit: string;
+	discountValue: string | number | readonly string[];
+	discountType: string;
 	productType: ProductType;
-
 	productTitle: string;
 	productPrice: number;
-
 	productImages: string[];
 	productDesc?: string;
-
+	manufacturedAt?: Date;
+	expiresAt?: Date;
 	memberId?: string;
 }
 
 interface PISearch {
-	productTypeList: any[];
+	productTypeList?: any[];
 	memberId?: string;
-
 	skinType?: SkinType[];
-
+	productTarget?: ProductTarget;
+	ageRange?: AgeRange[];
 	pricesRange?: Range;
-
 	text?: string;
 }
 
@@ -34,6 +40,7 @@ export interface ProductsInquiry {
 
 interface APISearch {
 	productStatus?: ProductStatus;
+	productTypeList?: ProductType[];
 }
 
 export interface BrandProductsInquiry {

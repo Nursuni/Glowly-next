@@ -74,6 +74,14 @@ export const UPDATE_ORDER = gql`
 	}
 `;
 
+export const REMOVE_BOARD_ARTICLE = gql`
+	mutation RemoveBoardArticle($articleId: String!) {
+		removeBoardArticle(articleId: $articleId) {
+			_id
+			articleStatus
+		}
+	}
+`;
 export const UPDATE_MEMBER = gql`
 	mutation UpdateMember($input: MemberUpdate!) {
 		updateMember(input: $input) {
@@ -352,25 +360,17 @@ export const CREATE_ORDER = gql`
 			paymentStatus
 			orderTotal
 			deliveryFee
-			itemsTotal
 			createdAt
-
 			orderItems {
 				_id
 				itemQty
 				itemPrice
 				itemShade
-
-				productData {
-					_id
-					productName
-					productPrice
-					productImages
-				}
 			}
 		}
 	}
 `;
+
 export const SUBSCRIBE_NEWSLETTER = gql`
 	mutation SubscribeNewsletter($email: String!) {
 		subscribeNewsletter(email: $email) {
@@ -378,5 +378,11 @@ export const SUBSCRIBE_NEWSLETTER = gql`
 			email
 			createdAt
 		}
+	}
+`;
+
+export const ADD_TO_VISITED = gql`
+	mutation AddToVisited($input: String!) {
+		addToVisited(input: $input)
 	}
 `;

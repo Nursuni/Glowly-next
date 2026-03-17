@@ -10,7 +10,7 @@ import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { Product } from '../../types/product/product';
-import { REACT_APP_API_URL } from '../../config';
+import { NEXT_PUBLIC_API_URL } from '../../config';
 
 const topProductRank = 4.5;
 
@@ -27,7 +27,7 @@ const ProductBigCard = (props: ProductBigCardProps) => {
 
 	/** HANDLERS **/
 	const goProductDetailPage = (productId: string) => {
-		router.push(`/catalog/detail?id=${productId}`);
+		router.push(`/catalog/detail?productId=${productId}`);
 	};
 
 	if (device === 'mobile') {
@@ -38,15 +38,8 @@ const ProductBigCard = (props: ProductBigCardProps) => {
 				<Box
 					component={'div'}
 					className={'card-img'}
-					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${product?.productImages?.[0]})` }}
+					style={{ backgroundImage: `url(${NEXT_PUBLIC_API_URL}/${product?.productImages?.[0]})` }}
 				>
-					{product?.productRank && product?.productRank >= topProductRank && (
-						<div className={'status'}>
-							<img src="/img/icons/electricity.svg" alt="" />
-							<span>top</span>
-						</div>
-					)}
-
 					<div className={'price'}>${formatterStr(product?.productPrice)}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>

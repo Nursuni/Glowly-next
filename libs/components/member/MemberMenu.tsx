@@ -4,7 +4,7 @@ import { Stack, Typography, Box, List, ListItem, Button } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Link from 'next/link';
 import { Member } from '../../types/member/member';
-import { REACT_APP_API_URL } from '../../config';
+import { NEXT_PUBLIC_API_URL } from '../../config';
 import { GET_MEMBER } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 import { T } from '../../types/common';
@@ -40,7 +40,7 @@ const MemberMenu = ({ subscribeHandler, unsubscribeHandler }: MemberMenuProps) =
 		return <div>MEMBER MENU MOBILE</div>;
 	}
 
-	const imageSrc = member?.memberImage ? `${REACT_APP_API_URL}/${member.memberImage}` : '/img/profile/user.svg';
+	const imageSrc = member?.memberImage ? `${NEXT_PUBLIC_API_URL}/${member.memberImage}` : '/img/profile/user.svg';
 
 	const isFollowing = member?.meFollowed?.[0]?.myFollowing;
 

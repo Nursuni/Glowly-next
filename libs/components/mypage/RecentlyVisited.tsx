@@ -19,7 +19,6 @@ const RecentlyVisitedProducts: NextPage = () => {
 		limit: 6,
 	});
 
-	/** APOLLO QUERY **/
 	const { data: getVisitedProductsData } = useQuery(GET_VISITED_PRODUCTS, {
 		fetchPolicy: 'network-only',
 		variables: {
@@ -27,25 +26,19 @@ const RecentlyVisitedProducts: NextPage = () => {
 		},
 	});
 
-	/** UPDATE STATE WHEN DATA ARRIVES **/
 	useEffect(() => {
 		if (getVisitedProductsData) {
-			setRecentlyVisitedProducts(getVisitedProductsData.getVisitedProducts?.list || []);
-			setTotal(getVisitedProductsData.getVisitedProducts?.metaCounter?.[0]?.total || 0);
+			// ✅ FIX: field is 'getVisited' not 'getVisitedProducts'
+			setRecentlyVisitedProducts(getVisitedProductsData?.getVisited?.list || []);
+			setTotal(getVisitedProductsData?.getVisited?.metaCounter?.[0]?.total || 0);
 		}
 	}, [getVisitedProductsData]);
 
-	/** PAGINATION **/
 	const paginationHandler = (e: T, value: number) => {
-		setSearchVisitedProducts({
-			...searchVisitedProducts,
-			page: value,
-		});
+		setSearchVisitedProducts({ ...searchVisitedProducts, page: value });
 	};
 
-	if (device === 'mobile') {
-		return <div>Recently Viewed MOBILE</div>;
-	}
+	if (device === 'mobile') return <div>Recently Viewed MOBILE</div>;
 
 	return (
 		<div id="my-favorites-page">
@@ -62,7 +55,7 @@ const RecentlyVisitedProducts: NextPage = () => {
 				) : (
 					<div className="no-data">
 						<img src="/img/icons/icoAlert.svg" alt="" />
-						<p>No Recently Viewed product found!</p>
+						<p>No recently viewed products found!</p>
 					</div>
 				)}
 			</Stack>
@@ -78,7 +71,6 @@ const RecentlyVisitedProducts: NextPage = () => {
 							onChange={paginationHandler}
 						/>
 					</Stack>
-
 					<Stack className="total-result">
 						<Typography>
 							Total {total} recently viewed product{total > 1 ? 's' : ''}

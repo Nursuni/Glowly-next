@@ -2,7 +2,7 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import { toast } from 'react-toastify';
 import { Box, Stack, Typography, TextField, Button } from '@mui/material';
 
-const API_URL = process.env.NEXT_PUBLIC_API_GRAPHQL_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function SubscribeSection() {
 	const [email, setEmail] = useState('');

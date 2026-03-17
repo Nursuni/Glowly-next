@@ -15,7 +15,7 @@ import {
 import Avatar from '@mui/material/Avatar';
 import { Stack } from '@mui/material';
 import { Product } from '../../../types/product/product';
-import { REACT_APP_API_URL } from '../../../config';
+import { NEXT_PUBLIC_API_URL } from '../../../config';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 import { ProductStatus } from '../../../enums/product.enum';
@@ -136,7 +136,7 @@ export const ProductPanelList = (props: ProductPanelListType) => {
 
 						{products.length !== 0 &&
 							products.map((product: Product, index: number) => {
-								const productImage = `${REACT_APP_API_URL}/${product?.productImages[0]}`;
+								const productImage = `${NEXT_PUBLIC_API_URL}/${product?.productImages[0]}`;
 
 								return (
 									<TableRow hover key={product?._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -144,12 +144,12 @@ export const ProductPanelList = (props: ProductPanelListType) => {
 										<TableCell align="left" className={'name'}>
 											{product.productStatus === ProductStatus.ACTIVE ? (
 												<Stack direction={'row'}>
-													<Link href={`/catalog/detail?id=${product?._id}`}>
+													<Link href={`/catalog/detail?productId=${product?._id}`}>
 														<div>
 															<Avatar alt="Remy Sharp" src={productImage} sx={{ ml: '2px', mr: '10px' }} />
 														</div>
 													</Link>
-													<Link href={`/catalog/detail?id=${product?._id}`}>
+													<Link href={`/catalog/detail?productId=${product?._id}`}>
 														<div>{product.productTitle}</div>
 													</Link>
 												</Stack>

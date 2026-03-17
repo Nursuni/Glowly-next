@@ -21,7 +21,7 @@ import MyArticles from '../../libs/components/mypage/MyArticles';
 import MyProfile from '../../libs/components/mypage/MyProfile';
 import MemberFollowers from '../../libs/components/member/MemberFollowers';
 import MemberFollowings from '../../libs/components/member/MemberFollowings';
-import MyOrders from '@/libs/components/member/MemberOrders';
+import MyOrders from '@/libs/components/mypage/MyOrder';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {

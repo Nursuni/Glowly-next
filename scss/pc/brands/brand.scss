@@ -1,3 +1,52 @@
+/** VARIABLES **/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
+
+$font: 'Poppins', sans-serif;
+$font-display: 'Cormorant Garamond', Georgia, serif;
+$font-body: 'DM Sans', sans-serif;
+$font-serif: 'Cormorant Garamond', serif;
+$font-sans: 'Jost', sans-serif;
+
+$pink: #f564a9;
+$pink-light: #f888bf;
+$pink-dim: rgba(245, 100, 169, 0.07);
+$gold: #c08a5e;
+$dark: #2a2520;
+$warm-off: #f5f0ea;
+$muted: #7a7067;
+$bg: #fdf7f9;
+$bg-hero: #fceef4;
+$surface: #ffffff;
+$surface-2: #fdf0f5;
+$border: rgba(245, 100, 169, 0.14);
+$border-soft: #f0e0ea;
+$text-primary: #1e1218;
+$text-secondary: #5c4556;
+$text-muted: #a08898;
+$text-dim: #cdb8c6;
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeUp {
+	from {
+		opacity: 0;
+		transform: translateY(18px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
 #pc-wrap {
 	.brand-list-page {
 		margin-top: 70px;
@@ -11,7 +60,7 @@
 			flex-direction: column;
 		}
 
-		/* ───────── PAGE HEADER ───────── */
+		/* ───────── PAGE HEADER — untouched ───────── */
 		.page-header {
 			display: flex;
 			flex-direction: column;
@@ -62,17 +111,229 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			padding: 14px 24px;
+			background: $surface;
+			border-radius: 16px;
+			border: 1px solid $border-soft;
+			box-shadow: 0 1px 12px rgba($pink, 0.05);
+
+			.toolbar-right {
+				flex: 1;
+				max-width: 360px;
+
+				.search-input {
+					position: relative;
+					display: flex;
+					align-items: center;
+
+					input {
+						width: 100%;
+						padding: 10px 42px 10px 16px;
+						border-radius: 12px;
+						border: 1px solid $border-soft;
+						background: $bg;
+						font-family: $font-body;
+						font-size: 14px;
+						color: $text-primary;
+						outline: none;
+						transition: border-color 0.2s, box-shadow 0.2s;
+
+						&::placeholder {
+							color: $text-dim;
+						}
+
+						&:focus {
+							border-color: rgba($pink, 0.4);
+							box-shadow: 0 0 0 3px rgba($pink, 0.07);
+						}
+					}
+
+					svg {
+						position: absolute;
+						right: 13px;
+						width: 17px;
+						height: 17px;
+						color: $text-muted;
+						cursor: pointer;
+						transition: color 0.2s;
+
+						&:hover {
+							color: $pink;
+						}
+					}
+				}
+			}
+
+			.toolbar-left {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+
+				.sort-label {
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 500;
+					color: $text-muted;
+					letter-spacing: 0.5px;
+					text-transform: uppercase;
+				}
+
+				.sort-btn {
+					min-width: unset;
+					width: 38px;
+					height: 38px;
+					border-radius: 11px;
+					border: 1px solid $border-soft;
+					background: $bg;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					padding: 0;
+					transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+					svg {
+						width: 17px;
+						height: 17px;
+						color: $text-secondary;
+						transition: color 0.2s;
+					}
+
+					&:hover {
+						background: $surface-2;
+						border-color: rgba($pink, 0.3);
+						box-shadow: 0 2px 8px rgba($pink, 0.1);
+						svg {
+							color: $pink;
+						}
+					}
+				}
+			}
 		}
 
-		/* ───────── PRODUCT GRID ───────── */
+		/* ───────── BRAND CARDS GRID ───────── */
 		.card-wrap {
 			position: relative;
-			margin-top: 35px;
+			margin-top: 40px;
 			width: 100%;
 			min-height: 500px;
 			display: flex;
 			flex-wrap: wrap;
-			gap: 0;
+			gap: 24px;
+			animation: fadeUp 0.5s 0.15s ease both;
+
+			// Individual card
+			.brand-general-card {
+				width: 220px;
+				flex-shrink: 0;
+				align-self: flex-start;
+				border-radius: 16px;
+				overflow: hidden;
+				background: $surface;
+				border: 1px solid $border-soft;
+				box-shadow: 0 2px 12px rgba($pink, 0.05);
+				transition: transform 0.25s ease, box-shadow 0.25s ease;
+				cursor: pointer;
+
+				&:hover {
+					transform: translateY(-4px);
+					box-shadow: 0 10px 32px rgba($pink, 0.12);
+				}
+
+				.brand-img {
+					width: 100%;
+					height: 200px;
+					position: relative;
+					overflow: hidden;
+					background-size: cover !important;
+					background-position: center !important;
+
+					&__badge {
+						position: absolute;
+						bottom: 10px;
+						left: 10px;
+						padding: 3px 10px;
+						border-radius: 20px;
+						background: rgba(255, 255, 255, 0.88);
+						backdrop-filter: blur(4px);
+						font-family: $font;
+						font-size: 11px;
+						font-weight: 500;
+						color: $text-primary;
+						line-height: 1.4;
+						white-space: nowrap;
+					}
+				}
+
+				.brand-desc {
+					padding: 14px 16px 12px;
+					flex-direction: column;
+					gap: 10px;
+
+					.brand-info {
+						display: flex;
+						flex-direction: column;
+						gap: 2px;
+
+						strong {
+							font-family: $font-display;
+							font-size: 17px;
+							font-weight: 500;
+							color: $text-primary;
+							line-height: 1.2;
+							display: block;
+							transition: color 0.2s;
+
+							&:hover {
+								color: $pink;
+							}
+						}
+
+						span {
+							font-family: $font-body;
+							font-size: 11px;
+							color: $text-muted;
+							text-transform: uppercase;
+							letter-spacing: 0.8px;
+						}
+					}
+
+					.buttons {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						gap: 2px;
+						padding-top: 8px;
+						border-top: 1px solid $border-soft;
+
+						.MuiIconButton-root {
+							padding: 6px;
+							svg {
+								width: 18px;
+								height: 18px;
+							}
+						}
+
+						.view-cnt {
+							font-family: $font-body;
+							font-size: 12px;
+							color: $text-muted;
+							min-width: 20px;
+						}
+
+						.stat-item {
+							display: flex;
+							align-items: center;
+							gap: 4px;
+							cursor: pointer;
+							svg {
+								width: 16px;
+								height: 16px;
+								color: $text-muted;
+							}
+						}
+					}
+				}
+			}
 
 			.no-data {
 				width: 100%;
@@ -83,27 +344,34 @@
 				justify-content: center;
 				gap: 14px;
 				text-align: center;
+				background: $surface;
+				border-radius: 20px;
+				border: 1px dashed $border-soft;
+				padding: 80px 40px;
 
 				.no-data-icon {
-					font-size: 22px;
-					color: $pink;
-					opacity: 0.3;
+					font-size: 28px;
+					color: $pink-light;
+					opacity: 0.4;
+					display: block;
 				}
 
 				p {
 					font-family: $font-serif;
-					font-size: 18px;
-					font-weight: 300;
+					font-size: 20px;
+					font-weight: 400;
 					font-style: italic;
-					color: $muted;
+					color: $text-secondary;
 					margin: 0;
 				}
 
 				.no-data-cta {
-					font-family: $font-sans;
-					font-size: 11.5px;
-					color: rgba(122, 112, 103, 0.5);
-					letter-spacing: 0.04em;
+					font-family: $font-body;
+					font-size: 13px;
+					color: $text-muted;
+					letter-spacing: 0.03em;
+					max-width: 300px;
+					line-height: 1.7;
 				}
 			}
 		}
@@ -113,40 +381,44 @@
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			margin-top: 48px;
+			margin-top: 52px;
+			padding-bottom: 8px;
+			animation: fadeUp 0.5s 0.25s ease both;
 
 			.MuiPagination-root {
 				.MuiPaginationItem-root {
 					font-family: $font;
-					font-size: 14px;
-					color: #717171;
-					border-radius: 50%;
-					transition: background 0.2s, color 0.2s;
+					font-size: 13px;
+					color: $text-secondary;
+					border-radius: 10px;
+					min-width: 36px;
+					height: 36px;
+					transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 
-					&:hover {
-						background: #f6f6f6;
-						color: #181a20;
+					&:hover:not(.Mui-selected) {
+						background: $pink-dim;
+						color: $pink;
 					}
 
 					&.Mui-selected {
-						background: #181a20;
-						color: #ffffff;
+						background: linear-gradient(135deg, $pink 0%, $pink-light 100%);
+						color: #fff;
 						font-weight: 600;
+						box-shadow: 0 4px 12px rgba($pink, 0.28);
 
 						&:hover {
-							background: lighten(#181a20, 10%);
+							background: linear-gradient(135deg, darken($pink, 6%) 0%, $pink 100%);
 						}
 					}
 				}
 			}
 
 			span {
-				margin-top: 20px;
-				color: #181a20;
-				font-family: $font;
-				font-size: 14px;
-				font-weight: 400;
-				line-height: 26px;
+				margin-top: 16px;
+				font-family: $font-body;
+				font-size: 13px;
+				color: $text-muted;
+				letter-spacing: 0.3px;
 			}
 		}
 	}
@@ -155,10 +427,10 @@
 	.sort-menu {
 		.MuiPaper-root {
 			margin-top: 6px;
-			border-radius: 12px;
-			border: 1px solid #ddd;
-			box-shadow: 0px 8px 24px rgba(24, 26, 32, 0.08);
-			min-width: 140px;
+			border-radius: 14px;
+			border: 1px solid $border-soft;
+			box-shadow: 0 8px 32px rgba($pink, 0.1);
+			min-width: 150px;
 		}
 
 		.MuiList-root {
@@ -167,25 +439,24 @@
 
 		.MuiMenuItem-root {
 			border-radius: 8px;
-			color: #717171;
+			color: $text-muted;
 			font-family: $font-body;
-			font-size: 14px;
+			font-size: 13px;
 			font-weight: 400;
-			line-height: 26px;
 			transition: background 0.15s, color 0.15s;
 
 			&:hover {
-				background: #f6f6f6;
-				color: #181a20;
+				background: $pink-dim;
+				color: $pink;
 			}
 
 			&.active {
-				background: #181a20;
+				background: $text-primary;
 				color: #ffffff;
 				font-weight: 600;
 
 				&:hover {
-					background: lighten(#181a20, 8%);
+					background: lighten($text-primary, 10%);
 				}
 			}
 		}

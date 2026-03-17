@@ -1,339 +1,549 @@
+/** VARIABLES **/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
+
+$font: 'Poppins', sans-serif;
+$font-display: 'Cormorant Garamond', Georgia, serif;
+$font-body: 'DM Sans', sans-serif;
+
+$pink: #f564a9;
+$pink-light: #f888bf;
+$pink-dim: rgba(245, 100, 169, 0.07);
+$gold: #c08a5e;
+$dark: #2a2520;
+$warm-off: #f5f0ea;
+$muted: #7a7067;
+$bg: #fdf7f9;
+$bg-hero: #fceef4;
+$surface: #ffffff;
+$surface-2: #fdf0f5;
+$border: rgba(245, 100, 169, 0.14);
+$border-soft: #f0e0ea;
+$text-primary: #1e1218;
+$text-secondary: #5c4556;
+$text-muted: #a08898;
+$text-dim: #cdb8c6;
+
+// ─── Mixins ───────────────────────────────────────────
+@mixin card {
+	background: $surface;
+	border-radius: 20px;
+	border: 1px solid $border;
+	box-shadow: 0 2px 24px rgba(245, 100, 169, 0.06), 0 1px 4px rgba(30, 18, 24, 0.04);
+}
+
+@mixin section-gap {
+	margin-top: 56px;
+}
+
+// ─── Page ─────────────────────────────────────────────
 #pc-wrap {
 	.brand-detail-page {
 		position: relative;
-		padding: 133px 0 75px;
+		padding: 120px 0 100px;
 		width: 100%;
-		height: auto;
+		min-height: 100vh;
+		background: $bg;
 		display: flex;
-		flex-direction: row;
 		justify-content: center;
+
+		// subtle grain texture
+		&::before {
+			content: '';
+			position: fixed;
+			inset: 0;
+			background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+			background-size: 200px 200px;
+			pointer-events: none;
+			z-index: 0;
+			opacity: 0.5;
+		}
+
 		.container {
+			position: relative;
+			z-index: 1;
+			width: min(1120px, 92vw);
 			display: flex;
 			flex-direction: column;
-			align-items: center;
+			align-items: stretch;
+		}
+
+		// ─── Brand Hero ───────────────────────────────
+		.brand-hero {
+			position: relative;
+			border-radius: 24px;
+			overflow: hidden;
+			margin-bottom: 8px;
+
+			&__bg {
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(135deg, $bg-hero 0%, #fce8f1 50%, #f9dcea 100%);
+				z-index: 0;
+
+				&::after {
+					content: '';
+					position: absolute;
+					bottom: -30px;
+					right: -30px;
+					width: 280px;
+					height: 280px;
+					border-radius: 50%;
+					background: radial-gradient(circle, rgba($pink, 0.12) 0%, transparent 70%);
+				}
+
+				&::before {
+					content: '';
+					position: absolute;
+					top: -20px;
+					left: 40%;
+					width: 180px;
+					height: 180px;
+					border-radius: 50%;
+					background: radial-gradient(circle, rgba($gold, 0.08) 0%, transparent 70%);
+				}
+			}
+
 			.brand-info {
-				margin-left: 58px;
-				width: 100%;
+				position: relative;
+				z-index: 1;
+				padding: 52px 60px;
 				display: flex;
 				flex-direction: row;
 				align-items: center;
-				img {
-					margin-right: 32px;
-					width: 135px;
-					height: 135px;
-					border-radius: 50%;
-					cursor: pointer;
-					object-fit: cover;
+				gap: 40px;
+				cursor: pointer;
+				transition: transform 0.25s ease;
+
+				&:hover {
+					transform: translateY(-2px);
+
+					.brand-avatar-wrap img {
+						box-shadow: 0 12px 40px rgba($pink, 0.35);
+						transform: scale(1.02);
+					}
+
+					.info strong {
+						color: $pink;
+					}
 				}
+
+				.brand-avatar-wrap {
+					flex-shrink: 0;
+					position: relative;
+
+					&::after {
+						content: '';
+						position: absolute;
+						inset: -4px;
+						border-radius: 50%;
+						background: linear-gradient(135deg, $pink 0%, $pink-light 50%, $gold 100%);
+						z-index: -1;
+						opacity: 0.6;
+					}
+
+					img {
+						width: 148px;
+						height: 148px;
+						border-radius: 50%;
+						object-fit: cover;
+						border: 3px solid $surface;
+						transition: box-shadow 0.3s ease, transform 0.3s ease;
+						display: block;
+					}
+				}
+
 				.info {
 					display: flex;
 					flex-direction: column;
+					gap: 10px;
+
 					strong {
-						color: #181a20;
-						font-family: $font;
-						font-size: 24px;
-						font-style: normal;
+						font-family: $font-display;
+						font-size: 36px;
 						font-weight: 600;
-						line-height: normal;
-						text-transform: capitalize;
-						cursor: pointer;
+						color: $text-primary;
+						letter-spacing: 0.3px;
+						line-height: 1.15;
+						transition: color 0.2s ease;
 					}
+
 					div {
-						margin-top: 13px;
 						display: flex;
 						flex-direction: row;
 						align-items: center;
+						gap: 8px;
+
 						img {
-							margin-right: 10px;
-							width: 16px;
-							height: 16px;
+							width: 15px;
+							height: 15px;
+							opacity: 0.6;
 						}
+
 						span {
-							color: #181a20;
-							font-family: $font;
-							font-size: 20px;
-							font-style: normal;
+							font-family: $font-body;
+							font-size: 15px;
+							color: $text-secondary;
 							font-weight: 400;
-							line-height: 28px;
+						}
+					}
+
+					.meta-row {
+						margin-top: 4px;
+						display: flex;
+						gap: 10px;
+						flex-wrap: wrap;
+
+						.meta-pill {
+							font-family: $font;
+							font-size: 12px;
+							font-weight: 500;
+							color: $pink;
+							background: rgba($pink, 0.1);
+							border: 1px solid rgba($pink, 0.2);
+							border-radius: 100px;
+							padding: 4px 14px;
+							letter-spacing: 0.3px;
 						}
 					}
 				}
 			}
-			.brand-home-list {
-				position: relative;
-				width: 100%;
-				margin-top: 33px;
-				padding: 0px 0 46px;
+		}
+
+		// ─── Section Title ────────────────────────────
+		.section-title {
+			font-family: $font-display;
+			font-size: 28px;
+			font-weight: 500;
+			color: $text-primary;
+			letter-spacing: 0.5px;
+			padding: 40px 40px 0;
+			position: relative;
+
+			&::after {
+				content: '';
+				display: block;
+				margin-top: 10px;
+				width: 40px;
+				height: 2px;
+				background: linear-gradient(90deg, $pink, $gold);
+				border-radius: 2px;
+			}
+		}
+
+		// ─── Products ─────────────────────────────────
+		.brand-home-list {
+			@include card;
+			@include section-gap;
+			padding-bottom: 40px;
+
+			.empty-state {
 				display: flex;
 				flex-direction: column;
-				border-radius: 12px;
-				background: #fff;
-				box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-				.card-wrap {
-					position: relative;
-					margin-top: 35px;
-					width: 100%;
-					height: auto;
+				align-items: center;
+				justify-content: center;
+				padding: 80px 40px;
+				gap: 16px;
+
+				img {
+					width: 56px;
+					opacity: 0.3;
+					filter: grayscale(1);
+				}
+
+				p,
+				.MuiTypography-root {
+					font-family: $font-body;
+					font-size: 15px;
+					color: $text-muted;
+					text-align: center;
+				}
+			}
+
+			.card-wrap {
+				padding: 32px 40px 0;
+
+				.wrap-main {
 					display: flex;
 					flex-direction: row;
 					flex-wrap: wrap;
-					.wrap-main {
-						margin-right: 0px;
-						margin-left: 5px;
-						display: flex;
-						flex-direction: row;
-						flex-wrap: wrap;
-					}
-					.brand-card {
-						position: relative;
-						margin-right: 27px;
-						margin-bottom: 34px;
-						display: flex;
-						flex-direction: column;
-						.brand-img {
-							border-radius: 12px;
-							width: 233px;
-							height: 273px;
-							background-size: cover;
-							cursor: pointer;
-							div {
-								position: absolute;
-								padding: 12px;
-								top: 12px;
-								left: 12px;
-								border-radius: 6px;
-								background: #eb6753;
-								color: #fff;
-								font-family: $font;
-								font-size: 12px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-							}
-						}
-						.brand-info {
-							margin-top: 23px;
-							display: flex;
-							flex-direction: column;
-							strong {
-								color: #181a20;
-								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-								cursor: pointer;
-							}
-							span {
-								color: #181a20;
-								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 28px;
-							}
-						}
-					}
+					gap: 24px;
 				}
-				.pagination {
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					span {
-						margin-top: 20px;
-						color: #181a20;
+			}
+
+			.pagination {
+				margin-top: 40px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 12px;
+				padding-bottom: 8px;
+
+				span {
+					font-family: $font-body;
+					font-size: 13px;
+					color: $text-muted;
+				}
+
+				.MuiPagination-root {
+					.MuiPaginationItem-root {
 						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
+						color: $text-secondary;
+						border-radius: 8px;
+
+						&.Mui-selected {
+							background: $pink;
+							color: #fff;
+
+							&:hover {
+								background: darken($pink, 8%);
+							}
+						}
 					}
 				}
 			}
-			.review-box {
-				position: relative;
-				margin-top: 75px;
-				padding: 58px 19px;
-				width: 95%;
-				height: auto;
-				border-radius: 24px;
-				background: #f6f6f6;
-				.main-intro {
+		}
+
+		// ─── Review Section ───────────────────────────
+		.review-box {
+			@include section-gap;
+			margin-bottom: 0;
+			padding: 56px 48px 64px;
+			background: linear-gradient(160deg, $surface-2 0%, #fff9fb 100%);
+			border-radius: 24px;
+			border: 1px solid $border-soft;
+
+			.main-intro {
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+				margin-bottom: 36px;
+
+				span {
+					font-family: $font-display;
+					font-size: 30px;
+					font-weight: 600;
+					color: $text-primary;
+					letter-spacing: 0.5px;
+				}
+
+				p {
+					font-family: $font-body;
+					font-size: 14px;
+					color: $text-muted;
+					line-height: 1.7;
+				}
+			}
+
+			.review-wrap {
+				@include card;
+				padding: 32px 36px 28px;
+				margin-bottom: 20px;
+
+				.title-box {
 					display: flex;
-					flex-direction: column;
-					span {
-						color: #181a20;
-						font-family: $font;
-						font-size: 30px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-						letter-spacing: 0.6px;
-						text-transform: capitalize;
+					align-items: center;
+					gap: 4px;
+					margin-bottom: 24px;
+
+					svg {
+						width: 14px;
+						height: 14px;
+						color: #f6c743;
 					}
-					p {
-						color: #181a20;
+
+					span {
+						margin-left: 10px;
 						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
+						font-size: 15px;
+						font-weight: 600;
+						color: $text-primary;
 					}
 				}
-				.review-wrap {
-					padding: 29px 25px;
-					margin-top: 57px;
-					display: flex;
-					flex-direction: column;
-					border-radius: 12px;
-					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-					.title-box {
-						svg {
-							width: 10px;
-							height: 10px;
+
+				// ReviewCard overrides
+				.review-card {
+					margin-top: 20px;
+					padding-bottom: 20px;
+					border-bottom: 1px solid $border-soft;
+
+					&:last-of-type {
+						border-bottom: none;
+					}
+
+					.info {
+						display: flex;
+						justify-content: space-between;
+
+						.left {
+							display: flex;
+							gap: 14px;
+
+							img {
+								width: 50px;
+								height: 50px;
+								border-radius: 50%;
+								object-fit: cover;
+								border: 2px solid $border-soft;
+							}
+
+							div {
+								display: flex;
+								flex-direction: column;
+								gap: 3px;
+
+								strong {
+									font-family: $font;
+									font-size: 14px;
+									font-weight: 600;
+									color: $text-primary;
+								}
+
+								span {
+									font-family: $font-body;
+									font-size: 12px;
+									color: $text-muted;
+								}
+							}
 						}
-						span {
-							margin-left: 8px;
-							color: #181a20;
-							font-family: $font;
-							font-size: 17px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
+
+						.right {
+							display: flex;
+							align-items: flex-start;
+							gap: 2px;
+
+							svg {
+								color: #f6c743;
+								width: 15px;
+								height: 15px;
+							}
 						}
 					}
-					.review-card {
-						margin-top: 20px;
-						display: flex;
-						flex-direction: column;
-						padding-bottom: 10px;
-						border-bottom: 1px solid #c4c4c4;
-						.info {
-							display: flex;
-							flex-direction: row;
-							justify-content: space-between;
-							.left {
-								display: flex;
-								flex-direction: row;
-								img {
-									width: 55px;
-									height: 59px;
-									border-radius: 50%;
-									object-fit: cover;
-								}
-								div {
-									margin-left: 8px;
-									display: flex;
-									flex-direction: column;
-									strong {
-										color: #181a20;
-										font-family: $font;
-										font-size: 15px;
-										font-style: normal;
-										font-weight: 600;
-										line-height: normal;
-									}
-									span {
-										margin-top: 4px;
-										color: #181a20;
-										font-family: $font;
-										font-size: 13px;
-										font-style: normal;
-										font-weight: 400;
-										line-height: normal;
-									}
-								}
-							}
-							.right {
-								display: flex;
-								flex-direction: row;
-								svg {
-									color: #edf023;
-								}
+
+					p {
+						margin-top: 12px;
+						font-family: $font-body;
+						font-size: 14px;
+						color: $text-secondary;
+						line-height: 1.8;
+					}
+				}
+
+				.pagination-box {
+					margin-top: 24px;
+					display: flex;
+					justify-content: center;
+
+					.MuiPaginationItem-root {
+						font-family: $font;
+						color: $text-secondary;
+						border-radius: 8px;
+
+						&.Mui-selected {
+							background: $pink;
+							color: #fff;
+						}
+					}
+				}
+			}
+
+			// ─── Leave Review Form ─────────────────────
+			.leave-review-config {
+				@include card;
+				padding: 36px 40px 40px;
+
+				.main-title {
+					font-family: $font-display;
+					font-size: 22px;
+					font-weight: 600;
+					color: $text-primary;
+					letter-spacing: 0.3px;
+					display: block;
+					margin-bottom: 20px;
+				}
+
+				.review-title {
+					font-family: $font;
+					font-size: 13px;
+					font-weight: 500;
+					color: $text-muted;
+					text-transform: uppercase;
+					letter-spacing: 1px;
+					display: block;
+					margin-bottom: 10px;
+				}
+
+				textarea {
+					width: 100%;
+					height: 130px;
+					padding: 18px 20px;
+					border-radius: 12px;
+					border: 1px solid $border-soft;
+					background: $bg;
+					color: $text-primary;
+					font-family: $font-body;
+					font-size: 14px;
+					line-height: 1.75;
+					resize: none;
+					outline: none;
+					transition: border-color 0.2s ease, box-shadow 0.2s ease;
+					box-sizing: border-box;
+
+					&::placeholder {
+						color: $text-dim;
+					}
+
+					&:focus {
+						border-color: rgba($pink, 0.5);
+						box-shadow: 0 0 0 3px rgba($pink, 0.07);
+					}
+				}
+
+				.submit-btn {
+					display: flex;
+					justify-content: flex-end;
+					margin-top: 20px;
+
+					.submit-review {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						gap: 8px;
+						padding: 14px 36px;
+						border-radius: 12px;
+						background: linear-gradient(135deg, $pink 0%, $pink-light 100%);
+						border: none;
+						cursor: pointer;
+						transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+						box-shadow: 0 4px 16px rgba($pink, 0.3);
+
+						&:hover:not(:disabled) {
+							opacity: 0.9;
+							transform: translateY(-1px);
+							box-shadow: 0 8px 24px rgba($pink, 0.35);
+						}
+
+						&:active:not(:disabled) {
+							transform: translateY(0);
+						}
+
+						&:disabled {
+							background: #e8dde3;
+							box-shadow: none;
+							cursor: not-allowed;
+
+							.title {
+								color: $text-dim;
 							}
 						}
-						p {
-							margin-top: 10px;
-							color: #181a20;
+
+						.title {
 							font-family: $font;
 							font-size: 14px;
-							font-style: normal;
-							font-weight: 400;
-							line-height: 26px;
-						}
-					}
-					.pagination-box {
-						margin-top: 15px;
-						width: 100%;
-						height: auto;
-						display: flex;
-						justify-content: center;
-					}
-				}
-				.leave-review-config {
-					margin-top: 15px;
-					border-radius: 12px;
-					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-					padding: 30px 38px;
-					.main-title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 17px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-					}
-					.review-title {
-						margin-top: 20px;
-						color: #181a20;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-					}
-					textarea {
-						width: 100%;
-						height: 120px;
-						margin-top: 8px;
-						padding: 20px;
-						border-radius: 8px;
-						border: 1px solid #ddd;
-						color: #717171;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
-					}
-					.submit-btn {
-						width: 100%;
-						display: flex;
-						justify-content: flex-end;
-						button:disabled {
-							background: #dfdfdf;
-						}
-						.submit-review {
-							display: flex;
-							width: 256px;
-							margin-top: 30px;
-							padding: 16px 30px;
-							justify-content: center;
-							align-items: center;
-							gap: 10px;
-							border-radius: 12px;
-							border: 1px solid #c4c4c4;
-							cursor: pointer;
-							.title {
-								color: #181a20;
-								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-							}
+							font-weight: 600;
+							color: #fff;
+							letter-spacing: 0.3px;
 						}
 					}
 				}

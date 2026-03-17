@@ -6,14 +6,16 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Product } from '../../types/product/product';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { REACT_APP_API_URL } from '../../config';
+import { NEXT_PUBLIC_API_URL } from '../../config';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { toastError, toastSuccess } from '@/libs/toast';
 
 interface TrendProductCardProps {
 	product: Product;
-	likeProductHandler: any;
+	likeProductHandler: (user: any, productId: string) => void;
 }
 
 const TrendProductCard = (props: TrendProductCardProps) => {
@@ -22,8 +24,33 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 
-	const redirectHandler = () => {
-		router.push(`/catalog/detail?productId=${product._id}`);
+	const redirectHandler = (productId: string) => {
+		console.log('productId value:', productId);
+		console.log('productId type:', typeof productId);
+
+		if (!productId) {
+			console.log('productId is empty or undefined');
+			return;
+		}
+
+		router.push({
+			pathname: '/catalog/detail',
+			query: { productId: productId },
+		});
+	};
+
+	// Add product to basket
+	const addToBasketHandler = (product: Product) => {
+		const basket = JSON.parse(localStorage.getItem('basket') || '[]');
+		const exists = basket.find((item: Product) => item._id === product._id);
+
+		if (!exists) {
+			basket.push({ ...product, quantity: 1 });
+			localStorage.setItem('basket', JSON.stringify(basket));
+			toastSuccess('Added to basket!');
+		} else {
+			toastError('Product already in basket!');
+		}
 	};
 	const firstImage = product?.productImages?.[0];
 
@@ -32,20 +59,23 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 	const isLiked = product?.meLiked && product?.meLiked[0]?.myFavorite;
 
 	return (
-		<Stack className="trend-card-box" key={product._id} onClick={redirectHandler}>
+		<Stack
+			className="trend-card-box"
+			onClick={(e) => {
+				e.stopPropagation();
+				redirectHandler(product._id);
+			}}
+		>
 			{/* Image Section */}
-			<Box className="card-img-wrap">
+			<Box className="card-img-wrap" onClick={() => product?._id && redirectHandler(product._id)}>
 				<Box
 					className="card-img"
 					style={{
-						backgroundImage: firstImage ? `url(${REACT_APP_API_URL}/${firstImage})` : 'none',
+						backgroundImage: firstImage ? `url(${NEXT_PUBLIC_API_URL}/${firstImage})` : 'none',
 					}}
 				>
 					{/* Hover overlay */}
 					<Box className="card-overlay" />
-
-					{/* Category tag */}
-					{product.productCategory && <span className="card-category">{product.productCategory}</span>}
 
 					{/* Price badge */}
 					{formattedPrice && <span className="card-price">{formattedPrice}</span>}
@@ -64,17 +94,6 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 
 				{/* Description */}
 				<p className="card-desc">{product.productDesc ?? 'No description available.'}</p>
-
-				{/* Meta row */}
-				<Box className="card-meta">
-					<Box className="meta-dot" />
-					<Box className="meta-item">
-						<span className="meta-label">Status</span>
-						<span className={`meta-value status-${(product.productStatus ?? 'available').toLowerCase()}`}>
-							{product.productStatus ?? 'Available'}
-						</span>
-					</Box>
-				</Box>
 
 				<Divider className="card-divider" />
 
