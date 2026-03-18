@@ -34,8 +34,6 @@ interface GetProductsData {
 	};
 }
 
-// FIX: Preserve ALL search fields so ageRange and productTarget are not silently
-// dropped before every Apollo query call. Also corrected price max from 500 → 200000.
 const cleanSearchFilter = (input: ProductsInquiry): ProductsInquiry => {
 	const safeSorts = ['createdAt', 'updatedAt', 'productLikes', 'productViews', 'productRank', 'productPrice'];
 
@@ -61,20 +59,13 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 		try {
 			if (router?.query?.input) {
 				const parsed = JSON.parse(router.query.input as string);
-
 				const safeSorts = ['createdAt', 'updatedAt', 'productLikes', 'productViews', 'productRank', 'productPrice'];
-
-				if (!safeSorts.includes(parsed.sort)) {
-					console.warn('⚠️ Invalid sort from URL, fixing...');
-					parsed.sort = 'createdAt';
-				}
-
+				if (!safeSorts.includes(parsed.sort)) parsed.sort = 'createdAt';
 				return parsed;
 			}
 		} catch (e) {
 			console.error('❌ Failed to parse router input:', e);
 		}
-
 		return initialInput;
 	});
 
@@ -102,14 +93,8 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 		if (router.query.input) {
 			try {
 				const inputObj = JSON.parse(router.query.input as string);
-
 				const safeSorts = ['createdAt', 'updatedAt', 'productLikes', 'productViews', 'productRank', 'productPrice'];
-
-				if (!safeSorts.includes(inputObj.sort)) {
-					console.warn('⚠️ Fixing invalid sort from router');
-					inputObj.sort = 'createdAt';
-				}
-
+				if (!safeSorts.includes(inputObj.sort)) inputObj.sort = 'createdAt';
 				setSearchFilter(inputObj);
 				setCurrentPage(inputObj.page ?? 1);
 			} catch (e) {
@@ -121,33 +106,19 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const sortingOpen = Boolean(anchorEl);
 
-	const sortingClickHandler = (e: React.MouseEvent<HTMLElement>) => {
-		setAnchorEl(e.currentTarget);
-	};
-
-	const sortingCloseHandler = () => {
-		setAnchorEl(null);
-	};
+	const sortingClickHandler = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
+	const sortingCloseHandler = () => setAnchorEl(null);
 
 	const sortingHandler = async (e: React.MouseEvent<HTMLLIElement>) => {
 		const selected = SORT_OPTIONS.find((opt) => opt.id === e.currentTarget.id);
 		if (!selected) return;
-
-		const updatedFilter = {
-			...searchFilter,
-			sort: selected.sort,
-			direction: selected.direction,
-			page: 1,
-		};
-
+		const updatedFilter = { ...searchFilter, sort: selected.sort, direction: selected.direction, page: 1 };
 		setSearchFilter(updatedFilter);
 		setFilterSortName(selected.label);
 		setCurrentPage(1);
-
 		await router.push({ pathname: '/catalog', query: { input: JSON.stringify(updatedFilter) } }, undefined, {
 			scroll: false,
 		});
-
 		setAnchorEl(null);
 	};
 
@@ -201,7 +172,7 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 
 					{/* Right side: toolbar + grid */}
 					<div className="product-right">
-						{/* ── Toolbar sits above the grid ── */}
+						{/* ── Toolbar ── */}
 						<div className="toolbar-box">
 							<div className="toolbar-left">
 								<button
@@ -231,7 +202,6 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 								<Button onClick={sortingClickHandler} disableRipple className="sort-btn">
 									<FavoriteBorderRoundedIcon />
 								</Button>
-
 								<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} disableScrollLock>
 									{SORT_OPTIONS.map((item) => (
 										<MenuItem
@@ -251,31 +221,36 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 							</div>
 						</div>
 
-						{/* ── Product grid ── */}
-						<div className="list-config">
-							{products?.length === 0 ? (
-								<div className="no-data">
-									<span className="no-data-icon">✦</span>
-									<p>No products available for now</p>
-								</div>
-							) : (
-								products.map((product) => (
+						{/*
+						 * FIX: .no-data is now a sibling of .list-config, not a child.
+						 * When it was inside the grid, align-content:start collapsed its
+						 * row to content height so centering never worked regardless of
+						 * any CSS tricks. Now it's a plain block element with full control
+						 * over its own height and centering.
+						 */}
+						{products?.length === 0 ? (
+							<div className="no-data">
+								<span className="no-data-icon">✦</span>
+								<p>No products available for now</p>
+							</div>
+						) : (
+							<div className="list-config">
+								{products.map((product) => (
 									<ProductCard key={product._id} product={product} likeProductHandler={likeProductHandler} />
-								))
-							)}
-
-							{total > 0 && (
-								<div className="pagination-box">
-									<Pagination
-										page={currentPage}
-										count={Math.ceil(total / (searchFilter.limit ?? 9))}
-										onChange={handlePaginationChange}
-										shape="circular"
-										color="primary"
-									/>
-								</div>
-							)}
-						</div>
+								))}
+								{total > 0 && (
+									<div className="pagination-box">
+										<Pagination
+											page={currentPage}
+											count={Math.ceil(total / (searchFilter.limit ?? 9))}
+											onChange={handlePaginationChange}
+											shape="circular"
+											color="primary"
+										/>
+									</div>
+								)}
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
