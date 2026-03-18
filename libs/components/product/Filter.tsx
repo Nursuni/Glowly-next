@@ -11,7 +11,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { ProductsInquiry } from '../../types/product/product.input';
-import { AgeRange, ProductType, SkinType } from '../../enums/product.enum';
+import { AgeRange, ProductTarget, ProductType, SkinType } from '../../enums/product.enum';
 import Collapse from '@mui/material/Collapse';
 
 interface FilterType {
@@ -20,8 +20,11 @@ interface FilterType {
 	initialInput: ProductsInquiry;
 }
 
-const accent = '#e91e63'; // pink accent
+const accent = '#e91e63';
 const textSize = '10px';
+const PRICE_MIN = 0;
+const PRICE_MAX = 200000;
+const PRICE_STEP = 1000;
 
 const Divider = () => <Stack sx={{ height: '1px', bgcolor: '#f5f5f5', my: 1 }} />;
 
@@ -44,7 +47,6 @@ const SectionHeader = ({ label, open, onToggle }: { label: string; open: boolean
 		>
 			{label}
 		</Typography>
-
 		{open ? (
 			<KeyboardArrowUpIcon sx={{ fontSize: 16, color: accent }} />
 		) : (
@@ -53,145 +55,71 @@ const SectionHeader = ({ label, open, onToggle }: { label: string; open: boolean
 	</Stack>
 );
 
-const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => {
-	const device = useDeviceDetect();
-	const router = useRouter();
+// FIX: FilterContent is defined at module level (outside Filter).
+// When it was defined inside Filter's render body, React treated it as a brand
+// new component type on every render and fully unmounted/remounted it —
+// destroying input focus after every keystroke.
+interface FilterContentProps {
+	searchText: string;
+	setSearchText: (v: string) => void;
+	searchFilter: ProductsInquiry;
+	setSearchFilter: any;
+	handleSearch: () => void;
+	productTypeSelectHandler: (e: any) => void;
+	skinTypeHandler: (e: any) => void;
+	ageHandler: (e: any) => void;
+	targetHandler: (e: any) => void;
+	priceHandler: (range: number[]) => void;
+	refreshHandler: () => void;
+	typeOpen: boolean;
+	setTypeOpen: (v: boolean) => void;
+	skinOpen: boolean;
+	setSkinOpen: (v: boolean) => void;
+	ageOpen: boolean;
+	setAgeOpen: (v: boolean) => void;
+	targetOpen: boolean;
+	setTargetOpen: (v: boolean) => void;
+	priceOpen: boolean;
+	setPriceOpen: (v: boolean) => void;
+}
 
-	const [mobileOpen, setMobileOpen] = useState(false);
-	const [searchText, setSearchText] = useState(searchFilter?.search?.text || '');
-
-	const [typeOpen, setTypeOpen] = useState(true);
-	const [skinOpen, setSkinOpen] = useState(true);
-	const [ageOpen, setAgeOpen] = useState(true);
-	const [targetOpen, setTargetOpen] = useState(true);
-	const [priceOpen, setPriceOpen] = useState(true);
-
+const FilterContent = ({
+	searchText,
+	setSearchText,
+	searchFilter,
+	setSearchFilter,
+	handleSearch,
+	productTypeSelectHandler,
+	skinTypeHandler,
+	ageHandler,
+	targetHandler,
+	priceHandler,
+	refreshHandler,
+	typeOpen,
+	setTypeOpen,
+	skinOpen,
+	setSkinOpen,
+	ageOpen,
+	setAgeOpen,
+	targetOpen,
+	setTargetOpen,
+	priceOpen,
+	setPriceOpen,
+}: FilterContentProps) => {
 	const productTypes = Object.values(ProductType) as ProductType[];
 	const skinTypes: (SkinType | 'ALL')[] = ['ALL', ...(Object.values(SkinType) as SkinType[])];
 	const ageRanges = Object.values(AgeRange) as AgeRange[];
-	const targets = ['ALL', 'MALE', 'FEMALE', 'UNISEX'];
+	// FIX: Derive targets from enum so values always match the backend exactly
+	const targets = ['ALL', ...Object.values(ProductTarget)];
 
 	const isSkincareSelected = (searchFilter?.search?.productTypeList || []).includes(ProductType.SKINCARE);
+	const priceStart = searchFilter?.search?.pricesRange?.start ?? PRICE_MIN;
+	const priceEnd = searchFilter?.search?.pricesRange?.end ?? PRICE_MAX;
 
-	const pushFilter = useCallback(
-		async (updated: ProductsInquiry) => {
-			await router.push(
-				{
-					pathname: '/catalog',
-					query: { input: JSON.stringify(updated) },
-				},
-				undefined,
-				{ scroll: false },
-			);
-		},
-		[router],
-	);
+	// FIX: toLocaleString() produces different output on server vs browser (hydration mismatch)
+	const formatPrice = (n: number) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-	const handleSearch = async () => {
-		const updated = {
-			...searchFilter,
-			page: 1,
-			search: { ...searchFilter.search, text: searchText },
-		};
-
-		setSearchFilter(updated);
-		await pushFilter(updated);
-	};
-
-	const productTypeSelectHandler = async (e: any) => {
-		const value = e.target.value as ProductType;
-		const checked = e.target.checked;
-
-		let updatedTypes = searchFilter?.search?.productTypeList || [];
-		if (checked) updatedTypes = [...updatedTypes, value];
-		else updatedTypes = updatedTypes.filter((item) => item !== value);
-
-		let updatedSkinTypes = searchFilter?.search?.skinType || [];
-		if (!updatedTypes.includes(ProductType.SKINCARE)) updatedSkinTypes = [];
-
-		const updated = {
-			...searchFilter,
-			page: 1,
-			search: {
-				...searchFilter.search,
-				productTypeList: updatedTypes,
-				skinType: updatedSkinTypes,
-			},
-		};
-
-		setSearchFilter(updated);
-		await pushFilter(updated);
-	};
-
-	const skinTypeHandler = async (e: any) => {
-		const value = e.target.value as SkinType | 'ALL';
-		const checked = e.target.checked;
-
-		let updatedSkinTypes = searchFilter?.search?.skinType || [];
-		if (value === 'ALL') updatedSkinTypes = [];
-		else if (checked) updatedSkinTypes = [...updatedSkinTypes, value];
-		else updatedSkinTypes = updatedSkinTypes.filter((item) => item !== value);
-
-		const updated = {
-			...searchFilter,
-			page: 1,
-			search: { ...searchFilter.search, skinType: updatedSkinTypes },
-		};
-
-		setSearchFilter(updated);
-		await pushFilter(updated);
-	};
-
-	const ageHandler = async (e: any) => {
-		const value = e.target.value as AgeRange;
-		const checked = e.target.checked;
-
-		let updatedAges = searchFilter?.search?.ageRange || [];
-		if (checked) updatedAges = [...updatedAges, value];
-		else updatedAges = updatedAges.filter((item) => item !== value);
-
-		const updated = { ...searchFilter, page: 1, search: { ...searchFilter.search, ageRange: updatedAges } };
-		setSearchFilter(updated);
-		await pushFilter(updated);
-	};
-
-	const targetHandler = async (e: any) => {
-		const value = e.target.value;
-		const updated = {
-			...searchFilter,
-			page: 1,
-			search: { ...searchFilter.search, productTarget: value === 'ALL' ? undefined : value },
-		};
-		setSearchFilter(updated);
-		await pushFilter(updated);
-	};
-
-	const priceHandler = async (range: number[]) => {
-		const [start, end] = range;
-		const updated = { ...searchFilter, page: 1, search: { ...searchFilter.search, pricesRange: { start, end } } };
-		setSearchFilter(updated);
-		await pushFilter(updated);
-	};
-
-	const refreshHandler = async () => {
-		setSearchText('');
-		const reset = {
-			...initialInput,
-			search: {
-				...initialInput.search,
-				text: '',
-				skinType: [],
-				productTypeList: [],
-				ageRange: [],
-				productTarget: undefined,
-				pricesRange: { start: 0, end: 200 },
-			},
-		};
-		setSearchFilter(reset);
-		await pushFilter(reset);
-	};
-
-	const FilterContent = () => (
+	return (
 		<Stack>
 			{/* SEARCH */}
 			<Stack mb={1.5}>
@@ -235,7 +163,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 				</Stack>
 			</Collapse>
 
-			{/* SKIN TYPE */}
+			{/* SKIN TYPE — only visible when SKINCARE is selected */}
 			{isSkincareSelected && (
 				<>
 					<Divider />
@@ -275,7 +203,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 								size="small"
 								sx={{ p: 0.5, '& svg': { fontSize: 16 } }}
 								value={age}
-								checked={(searchFilter?.search?.ageRange || []).includes(age)}
+								checked={Array.isArray(searchFilter?.search?.ageRange) && searchFilter.search.ageRange.includes(age)}
 								onChange={ageHandler}
 							/>
 							<Typography sx={{ fontSize: textSize }}>{age}</Typography>
@@ -312,22 +240,19 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 			<Divider />
 
 			{/* PRICE */}
-
 			<SectionHeader label="Price" open={priceOpen} onToggle={() => setPriceOpen(!priceOpen)} />
 			<Collapse in={priceOpen}>
 				<Stack spacing={1} pt={1}>
-					{/* Display current price range */}
 					<Stack direction="row" justifyContent="space-between" px={1}>
-						<Typography sx={{ fontSize: textSize }}>₩{searchFilter?.search?.pricesRange?.start ?? 0}</Typography>
-						<Typography sx={{ fontSize: textSize }}>₩{searchFilter?.search?.pricesRange?.end ?? 200}</Typography>
+						<Typography sx={{ fontSize: textSize }}>₩{formatPrice(priceStart)}</Typography>
+						<Typography sx={{ fontSize: textSize }}>₩{formatPrice(priceEnd)}</Typography>
 					</Stack>
-
 					<Slider
 						size="small"
-						value={[searchFilter?.search?.pricesRange?.start ?? 0, searchFilter?.search?.pricesRange?.end ?? 200]}
-						min={0}
-						max={200000} // example max price in ₩
-						step={1000} // step for finer control
+						value={[priceStart, priceEnd]}
+						min={PRICE_MIN}
+						max={PRICE_MAX}
+						step={PRICE_STEP}
 						onChange={(_, val) => {
 							const [start, end] = val as number[];
 							setSearchFilter({
@@ -345,6 +270,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 					/>
 				</Stack>
 			</Collapse>
+
 			<Divider />
 
 			{/* RESET */}
@@ -360,6 +286,143 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 			</Stack>
 		</Stack>
 	);
+};
+
+// Main Filter — owns all state and handlers, passes everything to FilterContent as stable props
+const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => {
+	const device = useDeviceDetect();
+	const router = useRouter();
+
+	const [mobileOpen, setMobileOpen] = useState(false);
+	const [searchText, setSearchText] = useState(searchFilter?.search?.text || '');
+
+	const [typeOpen, setTypeOpen] = useState(true);
+	const [skinOpen, setSkinOpen] = useState(true);
+	const [ageOpen, setAgeOpen] = useState(true);
+	const [targetOpen, setTargetOpen] = useState(true);
+	const [priceOpen, setPriceOpen] = useState(true);
+
+	const pushFilter = useCallback(
+		async (updated: ProductsInquiry) => {
+			await router.push({ pathname: '/catalog', query: { input: JSON.stringify(updated) } }, undefined, {
+				scroll: false,
+			});
+		},
+		[router],
+	);
+
+	const handleSearch = async () => {
+		const updated = { ...searchFilter, page: 1, search: { ...searchFilter.search, text: searchText } };
+		setSearchFilter(updated);
+		await pushFilter(updated);
+	};
+
+	const productTypeSelectHandler = async (e: any) => {
+		const value = e.target.value as ProductType;
+		const checked = e.target.checked;
+		let updatedTypes = searchFilter?.search?.productTypeList || [];
+		if (checked) updatedTypes = [...updatedTypes, value];
+		else updatedTypes = updatedTypes.filter((item) => item !== value);
+		let updatedSkinTypes = searchFilter?.search?.skinType || [];
+		if (!updatedTypes.includes(ProductType.SKINCARE)) updatedSkinTypes = [];
+		const updated = {
+			...searchFilter,
+			page: 1,
+			search: { ...searchFilter.search, productTypeList: updatedTypes, skinType: updatedSkinTypes },
+		};
+		setSearchFilter(updated);
+		await pushFilter(updated);
+	};
+
+	const skinTypeHandler = async (e: any) => {
+		const value = e.target.value as SkinType | 'ALL';
+		const checked = e.target.checked;
+		let updatedSkinTypes = searchFilter?.search?.skinType || [];
+		if (value === 'ALL') updatedSkinTypes = [];
+		else if (checked) updatedSkinTypes = [...updatedSkinTypes, value];
+		else updatedSkinTypes = updatedSkinTypes.filter((item) => item !== value);
+		const updated = { ...searchFilter, page: 1, search: { ...searchFilter.search, skinType: updatedSkinTypes } };
+		setSearchFilter(updated);
+		await pushFilter(updated);
+	};
+
+	const ageHandler = async (e: any) => {
+		const value = e.target.value as AgeRange;
+		const checked = e.target.checked;
+		const currentAges: AgeRange[] = Array.isArray(searchFilter?.search?.ageRange) ? searchFilter.search.ageRange : [];
+		const updatedAges = checked ? [...currentAges, value] : currentAges.filter((item) => item !== value);
+		const updated = { ...searchFilter, page: 1, search: { ...searchFilter.search, ageRange: updatedAges } };
+		setSearchFilter(updated);
+		await pushFilter(updated);
+	};
+
+	const targetHandler = async (e: any) => {
+		const value = e.target.value as string;
+		const updated = {
+			...searchFilter,
+			page: 1,
+			search: {
+				...searchFilter.search,
+				productTarget: value === 'ALL' ? undefined : (value as ProductTarget),
+			},
+		};
+		setSearchFilter(updated);
+		await pushFilter(updated);
+	};
+
+	const priceHandler = async (range: number[]) => {
+		const [start, end] = range;
+		const updated = {
+			...searchFilter,
+			page: 1,
+			search: { ...searchFilter.search, pricesRange: { start, end } },
+		};
+		setSearchFilter(updated);
+		await pushFilter(updated);
+	};
+
+	const refreshHandler = async () => {
+		setSearchText('');
+		const reset: ProductsInquiry = {
+			...initialInput,
+			page: 1,
+			search: {
+				...initialInput.search,
+				text: '',
+				skinType: [],
+				productTypeList: [],
+				ageRange: [],
+				productTarget: undefined,
+				pricesRange: { start: PRICE_MIN, end: PRICE_MAX },
+			},
+		};
+		setSearchFilter(reset);
+		await pushFilter(reset);
+	};
+
+	const contentProps: FilterContentProps = {
+		searchText,
+		setSearchText,
+		searchFilter,
+		setSearchFilter,
+		handleSearch,
+		productTypeSelectHandler,
+		skinTypeHandler,
+		ageHandler,
+		targetHandler,
+		priceHandler,
+		refreshHandler,
+		typeOpen,
+		setTypeOpen,
+		skinOpen,
+		setSkinOpen,
+		ageOpen,
+		setAgeOpen,
+		targetOpen,
+		setTargetOpen,
+		priceOpen,
+		setPriceOpen,
+	};
 
 	if (device === 'mobile') {
 		return (
@@ -369,14 +432,14 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 				</Button>
 				<Drawer anchor="right" open={mobileOpen} onClose={() => setMobileOpen(false)}>
 					<Stack p={2} width={260}>
-						<FilterContent />
+						<FilterContent {...contentProps} />
 					</Stack>
 				</Drawer>
 			</>
 		);
 	}
 
-	return <FilterContent />;
+	return <FilterContent {...contentProps} />;
 };
 
 export default Filter;

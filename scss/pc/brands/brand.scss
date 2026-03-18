@@ -167,7 +167,7 @@ $text-dim: #cdb8c6;
 			.toolbar-left {
 				display: flex;
 				align-items: center;
-				gap: 10px;
+				gap: 5px;
 
 				.sort-label {
 					font-family: $font;
@@ -182,26 +182,30 @@ $text-dim: #cdb8c6;
 					min-width: unset;
 					width: 38px;
 					height: 38px;
-					border-radius: 11px;
-					border: 1px solid $border-soft;
-					background: $bg;
+
 					display: flex;
 					align-items: center;
 					justify-content: center;
 					padding: 0;
-					transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+					background: transparent;
+
+					cursor: pointer;
+					transition: all 0.2s ease;
 
 					svg {
 						width: 17px;
 						height: 17px;
 						color: $text-secondary;
-						transition: color 0.2s;
+						transition: color 0.2s ease;
 					}
 
 					&:hover {
-						background: $surface-2;
-						border-color: rgba($pink, 0.3);
-						box-shadow: 0 2px 8px rgba($pink, 0.1);
+						svg {
+							color: $pink;
+						}
+					}
+					&.active {
 						svg {
 							color: $pink;
 						}
