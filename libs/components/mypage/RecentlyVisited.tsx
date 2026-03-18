@@ -3,11 +3,11 @@ import { NextPage } from 'next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Pagination, Stack, Typography } from '@mui/material';
 
-import { T } from '../../types/common';
 import { GET_VISITED_PRODUCTS } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 import { Product } from '../../types/product/product';
 import { ProductCard } from './ProductCard';
+import { T } from '@/libs/types/common';
 
 const RecentlyVisitedProducts: NextPage = () => {
 	const device = useDeviceDetect();

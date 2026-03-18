@@ -24,7 +24,6 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 	/** LIFECYCLES **/
 	useEffect(() => {
 		if (!user) return;
-
 		setUpdateData({
 			...updateData,
 			memberNick: user.memberNick,
@@ -38,7 +37,6 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 	const uploadImage = async (e: any) => {
 		try {
 			const image = e.target.files[0];
-
 			const formData = new FormData();
 
 			formData.append(
@@ -47,20 +45,10 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 					query: `mutation ImageUploader($file: Upload!, $target: String!) {
             imageUploader(file: $file, target: $target)
           }`,
-					variables: {
-						file: null,
-						target: 'member',
-					},
+					variables: { file: null, target: 'member' },
 				}),
 			);
-
-			formData.append(
-				'map',
-				JSON.stringify({
-					'0': ['variables.file'],
-				}),
-			);
-
+			formData.append('map', JSON.stringify({ '0': ['variables.file'] }));
 			formData.append('0', image);
 
 			const response = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, formData, {
@@ -72,12 +60,7 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 			});
 
 			const uploadedImage = response.data.data.imageUploader;
-
-			setUpdateData({
-				...updateData,
-				memberImage: uploadedImage,
-			});
-
+			setUpdateData({ ...updateData, memberImage: uploadedImage });
 			return `${NEXT_PUBLIC_API_URL}/${uploadedImage}`;
 		} catch (err) {
 			console.log('uploadImage error:', err);
@@ -88,45 +71,17 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 	const updateProfileHandler = useCallback(async () => {
 		try {
 			if (!user?._id) throw new Error(Messages.LOGIN_REQUIRED);
-
 			const result = await updateMember({
-				variables: {
-					input: {
-						...updateData,
-						_id: user._id,
-					},
-				},
+				variables: { input: { ...updateData, _id: user._id } },
 			});
-
 			const jwtToken = result?.data?.updateMember?.accessToken;
-
 			await updateStorage({ jwtToken });
 			updateUserInfo(jwtToken);
-
 			toastSuccess('Information updated successfully.');
 		} catch (err: any) {
 			toastError(err);
 		}
 	}, [updateData, user]);
-	const updateProductHandler = useCallback(async () => {
-		try {
-			if (!user._id) throw new Error(Messages.LOGIN_REQUIRED);
-			updateData._id = user._id;
-			const result = await updateMember({
-				variables: {
-					input: updateData,
-				},
-			});
-
-			// @ts-ignore
-			const jwtToken = result.data.updateMember?.accessToken;
-			await updateStorage({ jwtToken });
-			updateUserInfo(result.data.updateMember?.accessToken);
-			await toastSuccess('information updated successfully.');
-		} catch (err: any) {
-			toastError(err);
-		}
-	}, [updateData]);
 
 	/** BUTTON DISABLE CHECK **/
 	const doDisabledCheck = () => {
@@ -144,15 +99,16 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 
 	return (
 		<div id="my-profile-page">
+			{/* ── Page title ── */}
 			<Stack className="main-title-box">
 				<Stack className="right-box">
 					<Typography className="main-title">Profile Settings</Typography>
-					<Typography className="sub-title">We are glad to see you again!</Typography>
+					<Typography className="sub-title">Manage your personal information and account preferences.</Typography>
 				</Stack>
 			</Stack>
 
 			<Stack className="top-box">
-				{/* PROFILE IMAGE */}
+				{/* ── Profile photo ── */}
 				<Stack className="photo-box">
 					<Typography className="title">Profile Photo</Typography>
 
@@ -162,7 +118,7 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 								src={
 									updateData?.memberImage ? `${NEXT_PUBLIC_API_URL}/${updateData.memberImage}` : '/img/profile/user.svg'
 								}
-								alt=""
+								alt="Profile"
 							/>
 						</Stack>
 
@@ -174,17 +130,15 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 								onChange={uploadImage}
 								accept="image/jpg, image/jpeg, image/png"
 							/>
-
 							<label htmlFor="hidden-input" className="labeler">
 								<Typography>Upload Photo</Typography>
 							</label>
-
-							<Typography className="upload-text">Supported formats: JPG, JPEG, PNG</Typography>
+							<Typography className="upload-text">Supported formats: JPG, JPEG, PNG · Max 5MB</Typography>
 						</Stack>
 					</Stack>
 				</Stack>
 
-				{/* USERNAME + PHONE */}
+				{/* ── Display name + phone ── */}
 				<Stack className="small-input-box">
 					<Stack className="input-box">
 						<Typography className="title">Display Name</Typography>
@@ -192,12 +146,7 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 							type="text"
 							placeholder="Enter your display name"
 							value={updateData.memberNick}
-							onChange={(e) =>
-								setUpdateData({
-									...updateData,
-									memberNick: e.target.value,
-								})
-							}
+							onChange={(e) => setUpdateData({ ...updateData, memberNick: e.target.value })}
 						/>
 					</Stack>
 
@@ -207,33 +156,23 @@ const MyProfile: NextPage = ({ initialValues }: any) => {
 							type="text"
 							placeholder="Enter your phone number"
 							value={updateData.memberPhone}
-							onChange={(e) =>
-								setUpdateData({
-									...updateData,
-									memberPhone: e.target.value,
-								})
-							}
+							onChange={(e) => setUpdateData({ ...updateData, memberPhone: e.target.value })}
 						/>
 					</Stack>
 				</Stack>
 
-				{/* ADDRESS */}
+				{/* ── Address ── */}
 				<Stack className="address-box">
 					<Typography className="title">Address</Typography>
 					<input
 						type="text"
 						placeholder="Enter your address"
 						value={updateData.memberAddress}
-						onChange={(e) =>
-							setUpdateData({
-								...updateData,
-								memberAddress: e.target.value,
-							})
-						}
+						onChange={(e) => setUpdateData({ ...updateData, memberAddress: e.target.value })}
 					/>
 				</Stack>
 
-				{/* UPDATE BUTTON */}
+				{/* ── Save button ── */}
 				<Stack className="about-me-box">
 					<Button className="update-button" onClick={updateProfileHandler} disabled={doDisabledCheck()}>
 						<Typography>Save Changes</Typography>

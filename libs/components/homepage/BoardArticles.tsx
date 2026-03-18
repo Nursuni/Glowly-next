@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { BoardArticleCategory } from '@/libs/enums/board-article.enum';
 import { BoardArticle } from '@/libs/types/board-article/board-article';
 import { GET_BOARD_ARTICLES } from '@/apollo/user/query';
+import { NEXT_PUBLIC_API_URL } from '@/libs/config';
 import dayjs from 'dayjs';
 
 // ─── Category labels ──────────────────────────────────────────────────────────
@@ -26,14 +27,28 @@ function placeholder(seed: string): string {
 	return `linear-gradient(135deg, hsl(${h},38%,92%) 0%, hsl(${h + 14},32%,86%) 100%)`;
 }
 
+// ✅ Prepends API base URL to relative image paths
+function imgUrl(path: string | null | undefined): string | null {
+	if (!path) return null;
+	if (path.startsWith('http')) return path;
+	return `${NEXT_PUBLIC_API_URL}/${path}`;
+}
+
 // ─── Vertical card (news grid) ────────────────────────────────────────────────
 function VerticalCard({ article, delay }: { article: BoardArticle; delay: number }) {
+	const image = imgUrl(article.articleImage);
 	return (
-		<Link href={`/community/${article._id}`} className="blog-v-card" style={{ transitionDelay: `${delay}ms` }}>
+		<Link
+			href={`/blog/detail?articleCategory=${article.articleCategory}&id=${article._id}`}
+			className="blog-v-card"
+			style={{ transitionDelay: `${delay}ms` }}
+		>
 			<div
 				className="blog-v-img"
 				style={{
-					backgroundImage: article.articleImage ? `url(${article.articleImage})` : placeholder(String(article._id)),
+					backgroundImage: image ? `url(${image})` : placeholder(String(article._id)),
+					backgroundSize: 'cover',
+					backgroundPosition: 'center',
 				}}
 			/>
 			<p
@@ -64,11 +79,16 @@ function VerticalCard({ article, delay }: { article: BoardArticle; delay: number
 
 // ─── Horizontal card (tips list) ──────────────────────────────────────────────
 function HorizontalCard({ article, delay }: { article: BoardArticle; delay: number }) {
+	const image = imgUrl(article.articleImage);
 	return (
-		<Link href={`/blog/${article._id}`} className="blog-h-card" style={{ transitionDelay: `${delay}ms` }}>
+		<Link
+			href={`/blog/detail?articleCategory=${article.articleCategory}&id=${article._id}`}
+			className="blog-h-card"
+			style={{ transitionDelay: `${delay}ms` }}
+		>
 			<div className="blog-h-img-wrap">
-				{article.articleImage ? (
-					<img src={article.articleImage} alt={article.articleTitle} />
+				{image ? (
+					<img src={image} alt={article.articleTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
 				) : (
 					<div style={{ width: '100%', height: '100%', background: placeholder(String(article._id)) }} />
 				)}
@@ -204,7 +224,7 @@ export default function BoardArticles() {
 						<div>
 							<div className="blog-col-header">
 								<span>Latest News</span>
-								<Link href="/community?category=NEWS" className="blog-see-all">
+								<Link href="/blog?articleCategory=NEWS" className="blog-see-all">
 									See all →
 								</Link>
 							</div>
@@ -217,14 +237,7 @@ export default function BoardArticles() {
 										<VerticalCard key={article._id as string} article={article} delay={i * 55} />
 									))
 								) : (
-									<p
-										style={{
-											gridColumn: '1/-1',
-											color: '#a08898',
-											fontSize: 14,
-											fontFamily: "'Jost', sans-serif",
-										}}
-									>
+									<p style={{ gridColumn: '1/-1', color: '#a08898', fontSize: 14, fontFamily: "'Jost', sans-serif" }}>
 										No news articles yet.
 									</p>
 								)}
@@ -238,7 +251,7 @@ export default function BoardArticles() {
 						<div>
 							<div className="blog-col-header" style={{ transitionDelay: '0.12s' }}>
 								<span>Community Picks</span>
-								<Link href="/community" className="blog-see-all">
+								<Link href="/blog?articleCategory=FREE" className="blog-see-all">
 									See all →
 								</Link>
 							</div>
@@ -251,14 +264,7 @@ export default function BoardArticles() {
 										<HorizontalCard key={article._id as string} article={article} delay={80 + i * 55} />
 									))
 								) : (
-									<p
-										style={{
-											color: '#a08898',
-											fontSize: 14,
-											padding: '16px 0',
-											fontFamily: "'Jost', sans-serif",
-										}}
-									>
+									<p style={{ color: '#a08898', fontSize: 14, padding: '16px 0', fontFamily: "'Jost', sans-serif" }}>
 										No articles yet.
 									</p>
 								)}

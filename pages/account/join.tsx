@@ -14,6 +14,16 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
+/** Extract the most useful message from any Apollo / JS error */
+const extractMessage = (err: any): string => {
+	return (
+		err?.graphQLErrors?.[0]?.message ||
+		err?.networkError?.result?.errors?.[0]?.message ||
+		err?.message ||
+		'Something went wrong'
+	);
+};
+
 const Join: NextPage = () => {
 	const router = useRouter();
 	const device = useDeviceDetect();
@@ -34,9 +44,7 @@ const Join: NextPage = () => {
 	/** HANDLERS **/
 	const viewChangeHandler = (state: boolean) => {
 		if (animating) return;
-		// 1. Fade out overlay content
 		setAnimating(true);
-		// 2. After content fades, flip the view (panel slides)
 		setTimeout(() => {
 			setLoginView(state);
 			setAnimating(false);
@@ -52,7 +60,7 @@ const Join: NextPage = () => {
 			await logIn(input.nick, input.password);
 			await router.push(`${router.query.referrer ?? '/'}`);
 		} catch (err: any) {
-			toastError(err.message);
+			toastError(extractMessage(err));
 		}
 	}, [input]);
 
@@ -61,7 +69,7 @@ const Join: NextPage = () => {
 			await signUp(input.nick, input.password, input.phone, input.type, input.gender);
 			await router.push(`${router.query.referrer ?? '/'}`);
 		} catch (err: any) {
-			toastError(err.message);
+			toastError(extractMessage(err));
 		}
 	}, [input]);
 

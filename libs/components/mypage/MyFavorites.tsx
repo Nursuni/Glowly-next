@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Pagination, Stack, Typography } from '@mui/material';
-import { T } from '../../types/common';
+
 import { GET_FAVORITES } from '../../../apollo/user/query';
 import { useMutation, useQuery } from '@apollo/client';
 import { Messages } from '../../config';
@@ -10,6 +10,7 @@ import { Product } from '../../types/product/product';
 import { toastError } from '../../toast';
 import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 import { ProductCard } from './ProductCard';
+import { T } from '@/libs/types/common';
 
 const MyFavorites: NextPage = () => {
 	const device = useDeviceDetect();

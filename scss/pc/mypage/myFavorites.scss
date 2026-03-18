@@ -36,9 +36,11 @@
 			.favorites-list-box {
 				width: 100%;
 				height: auto;
-				flex-wrap: wrap;
 				flex-direction: row;
-				gap: 22px;
+				flex-wrap: wrap;
+				gap: 25px;
+				margin-top: 55px;
+				margin-bottom: 87px;
 				.card-config {
 					width: 296px;
 					height: 413px;

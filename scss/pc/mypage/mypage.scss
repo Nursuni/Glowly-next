@@ -95,28 +95,34 @@
 		flex-direction: column;
 		gap: 28px;
 
+		// ── Force title to match design system ─────────
 		.main-title-box {
 			.right-box {
 				.main-title {
-					font-family: $font-display;
-					font-size: 30px;
-					font-weight: 400;
-					color: $text-primary;
+					font-family: $font-display !important;
+					font-size: 30px !important;
+					font-weight: 400 !important;
+					color: $text-primary !important;
+					letter-spacing: normal !important;
+					text-transform: none !important;
 				}
 
 				.sub-title {
-					font-size: 13px;
-					color: $text-muted;
-					font-family: $font-body;
+					font-family: $font-body !important;
+					font-size: 13px !important;
+					font-weight: 400 !important;
+					color: $text-muted !important;
 				}
 			}
 		}
 
+		// ── 3-column grid (same as articles) ──────────
 		.favorites-list-box {
 			display: grid;
 			grid-template-columns: repeat(3, 1fr);
 			gap: 20px;
 
+			// ── No data ───────────────────────────────
 			.no-data {
 				grid-column: 1 / -1;
 				display: flex;
@@ -133,9 +139,224 @@
 					opacity: 0.4;
 					width: 40px;
 				}
+
+				p {
+					margin: 0;
+				}
+			}
+
+			// ── Card ──────────────────────────────────
+			.card-config {
+				display: flex;
+				flex-direction: column;
+				border-radius: 8px;
+				border: 1px solid #ede8e1;
+				background: #fff;
+				overflow: hidden;
+				cursor: pointer;
+				transition: box-shadow 0.25s ease, transform 0.25s ease;
+
+				&:hover {
+					box-shadow: 0 8px 24px rgba(245, 100, 169, 0.11);
+					transform: translateY(-3px);
+
+					.top img {
+						transform: scale(1.05);
+					}
+					.bottom .name-address .name p {
+						color: $pink;
+					}
+				}
+
+				// ── Cover image ───────────────────────
+				.top {
+					position: relative;
+					width: 100%;
+					aspect-ratio: 4 / 3;
+					overflow: hidden;
+					background: $warm-off;
+					flex-shrink: 0;
+
+					a {
+						display: block;
+						width: 100%;
+						height: 100%;
+					}
+
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+						display: block;
+						transition: transform 0.35s ease;
+					}
+
+					.top-badge {
+						position: absolute;
+						top: 10px;
+						left: 12px;
+						display: inline-flex;
+						align-items: center;
+						padding: 3px 9px;
+						border-radius: 2px;
+						font-family: $font-sans;
+						font-size: 8.5px;
+						font-weight: 600;
+						letter-spacing: 0.16em;
+						text-transform: uppercase;
+						color: #fff;
+						background: rgba(245, 100, 169, 0.85);
+						backdrop-filter: blur(4px);
+
+						img {
+							height: auto;
+							width: auto;
+						}
+					}
+
+					.price-box {
+						position: absolute;
+						bottom: 12px;
+						left: 14px;
+						background: rgba(255, 255, 255, 0.92);
+						backdrop-filter: blur(8px);
+						padding: 5px 12px;
+						border-radius: 20px;
+						box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+						p {
+							font-family: $font-serif;
+							font-size: 13px;
+							font-weight: 400;
+							color: $pink;
+							margin: 0;
+						}
+					}
+				}
+
+				// ── Text body ─────────────────────────
+				.bottom {
+					padding: 12px 14px 10px;
+					display: flex;
+					flex-direction: column;
+					gap: 4px;
+					flex: 1;
+
+					.name-address {
+						display: flex;
+						flex-direction: column;
+						gap: 3px;
+						margin-bottom: 8px;
+
+						.name {
+							overflow: hidden;
+
+							p {
+								font-family: $font-serif;
+								font-size: 15px;
+								font-weight: 400;
+								color: $dark;
+								line-height: 1.3;
+								white-space: nowrap;
+								overflow: hidden;
+								text-overflow: ellipsis;
+								transition: color 0.18s ease;
+								margin: 0;
+							}
+						}
+
+						.address {
+							overflow: hidden;
+
+							p {
+								font-family: $font-body;
+								font-size: 12px;
+								color: $text-muted;
+								line-height: 1.5;
+								margin: 0;
+							}
+						}
+					}
+
+					.options {
+						display: flex;
+						flex-direction: row;
+						gap: 12px;
+						margin-bottom: 8px;
+
+						.option {
+							display: flex;
+							flex-direction: row;
+							gap: 4px;
+							align-items: center;
+
+							p {
+								font-family: $font-sans;
+								font-size: 11px;
+								color: $text-muted;
+								margin: 0;
+							}
+						}
+					}
+
+					.divider {
+						width: 100%;
+						height: 1px;
+						background: $border-soft;
+						margin: 6px 0 10px;
+					}
+
+					.type-buttons {
+						display: flex;
+						flex-direction: row;
+						width: 100%;
+						justify-content: space-between;
+						align-items: center;
+
+						.type {
+							display: flex;
+							flex-direction: row;
+							align-items: center;
+							gap: 5px;
+
+							p {
+								font-family: $font-sans;
+								font-size: 11px;
+								color: $text-secondary;
+								margin: 0;
+							}
+
+							.disabled-type {
+								font-family: $font-sans;
+								font-size: 11px;
+								color: $text-dim;
+								margin: 0;
+							}
+						}
+
+						.buttons {
+							display: flex;
+							flex-direction: row;
+							gap: 6px;
+							align-items: center;
+
+							svg {
+								cursor: pointer;
+								color: $muted;
+								font-size: 18px;
+								transition: color 0.18s ease;
+
+								&:hover {
+									color: $pink;
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 
+		// ── Pagination ────────────────────────────────
 		.pagination-config {
 			display: flex;
 			flex-direction: column;
@@ -161,6 +382,7 @@
 					font-family: $font-body;
 					font-size: 13px;
 					color: $text-muted;
+					text-align: center;
 				}
 			}
 		}
@@ -193,7 +415,6 @@
 			}
 		}
 
-		// ── Image ───────────────────────────────────────
 		.image-box {
 			width: 100%;
 			aspect-ratio: 3 / 4;
@@ -210,7 +431,6 @@
 			}
 		}
 
-		// ── Info ────────────────────────────────────────
 		.information-box {
 			padding: 10px 12px 8px;
 			display: flex;
@@ -246,7 +466,6 @@
 			}
 		}
 
-		// ── Footer ──────────────────────────────────────
 		.card-footer {
 			display: flex;
 			align-items: center;
@@ -283,7 +502,6 @@
 					&:hover {
 						background: rgba($pink, 0.07);
 						border-color: rgba($pink, 0.3);
-
 						svg {
 							color: $pink;
 						}
@@ -292,7 +510,6 @@
 					&--delete:hover {
 						background: rgba(192, 71, 58, 0.07);
 						border-color: rgba(192, 71, 58, 0.3);
-
 						svg {
 							color: #c0473a;
 						}
@@ -301,7 +518,6 @@
 			}
 		}
 
-		// ── Status pill ──────────────────────────────────
 		.status-pill {
 			display: inline-flex;
 			align-items: center;
@@ -330,7 +546,7 @@
 	}
 
 	// ══════════════════════════════════════════════════
-	// MY PRODUCTS PAGE  (same layout as favorites/visited)
+	// MY PRODUCTS PAGE
 	// ══════════════════════════════════════════════════
 	#my-product-page {
 		width: 100%;
@@ -360,7 +576,6 @@
 			flex-direction: column;
 			gap: 20px;
 
-			// ── Tab filters ───────────────────────────────
 			.tab-name-box {
 				display: flex;
 				flex-direction: row;
@@ -393,7 +608,6 @@
 				}
 			}
 
-			// ── Grid — identical to .favorites-list-box ───
 			.products-grid {
 				display: grid;
 				grid-template-columns: repeat(3, 1fr);
@@ -405,7 +619,6 @@
 				}
 			}
 
-			// ── Empty state ───────────────────────────────
 			.no-data {
 				grid-column: 1 / -1;
 				display: flex;
@@ -452,7 +665,6 @@
 				}
 			}
 
-			// ── Skeleton — same 3-col grid ────────────────
 			.skeleton-list {
 				display: grid;
 				grid-template-columns: repeat(3, 1fr);
@@ -506,7 +718,6 @@
 				}
 			}
 
-			// ── Pagination — identical to favorites ───────
 			.pagination-config {
 				display: flex;
 				flex-direction: column;
@@ -548,7 +759,6 @@
 		flex-direction: column;
 		gap: 28px;
 
-		// ── Header ──────────────────────────────────────
 		.main-title-box {
 			.right-box {
 				.main-title {
@@ -565,7 +775,6 @@
 			}
 		}
 
-		// ── Empty state ──────────────────────────────────
 		.no-data {
 			display: flex;
 			flex-direction: column;
@@ -586,14 +795,12 @@
 			}
 		}
 
-		// ── 3-column grid (same as favorites) ───────────
 		.article-list-box {
 			display: grid;
 			grid-template-columns: repeat(3, 1fr);
 			gap: 20px;
 		}
 
-		// ── Article card ─────────────────────────────────
 		.article-card {
 			display: flex;
 			flex-direction: column;
@@ -608,22 +815,6 @@
 				box-shadow: 0 8px 24px rgba(245, 100, 169, 0.11);
 				transform: translateY(-3px);
 
-				.article-cover-placeholder {
-					width: 100%;
-					height: 100%;
-					background: linear-gradient(135deg, #f5f0ea 0%, #ede0d8 100%);
-					display: flex;
-					align-items: center;
-					justify-content: center;
-
-					span {
-						font-family: $font-serif;
-						font-size: 48px;
-						font-weight: 300;
-						color: rgba(245, 100, 169, 0.3);
-						text-transform: uppercase;
-					}
-				}
 				.article-cover img {
 					transform: scale(1.05);
 				}
@@ -632,7 +823,6 @@
 				}
 			}
 
-			// ── Cover image ──────────────────────────────
 			.article-cover {
 				position: relative;
 				width: 100%;
@@ -666,7 +856,6 @@
 				}
 			}
 
-			// ── Text body ────────────────────────────────
 			.article-body {
 				padding: 12px 14px 10px;
 				display: flex;
@@ -690,14 +879,12 @@
 					color: $dark;
 					line-height: 1.35;
 					display: -webkit-box;
-
 					-webkit-box-orient: vertical;
 					overflow: hidden;
 					transition: color 0.18s ease;
 				}
 			}
 
-			// ── Footer: stats + delete ────────────────────
 			.article-footer {
 				display: flex;
 				align-items: center;
@@ -776,7 +963,6 @@
 			}
 		}
 
-		// ── Pagination ───────────────────────────────────
 		.pagination-conf {
 			display: flex;
 			flex-direction: column;
@@ -802,6 +988,181 @@
 					font-family: $font-body;
 					font-size: 13px;
 					color: $text-muted;
+				}
+			}
+		}
+	}
+
+	// ══════════════════════════════════════════════════
+	// MY SAVED PAGE
+	// ══════════════════════════════════════════════════
+	#my-saved-page {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+
+		.main-title-box {
+			.right-box {
+				.main-title {
+					font-family: $font-display;
+					font-size: 30px;
+					font-weight: 400;
+					color: $text-primary;
+				}
+				.sub-title {
+					font-size: 13px;
+					color: $text-muted;
+					font-family: $font-body;
+				}
+			}
+		}
+
+		.my-saved-list-box {
+			width: 100%;
+			padding: 0;
+			border-radius: 16px;
+			border: 1px solid $border-soft;
+			background: #fff;
+			box-shadow: 0 2px 12px rgba(245, 100, 169, 0.05);
+			overflow: hidden;
+
+			// ── Column header row ─────────────────────
+			.list-title-box {
+				width: 100%;
+				height: 52px;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				padding: 0 24px;
+				background: $warm-off;
+				border-bottom: 1px solid $border-soft;
+
+				p {
+					font-family: $font-body;
+					font-size: 10.5px;
+					font-weight: 600;
+					letter-spacing: 0.1em;
+					text-transform: uppercase;
+					color: $text-muted;
+					flex: 1;
+					margin: 0;
+
+					&.date-created {
+						flex: 0 0 180px;
+					}
+					&.action {
+						flex: 0 0 100px;
+						text-align: right;
+					}
+				}
+			}
+
+			// ── Each saved row ────────────────────────
+			.search-box {
+				width: 100%;
+				min-height: 68px;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				padding: 0 24px;
+				border-bottom: 1px solid $border-soft;
+				background: #fff;
+				transition: background 0.18s ease;
+
+				&:last-of-type {
+					border-bottom: none;
+				}
+
+				&:hover {
+					background: rgba(245, 100, 169, 0.02);
+				}
+
+				.title {
+					flex: 1;
+					font-family: $font-body;
+					font-size: 14px;
+					font-weight: 500;
+					color: $text-primary;
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					margin-right: 16px;
+				}
+
+				.date {
+					flex: 0 0 180px;
+					font-family: $font-sans;
+					font-size: 12px;
+					font-weight: 300;
+					color: $text-muted;
+				}
+
+				.action-box {
+					flex: 0 0 100px;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: flex-end;
+					gap: 6px;
+
+					.icon-button {
+						width: 32px;
+						height: 32px;
+						border-radius: 6px;
+						border: 1px solid $border-soft;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						cursor: pointer;
+						transition: background 0.18s, border-color 0.18s;
+
+						&:hover {
+							background: rgba(192, 71, 58, 0.07);
+							border-color: rgba(192, 71, 58, 0.25);
+							.buttons {
+								color: #c0473a;
+							}
+						}
+
+						.buttons {
+							color: $muted;
+							font-size: 16px;
+							transition: color 0.18s;
+						}
+					}
+				}
+			}
+
+			// ── Pagination ────────────────────────────
+			.pagination-config {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 10px;
+				padding: 20px;
+
+				.pagination-box {
+					.MuiPaginationItem-root {
+						font-family: $font-body;
+						color: $text-secondary;
+						border-radius: 8px;
+
+						&.Mui-selected {
+							background: $pink;
+							color: #fff;
+						}
+					}
+				}
+
+				.total-result {
+					p,
+					.MuiTypography-root {
+						font-family: $font-body;
+						font-size: 13px;
+						color: $text-muted;
+						text-align: center;
+					}
 				}
 			}
 		}
@@ -901,57 +1262,69 @@
 		flex-direction: column;
 		gap: 24px;
 
+		// ── Page title ────────────────────────────────
 		.main-title-box {
 			.right-box {
 				.main-title {
-					font-family: $font-display;
-					font-size: 30px;
-					font-weight: 400;
-					color: $text-primary;
+					font-family: $font-display !important;
+					font-size: 30px !important;
+					font-weight: 400 !important;
+					color: $text-primary !important;
+					letter-spacing: normal !important;
+					text-transform: none !important;
 				}
 
 				.sub-title {
-					font-size: 13px;
-					color: $text-muted;
-					font-family: $font-body;
+					font-family: $font-body !important;
+					font-size: 13px !important;
+					font-weight: 400 !important;
+					color: $text-muted !important;
+					line-height: 1.6 !important;
 				}
 			}
 		}
 
+		// ── Shared box style ──────────────────────────
 		.top-box,
 		.bottom-box {
 			width: 100%;
-			padding: 28px;
+			padding: 28px 32px;
 			border-radius: 16px;
 			border: 1px solid $border-soft;
 			background: #fff;
 			box-shadow: 0 2px 12px rgba(245, 100, 169, 0.05);
 			display: flex;
 			flex-direction: column;
-			gap: 24px;
+			gap: 28px;
+		}
+
+		// ── Section labels — refined serif ────────────
+		.title {
+			font-family: $font-display !important;
+			font-size: 15px !important;
+			font-weight: 400 !important;
+			font-style: italic;
+			color: $text-primary !important;
+			letter-spacing: 0.01em !important;
 		}
 
 		.top-box {
 			.photo-box {
+				display: flex;
+				flex-direction: column;
 				gap: 16px;
 
-				.title {
-					font-family: $font-body;
-					font-size: 13px;
-					font-weight: 600;
-					color: $text-primary;
-					letter-spacing: 0.02em;
-				}
-
 				.image-big-box {
+					display: flex;
 					flex-direction: row;
 					gap: 32px;
-					align-items: flex-end;
+					align-items: center;
 
 					.image-box {
 						position: relative;
 						width: 96px;
 						height: 96px;
+						flex-shrink: 0;
 
 						img {
 							width: 100%;
@@ -963,24 +1336,27 @@
 					}
 
 					.upload-big-box {
-						gap: 12px;
-						align-self: center;
+						display: flex;
+						flex-direction: column;
+						gap: 10px;
 
 						.labeler {
 							display: inline-flex;
 							align-items: center;
 							justify-content: center;
-							padding: 0 20px;
+							padding: 0 22px;
 							height: 38px;
 							cursor: pointer;
 							border-radius: 10px;
 							border: 1.5px solid $pink;
 							transition: background 0.18s ease;
+							width: fit-content;
 
-							p {
+							p,
+							.MuiTypography-root {
 								font-family: $font-body;
 								font-size: 13px;
-								font-weight: 600;
+								font-weight: 500;
 								color: $pink;
 							}
 
@@ -994,28 +1370,25 @@
 							font-size: 11px;
 							color: $text-muted;
 							line-height: 1.5;
+							font-style: italic;
 						}
 					}
 				}
 			}
 
+			// ── Input grid ────────────────────────────
 			.small-input-box {
 				width: 100%;
+				display: flex;
 				flex-direction: row;
 				flex-wrap: wrap;
 				gap: 20px;
 
 				.input-box {
 					width: calc(50% - 10px);
+					display: flex;
+					flex-direction: column;
 					gap: 8px;
-
-					.title {
-						font-family: $font-body;
-						font-size: 12px;
-						font-weight: 600;
-						color: $text-primary;
-						letter-spacing: 0.02em;
-					}
 
 					input {
 						width: 100%;
@@ -1029,10 +1402,13 @@
 						color: $text-primary;
 						transition: border-color 0.18s ease;
 						box-sizing: border-box;
+						background: #fff;
 
 						&::placeholder {
 							color: $text-dim;
+							font-style: italic;
 						}
+
 						&:focus {
 							border-color: $pink;
 						}
@@ -1040,15 +1416,11 @@
 				}
 			}
 
+			// ── Address ───────────────────────────────
 			.address-box {
+				display: flex;
+				flex-direction: column;
 				gap: 8px;
-
-				.title {
-					font-family: $font-body;
-					font-size: 12px;
-					font-weight: 600;
-					color: $text-primary;
-				}
 
 				input {
 					width: 100%;
@@ -1062,25 +1434,24 @@
 					color: $text-primary;
 					transition: border-color 0.18s ease;
 					box-sizing: border-box;
+					background: #fff;
 
 					&::placeholder {
 						color: $text-dim;
+						font-style: italic;
 					}
+
 					&:focus {
 						border-color: $pink;
 					}
 				}
 			}
 
+			// ── Save button ───────────────────────────
 			.about-me-box {
+				display: flex;
+				flex-direction: column;
 				gap: 8px;
-
-				.title {
-					font-family: $font-body;
-					font-size: 12px;
-					font-weight: 600;
-					color: $text-primary;
-				}
 
 				.about-textarea {
 					width: 100%;
@@ -1095,6 +1466,11 @@
 					transition: border-color 0.18s ease;
 					box-sizing: border-box;
 
+					&::placeholder {
+						color: $text-dim;
+						font-style: italic;
+					}
+
 					&:focus {
 						outline: none;
 						border-color: $pink;
@@ -1103,22 +1479,24 @@
 
 				.update-button {
 					align-self: flex-end;
-					margin-top: 8px;
+					margin-top: 4px;
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					padding: 0 24px;
-					height: 40px;
-					border-radius: 10px;
-					background: linear-gradient(120deg, $pink, #ff8dc7);
+					padding: 0 28px !important;
+					height: 40px !important;
+					border-radius: 10px !important;
+					background: linear-gradient(120deg, $pink, #ff8dc7) !important;
 					box-shadow: 0 3px 14px rgba(245, 100, 169, 0.3);
 					transition: opacity 0.2s ease, transform 0.15s ease;
+					text-transform: none !important;
 
-					p {
+					p,
+					.MuiTypography-root {
 						color: #fff;
 						font-family: $font-body;
 						font-size: 13px;
-						font-weight: 600;
+						font-weight: 500;
 					}
 
 					&:hover {
@@ -1127,7 +1505,7 @@
 					}
 
 					&:disabled {
-						background: #e0d6da;
+						background: #e8e0e4 !important;
 						box-shadow: none;
 						transform: none;
 					}
@@ -1135,26 +1513,17 @@
 			}
 		}
 
+		// ── Password section ──────────────────────────
 		.bottom-box {
 			.top-inner-box {
+				display: flex;
+				flex-direction: column;
 				gap: 16px;
 
-				.title {
-					font-family: $font-body;
-					font-size: 14px;
-					font-weight: 600;
-					color: $text-primary;
-				}
-
 				.old-password-box {
+					display: flex;
+					flex-direction: column;
 					gap: 8px;
-
-					.title {
-						font-family: $font-body;
-						font-size: 12px;
-						font-weight: 600;
-						color: $text-primary;
-					}
 
 					input {
 						width: 50%;
@@ -1171,7 +1540,9 @@
 
 						&::placeholder {
 							color: $text-dim;
+							font-style: italic;
 						}
+
 						&:focus {
 							border-color: $pink;
 						}
@@ -1181,19 +1552,15 @@
 
 			.bottom-inner-box {
 				width: 100%;
+				display: flex;
 				flex-direction: row;
 				gap: 20px;
 
 				.new-password-box {
 					width: 100%;
+					display: flex;
+					flex-direction: column;
 					gap: 8px;
-
-					.title {
-						font-family: $font-body;
-						font-size: 12px;
-						font-weight: 600;
-						color: $text-primary;
-					}
 
 					input {
 						width: 100%;
@@ -1210,7 +1577,9 @@
 
 						&::placeholder {
 							color: $text-dim;
+							font-style: italic;
 						}
+
 						&:focus {
 							border-color: $pink;
 						}
@@ -1223,23 +1592,26 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				padding: 0 24px;
+				padding: 0 28px;
 				height: 40px;
 				border-radius: 10px;
 				background: linear-gradient(120deg, $pink, #ff8dc7);
 				box-shadow: 0 3px 14px rgba(245, 100, 169, 0.3);
-				transition: opacity 0.2s ease;
+				transition: opacity 0.2s ease, transform 0.15s ease;
 				cursor: pointer;
+				border: none;
 
-				p {
+				p,
+				.MuiTypography-root {
 					color: #fff;
 					font-family: $font-body;
 					font-size: 13px;
-					font-weight: 600;
+					font-weight: 500;
 				}
 
 				&:hover {
 					opacity: 0.9;
+					transform: translateY(-1px);
 				}
 			}
 		}
@@ -1267,6 +1639,151 @@
 					font-size: 13px;
 					color: $text-muted;
 					font-family: $font-body;
+				}
+			}
+		}
+
+		.right-wrap {
+			width: 100%;
+			height: auto;
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+
+			.cont_bd {
+				padding: 28px;
+				background: #fff;
+				border-radius: 16px;
+				border: 1px solid $border-soft;
+				box-shadow: 0 2px 12px rgba(245, 100, 169, 0.05);
+
+				.form_hd > div {
+					margin-bottom: 16px;
+				}
+			}
+
+			// ── Category select ───────────────────────
+			.select {
+				width: 220px;
+				height: 44px;
+				outline: none;
+				padding: 0 36px 0 14px;
+				border-radius: 10px;
+				border: 1.5px solid $border-soft;
+				font-family: $font-body;
+				font-size: 13px;
+				color: $text-primary;
+				appearance: none;
+				background: #fff;
+				cursor: pointer;
+				transition: border-color 0.18s ease;
+
+				&:focus {
+					border-color: $pink;
+				}
+			}
+
+			// ── Title input ───────────────────────────
+			.input-tit {
+				width: 100%;
+				height: 44px;
+				outline: none;
+				padding: 0 14px;
+				border-radius: 10px;
+				border: 1.5px solid $border-soft;
+				font-family: $font-body;
+				font-size: 13px;
+				color: $text-primary;
+				transition: border-color 0.18s ease;
+				box-sizing: border-box;
+				margin-top: 0;
+
+				&::placeholder {
+					color: $text-dim;
+					font-family: $font-body;
+					font-size: 13px;
+				}
+
+				&:focus {
+					border-color: $pink;
+				}
+			}
+
+			// ── Submit button row ─────────────────────
+			.btn-flex,
+			.flex-space {
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-end;
+				margin-top: 20px;
+
+				.btn-next,
+				.css-guvl2y-MuiButtonBase-root-MuiButton-root {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					padding: 0 32px;
+					height: 44px;
+					border-radius: 10px;
+					background: linear-gradient(120deg, $pink, #ff8dc7) !important;
+					box-shadow: 0 3px 16px rgba(245, 100, 169, 0.35);
+					transition: opacity 0.2s ease, transform 0.15s ease;
+					color: #fff !important;
+					font-family: $font-body !important;
+					font-size: 13px !important;
+					font-weight: 600 !important;
+					text-transform: none !important;
+
+					svg {
+						fill: #fff !important;
+					}
+
+					&:hover {
+						opacity: 0.9;
+						transform: translateY(-1px);
+					}
+
+					&:disabled {
+						background: #e0d6da !important;
+						box-shadow: none;
+						transform: none;
+					}
+				}
+			}
+
+			// ── Toast UI editor overrides ─────────────
+			.toastui-editor-defaultUI {
+				border-radius: 10px;
+				border: 1.5px solid $border-soft;
+				overflow: hidden;
+				font-family: $font-body;
+
+				button {
+					padding: 4px;
+				}
+			}
+
+			.toastui-editor-popup-body {
+				padding: 20px;
+			}
+
+			.youtube-div {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+
+			.youtube-input {
+				padding: 10px 14px;
+				border: 1.5px solid $border-soft;
+				border-radius: 10px;
+				font-family: $font-body;
+				font-size: 13px;
+				color: $text-primary;
+				outline: none;
+
+				&:focus {
+					border-color: $pink;
 				}
 			}
 		}
@@ -1303,7 +1820,6 @@
 			flex-direction: column;
 			gap: 0;
 
-			// ── Column header row ─────────────────────────
 			.listing-title-box {
 				display: flex;
 				flex-direction: row;
@@ -1331,7 +1847,6 @@
 				}
 			}
 
-			// ── Empty state ───────────────────────────────
 			.no-data {
 				display: flex;
 				flex-direction: column;
@@ -1349,13 +1864,11 @@
 					opacity: 0.4;
 					width: 40px;
 				}
-
 				p {
 					margin: 0;
 				}
 			}
 
-			// ── Each follow row ───────────────────────────
 			.follows-card-box {
 				display: flex;
 				flex-direction: row;
@@ -1369,12 +1882,10 @@
 				&:last-of-type {
 					border-radius: 0 0 10px 10px;
 				}
-
 				&:hover {
 					background: rgba(245, 100, 169, 0.02);
 				}
 
-				// ── Avatar + name ─────────────────────────
 				.info {
 					flex: 1;
 					display: flex;
@@ -1421,7 +1932,6 @@
 					}
 				}
 
-				// ── Stats ─────────────────────────────────
 				.details-box {
 					flex: 1;
 					display: flex;
@@ -1450,7 +1960,6 @@
 							font-weight: 300;
 						}
 
-						// Like icon
 						svg {
 							font-size: 16px !important;
 							cursor: pointer;
@@ -1460,7 +1969,6 @@
 							&[data-testid='FavoriteIcon'] {
 								color: $pink;
 							}
-
 							&:hover {
 								color: $pink;
 								transform: scale(1.15);
@@ -1469,7 +1977,6 @@
 					}
 				}
 
-				// ── Follow / Unfollow ─────────────────────
 				.action-box {
 					flex: 0.6;
 					display: flex;
@@ -1478,7 +1985,6 @@
 					justify-content: flex-end;
 					gap: 8px;
 
-					// "Following" label
 					.MuiTypography-root {
 						font-family: $font-sans;
 						font-size: 11px;
@@ -1486,7 +1992,6 @@
 						font-weight: 400;
 					}
 
-					// Buttons — override MUI defaults
 					.MuiButton-root {
 						font-family: $font-body !important;
 						font-size: 11px !important;
@@ -1522,7 +2027,6 @@
 			}
 		}
 
-		// ── Pagination ────────────────────────────────────
 		.pagination-config {
 			display: flex;
 			flex-direction: column;

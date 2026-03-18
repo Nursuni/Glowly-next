@@ -4,7 +4,6 @@ import { userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
 
 import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
-import { toastError } from '../toast';
 
 export function getJwtToken(): any {
 	if (typeof window !== 'undefined') {
@@ -24,10 +23,10 @@ export const logIn = async (nick: string, password: string): Promise<void> => {
 			updateStorage({ jwtToken });
 			updateUserInfo(jwtToken);
 		}
-	} catch (err) {
+	} catch (err: any) {
 		console.warn('login err', err);
-		logOut();
-		//throw new Error('Login Err');
+		// ✅ Re-throw so the component's catch block can show the error
+		throw err;
 	}
 };
 
@@ -53,15 +52,27 @@ const requestJwtToken = async ({
 		return { jwtToken: accessToken };
 	} catch (err: any) {
 		console.log('request token err', err.graphQLErrors);
-		switch (err.graphQLErrors[0].message) {
-			case 'Definer: login and password do not match':
-				await toastError('Please check your password again');
-				break;
-			case 'Definer: user has been blocked!':
-				await toastError('User has been blocked!');
-				break;
+
+		// ✅ Extract the backend message
+		const backendMessage: string = err?.graphQLErrors?.[0]?.message ?? '';
+
+		// ✅ Map all known backend messages to user-friendly strings
+		if (backendMessage.includes('login and password do not match')) {
+			throw new Error('Incorrect password. Please try again.');
+		} else if (backendMessage.includes('user has been blocked')) {
+			throw new Error('This account has been blocked.');
+		} else if (
+			backendMessage.includes('not found') ||
+			backendMessage.includes('does not exist') ||
+			backendMessage.includes('No member')
+		) {
+			throw new Error('No account found with that nickname.');
+		} else if (backendMessage) {
+			// Pass through any other backend message directly
+			throw new Error(backendMessage);
+		} else {
+			throw new Error('Login failed. Please try again.');
 		}
-		throw new Error('token error');
 	}
 };
 
@@ -79,10 +90,10 @@ export const signUp = async (
 			updateStorage({ jwtToken });
 			updateUserInfo(jwtToken);
 		}
-	} catch (err) {
-		console.warn('login err', err);
-		logOut();
-		//throw new Error('Login Err');
+	} catch (err: any) {
+		console.warn('signup err', err);
+		// ✅ Re-throw so the component's catch block can show the error
+		throw err;
 	}
 };
 
@@ -108,21 +119,24 @@ const requestSignUpJwtToken = async ({
 			fetchPolicy: 'network-only',
 		});
 
-		console.log('---------- login ----------');
+		console.log('---------- signup ----------');
 		const { accessToken } = result?.data?.signup;
 
 		return { jwtToken: accessToken };
 	} catch (err: any) {
 		console.log('request token err', err.graphQLErrors);
-		switch (err.graphQLErrors[0].message) {
-			case 'Definer: login and password do not match':
-				await toastError('Please check your password again');
-				break;
-			case 'Definer: user has been blocked!':
-				await toastError('User has been blocked!');
-				break;
+
+		const backendMessage: string = err?.graphQLErrors?.[0]?.message ?? '';
+
+		if (backendMessage.includes('already exists') || backendMessage.includes('duplicate')) {
+			throw new Error('This nickname is already taken.');
+		} else if (backendMessage.includes('phone')) {
+			throw new Error('Invalid phone number.');
+		} else if (backendMessage) {
+			throw new Error(backendMessage);
+		} else {
+			throw new Error('Sign up failed. Please try again.');
 		}
-		throw new Error('token error');
 	}
 };
 
@@ -147,7 +161,6 @@ export const updateUserInfo = (jwtToken: any) => {
 			claims.memberImage === null || claims.memberImage === undefined
 				? '/img/profile/user.svg'
 				: `${claims.memberImage}`,
-
 		memberAddress: claims.memberAddress ?? '',
 		memberGender: claims.memberGender ?? '',
 		memberDesc: claims.memberDesc ?? '',

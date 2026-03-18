@@ -13,10 +13,10 @@ import { CommentStatus } from '../../libs/enums/comment.enum';
 import { toastError, toastSuccess } from '@/libs/toast';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-export const getServerSideProps = async ({ locale, params }: any) => ({
+// ✅ getStaticProps instead of getServerSideProps — no params needed since we use query strings
+export const getStaticProps = async ({ locale }: any) => ({
 	props: {
 		...(await serverSideTranslations(locale, ['common'])),
-		articleId: params?.id || '',
 	},
 });
 
@@ -27,12 +27,14 @@ const categoryMeta: Record<string, { icon: string; label: string }> = {
 	TUTORIAL: { icon: '✿', label: 'Lighthearted' },
 };
 
-const BlogDetail: NextPage = ({ articleId: propArticleId }: any) => {
+const BlogDetail: NextPage = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 
-	const articleId = propArticleId || (router.query.id as string) || '';
+	// ✅ Read both from query params: /blog/detail?articleCategory=FREE&id=...
+	const articleId = (router.query.id as string) || '';
+	const articleCategory = (router.query.articleCategory as string) || 'FREE';
 
 	const [boardArticle, setBoardArticle] = useState<any>(null);
 	const [comments, setComments] = useState<any[]>([]);
@@ -54,6 +56,7 @@ const BlogDetail: NextPage = ({ articleId: propArticleId }: any) => {
 		skip: !articleId,
 		fetchPolicy: 'network-only',
 	});
+
 	const { data: commentsData, refetch: commentsRefetch } = useQuery(GET_COMMENTS, {
 		variables: { input: searchFilter },
 		skip: !searchFilter.search.commentRefId,
@@ -79,7 +82,6 @@ const BlogDetail: NextPage = ({ articleId: propArticleId }: any) => {
 		try {
 			if (!user?._id) throw new Error('Please login');
 			await likeTargetBoardArticle({ variables: { input: boardArticle._id } });
-			// Refetch so meLiked + articleLikes count both update
 			await articleRefetch();
 		} catch (err: any) {
 			toastError(err.message);
@@ -120,11 +122,10 @@ const BlogDetail: NextPage = ({ articleId: propArticleId }: any) => {
 
 	if (device === 'mobile') return <div>MOBILE BLOG DETAIL</div>;
 
-	const cat = boardArticle?.articleCategory || 'FREE';
+	// ✅ Use category from URL query param first, fallback to fetched article's category
+	const cat = boardArticle?.articleCategory || articleCategory || 'FREE';
 	const catMeta = categoryMeta[cat] ?? categoryMeta['FREE'];
 
-	// ── Like state derived from backend ──────────────────────────────────────
-	// meLiked is an array of like objects — if it has length > 0, user has liked it
 	const isLiked: boolean = Array.isArray(boardArticle?.meLiked) && boardArticle.meLiked.length > 0;
 	const likeCount: number = boardArticle?.articleLikes ?? 0;
 
@@ -307,7 +308,7 @@ const BlogDetail: NextPage = ({ articleId: propArticleId }: any) => {
 								)}
 							</div>
 							<button
-								onClick={() => router.push('/blog')}
+								onClick={() => router.push({ pathname: '/blog', query: { articleCategory: cat } })}
 								style={{
 									height: 36,
 									padding: '0 18px',
@@ -349,7 +350,6 @@ const BlogDetail: NextPage = ({ articleId: propArticleId }: any) => {
 										/>
 									)}
 
-									{/* Rich-text HTML */}
 									<div
 										style={{
 											fontFamily: 'Cormorant Garamond, serif',
@@ -360,7 +360,6 @@ const BlogDetail: NextPage = ({ articleId: propArticleId }: any) => {
 										dangerouslySetInnerHTML={{ __html: boardArticle?.articleContent || '' }}
 									/>
 
-									{/* ── Like button — filled when isLiked ── */}
 									<div
 										style={{
 											display: 'flex',
@@ -379,7 +378,6 @@ const BlogDetail: NextPage = ({ articleId: propArticleId }: any) => {
 												gap: 6,
 												height: 34,
 												padding: '0 18px',
-												// ✅ filled pink background when liked, outline when not
 												background: isLiked ? '#f564a9' : 'transparent',
 												border: '1px solid rgba(245,100,169,0.5)',
 												borderRadius: 20,
@@ -391,7 +389,6 @@ const BlogDetail: NextPage = ({ articleId: propArticleId }: any) => {
 												transition: 'all 0.2s ease',
 											}}
 										>
-											{/* ✅ filled heart ♥ when liked, outline heart ♡ when not */}
 											{isLiked ? '♥' : '♡'} {likeCount} {likeCount === 1 ? 'Like' : 'Likes'}
 										</button>
 										<span style={{ fontFamily: 'Jost, sans-serif', fontSize: 13, color: '#7a7067' }}>
@@ -467,7 +464,7 @@ const BlogDetail: NextPage = ({ articleId: propArticleId }: any) => {
 								</div>
 							) : (
 								<p style={{ fontFamily: 'Jost, sans-serif', fontSize: 13, color: '#7a7067', margin: 0 }}>
-									Please log in to leave a comment.
+									{user?._id ? 'You cannot comment on your own article.' : 'Please log in to leave a comment.'}
 								</p>
 							)}
 

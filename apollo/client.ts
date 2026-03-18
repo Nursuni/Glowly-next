@@ -77,19 +77,14 @@ function createIsomorphicLink() {
 	);
 
 	// Error handling
-	const errorLink = onError(({ graphQLErrors, networkError }) => {
-		if (graphQLErrors && graphQLErrors.length > 0) {
-			graphQLErrors.forEach((err) => {
-				const msg = err.message || 'An unknown GraphQL error occurred';
-				toastError(msg);
-				console.log(`[GraphQL error]: Message: ${msg}`, err);
-			});
-		}
+	const errorLink = onError(({ graphQLErrors, operation }) => {
+		if (graphQLErrors) {
+			const skipOps = ['Login', 'Signup'];
+			if (skipOps.includes(operation.operationName)) return;
 
-		if (networkError) {
-			const msg = 'message' in networkError ? networkError.message : 'A network error occurred';
-			toastError(msg);
-			console.log(`[Network error]:`, networkError);
+			graphQLErrors.forEach(({ message }) => {
+				toastError(message);
+			});
 		}
 	});
 
