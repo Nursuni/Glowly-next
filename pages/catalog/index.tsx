@@ -172,31 +172,8 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 
 					{/* Right side: toolbar + grid */}
 					<div className="product-right">
-						{/* ── Toolbar ── */}
+						{/* ── Toolbar: always visible ── */}
 						<div className="toolbar-box">
-							<div className="toolbar-left">
-								<button
-									className={`sort-btn ${viewMode === 'small' ? 'active' : ''}`}
-									onClick={() => setViewMode('small')}
-									title="3 columns"
-								>
-									<ViewModuleIcon />
-								</button>
-								<button
-									className={`sort-btn ${viewMode === 'medium' ? 'active' : ''}`}
-									onClick={() => setViewMode('medium')}
-									title="2 columns"
-								>
-									<ViewQuiltIcon />
-								</button>
-								<button
-									className={`sort-btn ${viewMode === 'large' ? 'active' : ''}`}
-									onClick={() => setViewMode('large')}
-									title="1 column"
-								>
-									<GridViewIcon />
-								</button>
-							</div>
 							<div className="toolbar-right">
 								<span className="sort-label">Sort by</span>
 								<Button onClick={sortingClickHandler} disableRipple className="sort-btn">
@@ -221,13 +198,7 @@ const ProductList: NextPage<{ initialInput: ProductsInquiry }> = ({ initialInput
 							</div>
 						</div>
 
-						{/*
-						 * FIX: .no-data is now a sibling of .list-config, not a child.
-						 * When it was inside the grid, align-content:start collapsed its
-						 * row to content height so centering never worked regardless of
-						 * any CSS tricks. Now it's a plain block element with full control
-						 * over its own height and centering.
-						 */}
+						{/* ── Products or No Data ── */}
 						{products?.length === 0 ? (
 							<div className="no-data">
 								<span className="no-data-icon">✦</span>

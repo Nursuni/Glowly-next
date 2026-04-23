@@ -11,14 +11,14 @@ import { NEXT_PUBLIC_API_URL } from '../../config';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 
-interface ProductCardType {
+interface CatalogProductCardType {
 	product: Product;
 	likeProductHandler?: (user: any, productId: string) => void;
 	myFavorites?: boolean;
 	recentlyVisited?: boolean;
 }
 
-const ProductCard = ({ product, likeProductHandler, myFavorites, recentlyVisited }: ProductCardType) => {
+const CatalogProductCard = ({ product, likeProductHandler, myFavorites, recentlyVisited }: CatalogProductCardType) => {
 	const user = useReactiveVar(userVar);
 
 	const imagePath = product?.productImages[0]
@@ -27,69 +27,53 @@ const ProductCard = ({ product, likeProductHandler, myFavorites, recentlyVisited
 
 	return (
 		<Stack className="card-config">
-			{/* Top Section - Image + Price */}
-			<Stack className="top">
+			{/* Floating Image Area */}
+			<Box className="card-top">
 				<Link href={{ pathname: '/catalog/detail', query: { productId: product._id } }}>
 					<img src={imagePath} alt={product.productTitle} className="product-image" />
 				</Link>
-				<Box className="price-box">
-					<Typography className="price">{formatterStr(product.productPrice)}₩</Typography>
-				</Box>
-			</Stack>
+				<Box className="price-badge">{formatterStr(product.productPrice)}₩</Box>
+			</Box>
 
-			{/* Bottom Section - Info + Icons */}
-			<Stack className="bottom" spacing={1}>
-				<Stack className="name-address">
-					<Link href={{ pathname: '/catalog/detail', query: { productId: product._id } }}>
-						<Typography className="title">{product.productTitle}</Typography>
-					</Link>
+			{/* Seamless Description Area */}
+			<Stack className="bottom">
+				<Box className="name-address">
+					<Typography className="title">{product.productTitle}</Typography>
 					<Typography className="subtitle">
-						{product.productType || 'N/A'} | {product.productTarget || 'N/A'} | {(product.ageRange || []).join(', ')}
+						{product.productType} &nbsp;•&nbsp; {product.productTarget}
 					</Typography>
-				</Stack>
+				</Box>
 
-				{/* Additional Product Info */}
-				<Stack className="product-info" direction="row" flexWrap="wrap" spacing={0.5}>
-					{product.volume && product.volumeUnit && (
-						<Chip label={`Volume: ${product.volume}${product.volumeUnit}`} size="small" />
-					)}
-					{(product.skinType || []).map((s, idx) => (
-						<Chip key={idx} label={`Skin: ${s}`} size="small" />
-					))}
-					{(product.ingredientType || []).map((i, idx) => (
-						<Chip key={idx} label={`Ingredient: ${i}`} size="small" />
+				<Stack className="product-info" direction="row">
+					{product.volume && <Chip className="chip-custom" label={`${product.volume}${product.volumeUnit}`} />}
+					{product.skinType?.slice(0, 1).map((s, idx) => (
+						<Chip key={idx} className="chip-custom" label={s} />
 					))}
 				</Stack>
 
-				<Stack className="type-buttons" direction="row" justifyContent="space-between" alignItems="center">
-					<Stack direction="row" spacing={1} alignItems="center">
-						{!recentlyVisited && (
-							<>
-								<IconButton color="default">
-									<RemoveRedEyeIcon />
-								</IconButton>
-								<Typography>{product.productViews}</Typography>
+				<div className="divider" />
 
-								<IconButton color="default" onClick={() => likeProductHandler && likeProductHandler(user, product._id)}>
-									{myFavorites || (product.meLiked && product.meLiked[0]?.myFavorite) ? (
-										<FavoriteIcon color="primary" />
-									) : (
-										<FavoriteBorderIcon />
-									)}
-								</IconButton>
-								<Typography>{product.productLikes}</Typography>
+				<Box className="action-row">
+					<div className="stats-group">
+						<div className="stat-item">
+							<RemoveRedEyeIcon /> <span>{product.productViews}</span>
+						</div>
+						<div className="stat-item">
+							<CommentIcon /> <span>{product.productComments}</span>
+						</div>
+					</div>
 
-								<IconButton color="default">
-									<CommentIcon />
-								</IconButton>
-								<Typography>{product.productComments}</Typography>
-							</>
+					<IconButton className="like-btn" size="small" onClick={() => likeProductHandler?.(user, product._id)}>
+						{myFavorites || product.meLiked?.[0]?.myFavorite ? (
+							<FavoriteIcon sx={{ color: 'var(--card-accent)', fontSize: 18 }} />
+						) : (
+							<FavoriteBorderIcon sx={{ fontSize: 18 }} />
 						)}
-					</Stack>
-				</Stack>
+					</IconButton>
+				</Box>
 			</Stack>
 		</Stack>
 	);
 };
 
-export default ProductCard;
+export default CatalogProductCard;

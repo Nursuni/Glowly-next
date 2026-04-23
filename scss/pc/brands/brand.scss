@@ -358,14 +358,15 @@ $text-dim: #cdb8c6;
 					color: $pink-light;
 					opacity: 0.4;
 					display: block;
+					animation: twinkle-soft 3s ease-in-out infinite;
 				}
 
 				p {
-					font-family: $font-serif;
+					font-family: $font-display;
 					font-size: 20px;
-					font-weight: 400;
-					font-style: italic;
-					color: $text-secondary;
+					font-weight: 300;
+
+					color: $muted;
 					margin: 0;
 				}
 

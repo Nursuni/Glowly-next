@@ -59,12 +59,10 @@ const TopProducts = (props: TopProductsProps) => {
 		try {
 			if (!id) return;
 			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
-			//execute likeTargetProduct
 			await likeTargetProduct({
 				variables: { input: id },
 			});
 			await getProductsRefetch({ input: initialInput });
-			//execute getsRefetch
 			await toastSuccess('success');
 		} catch (err) {
 			const errorMessage = err instanceof Error ? err.message : String(err);
@@ -73,7 +71,7 @@ const TopProducts = (props: TopProductsProps) => {
 		}
 	};
 
-	// Filter dummy products by selected skin type
+	// Filter products by selected skin type
 	const filteredProducts = useMemo(() => {
 		if (activeFilter === 'ALL') return topProducts;
 		return topProducts.filter((p) => Array.isArray(p.skinType) && p.skinType.includes(activeFilter as SkinType));
@@ -176,7 +174,9 @@ TopProducts.defaultProps = {
 		limit: 8,
 		sort: 'productRank',
 		direction: Direction.DESC,
-		search: {},
+		search: {
+			productTypeList: ['SKINCARE'],
+		},
 	},
 };
 

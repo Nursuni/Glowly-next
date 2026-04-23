@@ -10,7 +10,6 @@ import '../scss/app.scss';
 import '../scss/pc/main.scss';
 import { useApollo } from '../apollo/client';
 
-import { CurrencyProvider } from '../libs/context/CurrencyContext';
 import { ApolloProvider } from '@apollo/client';
 import { appWithTranslation } from 'next-i18next';
 import ScrollToTop from '@/libs/components/common/ScrollToTop';
@@ -45,25 +44,23 @@ const App = ({ Component, pageProps }: AppProps) => {
 	}, [router]);
 	return (
 		<ApolloProvider client={client}>
-			<CurrencyProvider>
-				{' '}
-				<ThemeProvider theme={theme}>
-					<CssBaseline />
-					<Component {...pageProps} />
-					<ScrollToTop />
-					<ToastContainer
-						position="top-right"
-						autoClose={2500}
-						newestOnTop
-						closeOnClick
-						pauseOnHover
-						draggable
-						pauseOnFocusLoss
-						limit={3}
-						theme="colored"
-					/>
-				</ThemeProvider>
-			</CurrencyProvider>
+			{' '}
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				<Component {...pageProps} />
+				<ScrollToTop />
+				<ToastContainer
+					position="top-right"
+					autoClose={2500}
+					newestOnTop
+					closeOnClick
+					pauseOnHover
+					draggable
+					pauseOnFocusLoss
+					limit={3}
+					theme="colored"
+				/>
+			</ThemeProvider>
 		</ApolloProvider>
 	);
 };

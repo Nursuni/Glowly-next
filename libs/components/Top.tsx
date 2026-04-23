@@ -276,7 +276,7 @@ const Top = () => {
 																alt="avatar"
 																className="np-avatar"
 															/>
-															<div>
+															<div className="np-body">
 																<div className="np-content">{n.content}</div>
 																<div className="np-date">{new Date(n.createdAt).toLocaleString()}</div>
 															</div>
@@ -293,6 +293,7 @@ const Top = () => {
 																</button>
 															)}
 															<button
+																className="del"
 																onClick={async () => {
 																	await deleteNotification({ variables: { notificationId: n._id } });
 																	refetchNotifs();
@@ -315,7 +316,7 @@ const Top = () => {
 							{/* User Dropdown */}
 							<div className="user-drop-wrap" ref={userDropRef}>
 								<button
-									className={`icon-btn user-btn${userDropOpen ? ' active' : ''}`}
+									className={`icon-btn user-btn${userDropOpen ? ' active' : ''}${user?.memberImage ? ' has-img' : ''}`}
 									onClick={() => setUserDropOpen((v) => !v)}
 									aria-label="Account"
 								>

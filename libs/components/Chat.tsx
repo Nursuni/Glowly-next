@@ -6,12 +6,13 @@ import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
 import { useRouter } from 'next/router';
 import ScrollableFeed from 'react-scrollable-feed';
-import { RippleBadge } from '../../scss/MaterialTheme/styled';
+
 import { useReactiveVar } from '@apollo/client';
 import { socketVar, userVar } from '../../apollo/store';
 import { Member } from '../types/member/member';
 import { Messages, NEXT_PUBLIC_API_URL } from '../config';
 import { toastError } from '../toast';
+import { RippleBadge } from '@/scss/MaterialTheme/styled';
 
 const NewMessage = (type: any) => {
 	if (type === 'right') {
@@ -62,6 +63,26 @@ const Chat = () => {
 	const socket = useReactiveVar(socketVar);
 
 	/** LIFECYCLES **/
+	useEffect(() => {
+		if (!socket) return;
+
+		const handleMessage = (msg: MessageEvent) => {
+			try {
+				const data = JSON.parse(msg.data);
+				if (data.event === 'message') {
+					setMessagesList((prev) => [...prev, data]);
+				}
+				if (data.event === 'info') {
+					setOnlineUsers(data.totalClients);
+				}
+			} catch (e) {
+				console.log('WS parse error:', e);
+			}
+		};
+
+		socket.addEventListener('message', handleMessage);
+		return () => socket.removeEventListener('message', handleMessage);
+	}, [socket]);
 
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
@@ -100,7 +121,15 @@ const Chat = () => {
 			return;
 		}
 
-		socket.send(JSON.stringify({ event: 'message', data: messageInput }));
+		socket.send(
+			JSON.stringify({
+				event: 'message',
+				data: {
+					text: messageInput,
+					memberData: user ?? null,
+				},
+			}),
+		);
 		setMessageInput('');
 	};
 	return (

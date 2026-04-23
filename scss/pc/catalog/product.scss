@@ -1,72 +1,137 @@
 .card-config {
-	border: 1px solid #e0e0e0;
-	border-radius: 12px;
+	--card-accent: #f564a9;
+	--card-bg: #ffffff;
+	--card-dark: #0f0d0b;
+	--card-muted: #9e9189;
+	--card-radius: 16px;
+
+	max-width: 280px;
+	background: var(--card-bg);
+	border-radius: var(--card-radius);
+	border: 1px solid rgba(0, 0, 0, 0.06);
 	overflow: hidden;
-	background: #fff;
-	transition: box-shadow 0.2s ease-in-out;
+	transition: all 0.4s ease;
+	display: flex;
+	flex-direction: column;
 
 	&:hover {
-		box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.1);
+		transform: translateY(-6px);
+		box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+
+		.product-image {
+			transform: scale(1.05);
+		}
 	}
 
-	.top {
+	/* ── SEAMLESS TOP ── */
+	.card-top {
 		position: relative;
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		background: transparent; // REMOVED grey background
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 20px; // Gives the product breathing room
 
 		.product-image {
 			width: 100%;
-			height: 200px;
-			object-fit: cover;
+			height: 100%;
+			object-fit: contain;
+			transition: transform 0.5s ease;
+			/* This shadow follows the shape of the bottle, not the box! */
+			filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.04));
 		}
 
-		.price-box {
+		.price-badge {
 			position: absolute;
-			bottom: 10px;
-			left: 10px;
-			background: rgba(255, 255, 255, 0.9);
+			top: 15px;
+			right: 15px;
+			background: var(--card-dark);
+			color: #fff;
 			padding: 4px 8px;
-			border-radius: 8px;
-
-			.price {
-				font-weight: 600;
-				font-size: 16px;
-			}
+			border-radius: 4px;
+			font-size: 11px;
+			font-weight: 600;
+			z-index: 2;
 		}
 	}
 
+	/* ── BETTER DESCRIPTION & BOTTOM ── */
 	.bottom {
-		padding: 12px;
+		padding: 0 20px 20px 20px;
+		text-align: center; // Centering usually helps the floating look
 
-		.title {
-			font-weight: 600;
-			font-size: 16px;
-		}
+		.name-address {
+			margin-bottom: 12px;
 
-		.subtitle {
-			font-size: 12px;
-			color: gray;
+			.title {
+				font-family: 'Cormorant Garamond', serif;
+				font-size: 19px;
+				font-weight: 600;
+				color: var(--card-dark);
+				line-height: 1.2;
+				margin-bottom: 4px;
+			}
+
+			.subtitle {
+				font-size: 10px;
+				color: var(--card-muted);
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				font-weight: 500;
+			}
 		}
 
 		.product-info {
-			margin-top: 4px;
 			display: flex;
-			gap: 4px;
+			justify-content: center;
+			gap: 6px;
+			margin-bottom: 15px;
+
+			.chip-custom {
+				height: 20px;
+				font-size: 9px;
+				background: #f9f9f9;
+				border: 1px solid #eee;
+				color: #888;
+				border-radius: 4px;
+			}
 		}
 
-		.type-buttons {
-			margin-top: 8px;
+		.divider {
+			height: 1px;
+			background: #f4f4f4;
+			width: 100%;
+			margin-bottom: 12px;
+		}
+
+		.action-row {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 
-			.type-btn {
-				font-size: 13px;
-				font-weight: 500;
-				padding: 2px 8px;
-				border: 1px solid #ccc;
-				border-radius: 8px;
-				cursor: pointer;
+			.stats-group {
+				display: flex;
+				gap: 10px;
+			}
+
+			.stat-item {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+				color: #b0b0b0;
+				font-size: 11px;
+				svg {
+					font-size: 14px;
+				}
+			}
+
+			.like-btn {
+				padding: 4px;
+				color: #b0b0b0;
 				&:hover {
-					background: #f5f5f5;
+					color: var(--card-accent);
 				}
 			}
 		}

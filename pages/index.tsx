@@ -36,14 +36,17 @@ const Home: NextPage = () => {
 				<HomeFeaturesSection />
 				<ShopByCategories />
 				<SectionDivider variant="dark" />
-				<TopProducts />
-				<TopBrandsCarousel initialInput={undefined} />
-				<SectionDivider variant="pink" />
 				<TrendProductCard />
+				<SectionDivider variant="pink" />
+
+				<TopBrandsCarousel initialInput={undefined} />
+
+				<TopProducts />
+				<SectionDivider variant="dark" />
+
+				<Advertisement />
 
 				<BoardArticles />
-				<SectionDivider variant="dark" />
-				<Advertisement />
 				<SubscribeSection />
 			</Stack>
 		);

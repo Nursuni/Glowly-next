@@ -55,10 +55,6 @@ const SectionHeader = ({ label, open, onToggle }: { label: string; open: boolean
 	</Stack>
 );
 
-// FIX: FilterContent is defined at module level (outside Filter).
-// When it was defined inside Filter's render body, React treated it as a brand
-// new component type on every render and fully unmounted/remounted it —
-// destroying input focus after every keystroke.
 interface FilterContentProps {
 	searchText: string;
 	setSearchText: (v: string) => void;

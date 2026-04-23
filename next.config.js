@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const { i18n } = require('./next-i18next.config');
+const path = require('path');
 
-const nextConfig = {
+module.exports = {
 	reactStrictMode: true,
 
 	experimental: {
@@ -16,10 +17,17 @@ const nextConfig = {
 
 	i18n,
 
-	// 🔥 Reduce build overhead
 	compiler: {
 		styledComponents: true,
 	},
-};
 
-module.exports = nextConfig;
+	sassOptions: {
+		includePaths: [path.join(__dirname)],
+		silenceDeprecations: ['legacy-js-api', 'import', 'color-functions', 'global-builtin'],
+	},
+
+	webpack(config) {
+		config.resolve.alias['~'] = path.resolve(__dirname);
+		return config;
+	},
+};

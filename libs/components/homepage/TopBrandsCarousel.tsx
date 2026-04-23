@@ -91,35 +91,42 @@ const TopBrandsCarousel = ({ initialInput }: TopBrandsProps) => {
 				</Stack>
 
 				{/* Swiper */}
-				<Stack className={'wrapper'}>
-					<Box className={'switch-btn swiper-brands-prev'}>
-						<ArrowBackIosNewIcon />
+				{topBrands.length === 0 ? (
+					<Box className="empty-list">
+						<div className="empty-icon">✦</div>
+						<p>No brands yet</p>
 					</Box>
+				) : (
+					<Stack className={'wrapper'}>
+						<Box className={'switch-btn swiper-brands-prev'}>
+							<ArrowBackIosNewIcon />
+						</Box>
 
-					<Box className={'card-wrapper'}>
-						<Swiper
-							className={'top-brands-swiper'}
-							slidesPerView={'auto'}
-							spaceBetween={24}
-							modules={[Autoplay, Navigation]}
-							autoplay={{ delay: 3000, disableOnInteraction: false }}
-							navigation={{
-								nextEl: '.swiper-brands-next',
-								prevEl: '.swiper-brands-prev',
-							}}
-						>
-							{topBrands.map((brand) => (
-								<SwiperSlide className={'top-brands-slide'} key={brand._id}>
-									<TopBrandCard brand={brand} likeMemberHandler={() => {}} />
-								</SwiperSlide>
-							))}
-						</Swiper>
-					</Box>
+						<Box className={'card-wrapper'}>
+							<Swiper
+								className={'top-brands-swiper'}
+								slidesPerView={'auto'}
+								spaceBetween={24}
+								modules={[Autoplay, Navigation]}
+								autoplay={{ delay: 3000, disableOnInteraction: false }}
+								navigation={{
+									nextEl: '.swiper-brands-next',
+									prevEl: '.swiper-brands-prev',
+								}}
+							>
+								{topBrands.map((brand) => (
+									<SwiperSlide className={'top-brands-slide'} key={brand._id}>
+										<TopBrandCard brand={brand} likeMemberHandler={() => {}} />
+									</SwiperSlide>
+								))}
+							</Swiper>
+						</Box>
 
-					<Box className={'switch-btn swiper-brands-next'}>
-						<ArrowForwardIosIcon />
-					</Box>
-				</Stack>
+						<Box className={'switch-btn swiper-brands-next'}>
+							<ArrowForwardIosIcon />
+						</Box>
+					</Stack>
+				)}
 			</Stack>
 		</Stack>
 	);
