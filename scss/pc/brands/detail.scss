@@ -48,7 +48,6 @@ $text-dim: #cdb8c6;
 		display: flex;
 		justify-content: center;
 
-		// subtle grain texture
 		&::before {
 			content: '';
 			position: fixed;
@@ -206,10 +205,47 @@ $text-dim: #cdb8c6;
 							padding: 4px 14px;
 							letter-spacing: 0.3px;
 						}
-					}
-				}
-			}
-		}
+					} // ← .meta-row closes here
+
+					// ─── Follow Button ────────────────
+					.follow-btn {
+						margin-top: 6px;
+						align-self: flex-start;
+						padding: 9px 28px;
+						border: 1.5px solid $pink;
+						border-radius: 100px;
+						background: transparent;
+						color: $pink;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 500;
+						letter-spacing: 0.08em;
+						text-transform: uppercase;
+						cursor: pointer;
+						transition: all 0.22s ease;
+
+						&:hover {
+							background: $pink;
+							color: #fff;
+							box-shadow: 0 4px 16px rgba($pink, 0.3);
+						}
+
+						&.followed {
+							background: $pink;
+							color: #fff;
+							box-shadow: 0 4px 16px rgba($pink, 0.25);
+
+							&:hover {
+								background: transparent;
+								color: $pink;
+								box-shadow: none;
+							}
+						}
+					} // ← .follow-btn closes here
+
+				} // ← .info closes here
+			} // ← .brand-info closes here
+		} // ← .brand-hero closes here
 
 		// ─── Section Title ────────────────────────────
 		.section-title {
@@ -362,7 +398,6 @@ $text-dim: #cdb8c6;
 					}
 				}
 
-				// ReviewCard overrides
 				.review-card {
 					margin-top: 20px;
 					padding-bottom: 20px;

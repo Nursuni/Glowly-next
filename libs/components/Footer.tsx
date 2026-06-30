@@ -19,7 +19,6 @@ const Footer = () => {
 	const device = useDeviceDetect();
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	/* scroll fade-in */
 	useEffect(() => {
 		const root = containerRef.current;
 		if (!root) return;
@@ -60,18 +59,10 @@ const Footer = () => {
 						<Box className={'footer-box'}>
 							<span>Follow Glowly</span>
 							<div className={'media-box'}>
-								<a href="#">
-									<FacebookOutlinedIcon />
-								</a>
-								<a href="#">
-									<TelegramIcon />
-								</a>
-								<a href="#">
-									<InstagramIcon />
-								</a>
-								<a href="#">
-									<TwitterIcon />
-								</a>
+								<a href="#"><FacebookOutlinedIcon /></a>
+								<a href="#"><TelegramIcon /></a>
+								<a href="#"><InstagramIcon /></a>
+								<a href="#"><TwitterIcon /></a>
 							</div>
 						</Box>
 					</Stack>
@@ -85,13 +76,7 @@ const Footer = () => {
 								<span>Best Brands</span>
 								<span>New Arrivals</span>
 							</div>
-							<div>
-								<strong>Help</strong>
-								<span>Shipping & Returns</span>
-								<span>Privacy Policy</span>
-								<span>Terms of Service</span>
-								<span>FAQs</span>
-							</div>
+				
 							<div>
 								<strong>Discover</strong>
 								<span>About Glowly</span>
@@ -112,6 +97,8 @@ const Footer = () => {
 	/* ─── DESKTOP ─── */
 	return (
 		<Stack className={'footer-container'} ref={containerRef as any}>
+
+			{/* ── MAIN GRID ── */}
 			<Stack className={'main'}>
 				{/* LEFT */}
 				<Stack className={'left gf-fade'}>
@@ -135,18 +122,10 @@ const Footer = () => {
 					<Box className={'footer-box'}>
 						<span>Follow Glowly</span>
 						<div className={'media-box'}>
-							<a href="#">
-								<FacebookOutlinedIcon />
-							</a>
-							<a href="#">
-								<TelegramIcon />
-							</a>
-							<a href="#">
-								<InstagramIcon />
-							</a>
-							<a href="#">
-								<TwitterIcon />
-							</a>
+							<a href="#"><FacebookOutlinedIcon /></a>
+							<a href="#"><TelegramIcon /></a>
+							<a href="#"><InstagramIcon /></a>
+							<a href="#"><TwitterIcon /></a>
 						</div>
 					</Box>
 				</Stack>
@@ -191,32 +170,43 @@ const Footer = () => {
 				</Stack>
 			</Stack>
 
-			{/* TRUST BADGES — separator only between items, not after last */}
+			{/* ── TRUST BADGES ── */}
 			<div className={'badges gf-fade'}>
 				{BADGES.map((b, i) => (
-					<div key={b.title} className="badge-wrapper">
-						<div className={'badge'}>
+					<React.Fragment key={b.title}>
+						<div
+							className={'badge'}
+							style={{
+								flex: 1,
+								padding: '0',
+								display: 'flex',
+								alignItems: 'center',
+								gap: '12px',
+							}}
+						>
 							<div className={'badge-icon'}>{b.icon}</div>
 							<div className={'badge-text'}>
 								<strong>{b.title}</strong>
 								<span>{b.sub}</span>
 							</div>
 						</div>
-						{i < BADGES.length - 1 && <div className={'badge-sep'} />}
-					</div>
+						{i < BADGES.length - 1 && (
+							<div
+								style={{
+									width: '1px',
+									height: '28px',
+									background: 'rgba(255,255,255,0.08)',
+									flexShrink: 0,
+									margin: '0 32px',
+								}}
+							/>
+						)}
+					</React.Fragment>
 				))}
 			</div>
 
-			{/* BOTTOM BAR */}
-			<Stack className={'second gf-fade'}>
-				<Box className={'links'}>
-					<span>Privacy Policy</span>
-					<span>Terms of Service</span>
-					<span>Cookie Settings</span>
-				</Box>
-			</Stack>
 
-			{/* COPYRIGHT ONLY */}
+			{/* ── COPYRIGHT ── */}
 			<Box className={'tagline-bar gf-fade'}>
 				<p className={'copy'}>© {dayjs().year()} Glowly Cosmetics. All Rights Reserved.</p>
 			</Box>

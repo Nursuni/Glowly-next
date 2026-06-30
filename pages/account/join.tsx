@@ -2,7 +2,18 @@ import React, { useCallback, useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { Box, Button, Checkbox, FormControlLabel, FormGroup, Stack, Radio, RadioGroup, FormLabel } from '@mui/material';
+import {
+	Box,
+	Button,
+	Checkbox,
+	FormControlLabel,
+	FormGroup,
+	Stack,
+	Radio,
+	RadioGroup,
+	FormLabel,
+	Typography,
+} from '@mui/material';
 import { useRouter } from 'next/router';
 import { logIn, signUp } from '../../libs/auth';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -14,7 +25,6 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-/** Extract the most useful message from any Apollo / JS error */
 const extractMessage = (err: any): string => {
 	return (
 		err?.graphQLErrors?.[0]?.message ||
@@ -36,9 +46,7 @@ const Join: NextPage = () => {
 		gender: '',
 	});
 
-	// loginView: true = showing login form, false = showing signup form
 	const [loginView, setLoginView] = useState<boolean>(true);
-	// animating: true during the brief cross-fade before the panel snaps
 	const [animating, setAnimating] = useState<boolean>(false);
 
 	/** HANDLERS **/
@@ -62,7 +70,7 @@ const Join: NextPage = () => {
 		} catch (err: any) {
 			toastError(extractMessage(err));
 		}
-	}, [input]);
+	}, [input, router]);
 
 	const doSignUp = useCallback(async () => {
 		try {
@@ -71,13 +79,145 @@ const Join: NextPage = () => {
 		} catch (err: any) {
 			toastError(extractMessage(err));
 		}
-	}, [input]);
+	}, [input, router]);
 
 	if (device === 'mobile') {
-		return <div>LOGIN MOBILE</div>;
+		return (
+			<Stack className="join-page-mobile" sx={{ p: '40px 20px', minHeight: '80vh' }} alignItems="center">
+				{/* LOGO */}
+				<Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 4 }}>
+					<img src="/img/logo/glowly.svg" alt="Glowly" style={{ width: '40px' }} />
+					<Typography variant="h5" sx={{ fontWeight: 'bold', textTransform: 'lowercase' }}>
+						glowly
+					</Typography>
+				</Stack>
+
+				{/* INFO */}
+				<Box sx={{ textAlign: 'center', mb: 4 }}>
+					<Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
+						{loginView ? 'Welcome back' : 'Create account'}
+					</Typography>
+					<Typography variant="body2" color="textSecondary">
+						{loginView ? 'Login to your account' : 'Sign up to access Glowly features'}
+					</Typography>
+				</Box>
+
+				{/* FORM */}
+				<Stack spacing={2.5} sx={{ width: '100%', maxWidth: '400px' }}>
+					<Box className="input-box-mobile">
+						<Typography variant="caption" sx={{ fontWeight: 'bold', mb: 0.5, display: 'block', ml: 0.5 }}>
+							Nickname
+						</Typography>
+						<input
+							className="mobile-input"
+							type="text"
+							placeholder="Enter Nickname"
+							value={input.nick}
+							onChange={(e) => handleInput('nick', e.target.value)}
+							style={{ width: '100%', padding: '14px', borderRadius: '10px', border: '1px solid #e0e0e0' }}
+						/>
+					</Box>
+
+					<Box className="input-box-mobile">
+						<Typography variant="caption" sx={{ fontWeight: 'bold', mb: 0.5, display: 'block', ml: 0.5 }}>
+							Password
+						</Typography>
+						<input
+							className="mobile-input"
+							type="password"
+							placeholder="Enter Password"
+							value={input.password}
+							onChange={(e) => handleInput('password', e.target.value)}
+							style={{ width: '100%', padding: '14px', borderRadius: '10px', border: '1px solid #e0e0e0' }}
+						/>
+					</Box>
+
+					{!loginView && (
+						<Stack spacing={2.5}>
+							<Box className="input-box-mobile">
+								<Typography variant="caption" sx={{ fontWeight: 'bold', mb: 0.5, display: 'block', ml: 0.5 }}>
+									Phone
+								</Typography>
+								<input
+									className="mobile-input"
+									type="text"
+									placeholder="Enter Phone"
+									value={input.phone}
+									onChange={(e) => handleInput('phone', e.target.value)}
+									style={{ width: '100%', padding: '14px', borderRadius: '10px', border: '1px solid #e0e0e0' }}
+								/>
+							</Box>
+
+							<Box>
+								<FormLabel sx={{ fontSize: '12px', fontWeight: 'bold', color: '#1a1a1a' }}>Gender</FormLabel>
+								<RadioGroup row value={input.gender} onChange={(e) => handleInput('gender', e.target.value)}>
+									<FormControlLabel value="male" control={<Radio size="small" />} label="Male" />
+									<FormControlLabel value="female" control={<Radio size="small" />} label="Female" />
+								</RadioGroup>
+							</Box>
+
+							<Box>
+								<FormLabel sx={{ fontSize: '12px', fontWeight: 'bold', color: '#1a1a1a' }}>Register as:</FormLabel>
+								<FormGroup row>
+									<FormControlLabel
+										control={
+											<Checkbox
+												size="small"
+												checked={input.type === 'USER'}
+												onChange={() => handleInput('type', 'USER')}
+											/>
+										}
+										label="User"
+									/>
+									<FormControlLabel
+										control={
+											<Checkbox
+												size="small"
+												checked={input.type === 'BRAND'}
+												onChange={() => handleInput('type', 'BRAND')}
+											/>
+										}
+										label="Brand"
+									/>
+								</FormGroup>
+							</Box>
+						</Stack>
+					)}
+
+					<Button
+						variant="contained"
+						fullWidth
+						size="large"
+						onClick={loginView ? doLogin : doSignUp}
+						sx={{
+							mt: 2,
+							height: '55px',
+							borderRadius: '12px',
+							backgroundColor: '#1a1a1a',
+							fontWeight: 'bold',
+							'&:disabled': { backgroundColor: '#cccccc' },
+						}}
+						disabled={loginView ? !input.nick || !input.password : !input.nick || !input.password || !input.phone}
+					>
+						{loginView ? 'LOGIN' : 'SIGN UP'}
+					</Button>
+
+					<Box sx={{ textAlign: 'center', mt: 2 }}>
+						<Typography variant="body2" color="textSecondary">
+							{loginView ? "Don't have an account?" : 'Already have an account?'}{' '}
+							<span
+								style={{ color: '#f564a9', fontWeight: 'bold', cursor: 'pointer', marginLeft: '5px' }}
+								onClick={() => setLoginView(!loginView)}
+							>
+								{loginView ? 'Sign Up' : 'Login'}
+							</span>
+						</Typography>
+					</Box>
+				</Stack>
+			</Stack>
+		);
 	}
 
-	// Shared form fields
 	const FormFields = (
 		<Box className="input-wrap">
 			<div className="input-box">
@@ -146,7 +286,7 @@ const Join: NextPage = () => {
 		<Stack className="join-page">
 			<Stack className="container">
 				<Stack className="main">
-					{/* ── LOGIN FORM (left slot) ── */}
+					{/* ── LOGIN FORM ── */}
 					<Stack className={`left${!loginView ? ' hidden' : ''}`}>
 						<Box className="logo">
 							<img src="/img/logo/glowly.svg" alt="Glowly" />
@@ -169,7 +309,7 @@ const Join: NextPage = () => {
 						</Box>
 					</Stack>
 
-					{/* ── SIGN UP FORM (right slot, revealed when panel slides left) ── */}
+					{/* ── SIGN UP FORM ── */}
 					<Stack className={`left right-form${loginView ? ' hidden' : ''}`}>
 						<Box className="logo">
 							<img src="/img/logo/glowly.svg" alt="Glowly" />

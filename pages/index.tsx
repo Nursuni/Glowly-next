@@ -27,7 +27,23 @@ const Home: NextPage = () => {
 	const device = useDeviceDetect();
 
 	if (device === 'mobile') {
-		return <Stack className={'home-page'}></Stack>;
+		return <Stack className={'home-page'}><Hero />
+				<SectionDivider variant="dark" />
+				<HomeFeaturesSection />
+				<ShopByCategories />
+				<SectionDivider variant="dark" />
+				<TrendProductCard />
+				<SectionDivider variant="pink" />
+
+				<TopBrandsCarousel initialInput={undefined} />
+
+				<TopProducts />
+				<SectionDivider variant="dark" />
+
+				<Advertisement />
+
+				<BoardArticles />
+				<SubscribeSection /></Stack>;
 	} else {
 		return (
 			<Stack className={'home-page'}>

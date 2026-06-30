@@ -92,7 +92,6 @@ export const GET_PRODUCT = gql`
 			productStatus
 			productTitle
 			productPrice
-
 			volume
 			volumeUnit
 			skinType
@@ -111,6 +110,12 @@ export const GET_PRODUCT = gql`
 			deletedAt
 			createdAt
 			updatedAt
+
+			meLiked {
+				memberId
+				likeRefId
+				myFavorite
+			}
 		}
 	}
 `;

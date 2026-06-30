@@ -21,7 +21,7 @@ import { CommentGroup } from '../../libs/enums/comment.enum';
 import { userVar } from '../../apollo/store';
 
 import { GET_MEMBER, GET_PRODUCTS, GET_COMMENTS } from '@/apollo/user/query';
-import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from '@/apollo/user/mutation';
+import { CREATE_COMMENT, LIKE_TARGET_PRODUCT, SUBSCRIBE, UNSUBSCRIBE } from '@/apollo/user/mutation';
 import { NEXT_PUBLIC_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { toastError, toastSuccess } from '@/libs/toast';
@@ -38,6 +38,8 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 
 	const [brandId, setBrandId] = useState<string | null>(null);
 	const [brand, setBrand] = useState<Member | null>(null);
+	const [isFollowed, setIsFollowed] = useState<boolean>(false);
+
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(initialInput);
 	const [brandProducts, setBrandProducts] = useState<Product[]>([]);
 	const [productTotal, setProductTotal] = useState<number>(0);
@@ -54,6 +56,8 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 
 	const [createComment] = useMutation(CREATE_COMMENT);
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+	const [subscribe] = useMutation(SUBSCRIBE);
+	const [unsubscribe] = useMutation(UNSUBSCRIBE);
 
 	/* ================= ROUTER ================= */
 	useEffect(() => {
@@ -63,7 +67,7 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	}, [router.isReady, router.query.brandId]);
 
 	/* ================= GET MEMBER ================= */
-	const { data: memberData } = useQuery(GET_MEMBER, {
+	const { data: memberData, refetch: refetchMember } = useQuery(GET_MEMBER, {
 		fetchPolicy: 'network-only',
 		variables: { input: brandId },
 		skip: !brandId,
@@ -74,6 +78,7 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 		if (!member) return;
 
 		setBrand(member);
+		setIsFollowed(member?.meFollowed?.[0]?.myFollowing ?? false);
 
 		setSearchFilter((prev) => ({
 			...prev,
@@ -101,7 +106,7 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	useEffect(() => {
 		if (productsData?.getProducts) {
 			setBrandProducts(productsData.getProducts.list || []);
-			setProductTotal(productsData.getProducts.metaCounter?.[0]?.total || 0);
+			setProductTotal(productsData.getProducts.metaCounter?.[0]?.total ?? 0);
 		}
 	}, [productsData]);
 
@@ -121,7 +126,7 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	useEffect(() => {
 		if (commentsData?.getComments) {
 			setBrandComments(commentsData.getComments.list || []);
-			setCommentTotal(commentsData.getComments.metaCounter?.[0]?.total || 0);
+			setCommentTotal(commentsData.getComments.metaCounter?.[0]?.total ?? 0);
 		}
 	}, [commentsData]);
 
@@ -132,6 +137,26 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	}, [commentInquiry]);
 
 	/* ================= HANDLERS ================= */
+	const followBrandHandler = async (e: React.MouseEvent) => {
+		e.stopPropagation(); // prevent navigating to member page
+		try {
+			if (!user?._id) {
+				toastError('Login required');
+				return;
+			}
+			if (isFollowed) {
+				await unsubscribe({ variables: { input: brand?._id } });
+				toastSuccess('Unfollowed');
+			} else {
+				await subscribe({ variables: { input: brand?._id } });
+				toastSuccess('Now following!');
+			}
+			await refetchMember();
+		} catch (err: any) {
+			toastError(err.message);
+		}
+	};
+
 	const productPaginationChangeHandler = (_: ChangeEvent<unknown>, value: number) => {
 		setSearchFilter({ ...searchFilter, page: value });
 	};
@@ -171,13 +196,17 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 				{/* ── BRAND HERO ── */}
 				<Stack className="brand-hero">
 					<div className="brand-hero__bg" />
-					<Stack className="brand-info" onClick={() => brand?._id && router.push(`/member?memberId=${brand._id}`)}>
+					<Stack
+						className="brand-info"
+						onClick={() => brand?._id && router.push(`/member?memberId=${brand._id}`)}
+					>
 						<div className="brand-avatar-wrap">
 							<img
 								src={brand?.memberImage ? `${NEXT_PUBLIC_API_URL}/${brand.memberImage}` : '/img/profile/user.svg'}
 								alt={brand?.memberNick || 'Brand'}
 							/>
 						</div>
+
 						<div className="info">
 							<strong>{brand?.memberNick ?? '—'}</strong>
 							<div>
@@ -187,6 +216,16 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 								<span className="meta-pill">{productTotal} products</span>
 								<span className="meta-pill">{commentTotal} reviews</span>
 							</div>
+
+							{/* ── FOLLOW BUTTON ── */}
+							{user?._id && user._id !== brand?._id && (
+								<button
+									className={`follow-btn ${isFollowed ? 'followed' : ''}`}
+									onClick={followBrandHandler}
+								>
+									{isFollowed ? '✓ Following' : '+ Follow'}
+								</button>
+							)}
 						</div>
 					</Stack>
 				</Stack>
@@ -204,7 +243,11 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 						<div className="card-wrap">
 							<div className="wrap-main">
 								{brandProducts.map((p) => (
-									<ProductBigCard key={p._id} product={p} likeProductHandler={() => likeProductHandler(p._id)} />
+									<ProductBigCard
+										key={p._id}
+										product={p}
+										likeProductHandler={() => likeProductHandler(p._id)}
+									/>
 								))}
 							</div>
 						</div>
@@ -258,7 +301,9 @@ const BrandDetail: NextPage = ({ initialInput, initialComment }: any) => {
 						<textarea
 							placeholder="Share your experience with this brand…"
 							value={insertCommentData.commentContent}
-							onChange={(e) => setInsertCommentData({ ...insertCommentData, commentContent: e.target.value })}
+							onChange={(e) =>
+								setInsertCommentData({ ...insertCommentData, commentContent: e.target.value })
+							}
 						/>
 						<div className="submit-btn">
 							<button

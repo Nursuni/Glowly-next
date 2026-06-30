@@ -1,12 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Avatar, Box, Stack } from '@mui/material';
+import { Avatar, Box, Stack, Typography, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
 import { useRouter } from 'next/router';
-import ScrollableFeed from 'react-scrollable-feed';
-
 import { useReactiveVar } from '@apollo/client';
 import { socketVar, userVar } from '../../apollo/store';
 import { Member } from '../types/member/member';
@@ -14,55 +11,25 @@ import { Messages, NEXT_PUBLIC_API_URL } from '../config';
 import { toastError } from '../toast';
 import { RippleBadge } from '@/scss/MaterialTheme/styled';
 
-const NewMessage = (type: any) => {
-	if (type === 'right') {
-		return (
-			<Box
-				component={'div'}
-				flexDirection={'row'}
-				style={{ display: 'flex' }}
-				alignItems={'flex-end'}
-				justifyContent={'flex-end'}
-				sx={{ m: '10px 0px' }}
-			>
-				<div className={'msg_right'}></div>
-			</Box>
-		);
-	} else {
-		return (
-			<Box flexDirection={'row'} style={{ display: 'flex' }} sx={{ m: '10px 0px' }} component={'div'}>
-				<Avatar alt={'jonik'} src={'/img/profile/user.svg'} />
-				<div className={'msg_left'}></div>
-			</Box>
-		);
-	}
-};
-
+// Interfeyslerdi anıqlastıramız
 interface MessagePayload {
 	event: string;
 	text: string;
-	memberData: Member;
-}
-interface InfoPayload {
-	event: string;
-	totalClients: number;
-	memberData: Member;
-	action: string;
+	memberData: Member | null;
 }
 
 const Chat = () => {
-	const chatContentRef = useRef<HTMLDivElement>(null);
 	const [messagesList, setMessagesList] = useState<MessagePayload[]>([]);
 	const [onlineUsers, setOnlineUsers] = useState<number>(0);
-
 	const [messageInput, setMessageInput] = useState<string>('');
 	const [open, setOpen] = useState(false);
-	const [openButton, setOpenButton] = useState(false);
+	const [showButton, setShowButton] = useState(false);
+
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const socket = useReactiveVar(socketVar);
 
-	/** LIFECYCLES **/
+	/** WS LOGIKASI **/
 	useEffect(() => {
 		if (!socket) return;
 
@@ -71,12 +38,11 @@ const Chat = () => {
 				const data = JSON.parse(msg.data);
 				if (data.event === 'message') {
 					setMessagesList((prev) => [...prev, data]);
-				}
-				if (data.event === 'info') {
-					setOnlineUsers(data.totalClients);
+				} else if (data.event === 'info') {
+					setOnlineUsers(data.totalClients || 0);
 				}
 			} catch (e) {
-				console.log('WS parse error:', e);
+				console.error('WS parse error:', e);
 			}
 		};
 
@@ -84,40 +50,30 @@ const Chat = () => {
 		return () => socket.removeEventListener('message', handleMessage);
 	}, [socket]);
 
+	/** UI LOGIKASI **/
 	useEffect(() => {
-		const timeoutId = setTimeout(() => {
-			setOpenButton(true);
-		}, 100);
+		const timeoutId = setTimeout(() => setShowButton(true), 500);
 		return () => clearTimeout(timeoutId);
 	}, []);
 
 	useEffect(() => {
-		setOpenButton(false);
+		// Sahifa almashganda chatni yopish (optional)
+		setOpen(false);
 	}, [router.pathname]);
 
 	/** HANDLERS **/
-	const handleOpenChat = () => {
-		setOpen((prevState) => !prevState);
-	};
+	const toggleChat = () => setOpen(!open);
 
-	const getInputMessageHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-		const text = e.target.value;
-		setMessageInput(text);
-	}, []);
-
-	const getKeyHandler = (e: any) => {
-		try {
-			if (e.key === 'Enter') {
-				onClickHandler();
-			}
-		} catch (err: any) {
-			console.log(err);
-		}
-	};
-
-	const onClickHandler = () => {
-		if (!messageInput.trim()) {
+	const handleSendMessage = () => {
+		
+		const trimmedMsg = messageInput.trim();
+		if (!trimmedMsg) {
 			toastError(Messages.EMPTY_MESSAGE);
+			return;
+		}
+
+		if (!socket || socket.readyState !== WebSocket.OPEN) {
+			toastError('Connection lost. Please refresh.');
 			return;
 		}
 
@@ -125,71 +81,96 @@ const Chat = () => {
 			JSON.stringify({
 				event: 'message',
 				data: {
-					text: messageInput,
-					memberData: user ?? null,
+					text: trimmedMsg,
+					memberData: user,
 				},
 			}),
 		);
 		setMessageInput('');
 	};
+
+	const handleKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === 'Enter' && !e.shiftKey) {
+			e.preventDefault();
+			handleSendMessage();
+		}
+	};
+
 	return (
 		<Stack className="chatting">
-			{openButton ? (
-				<button className="chat-button" onClick={handleOpenChat}>
+			{showButton && (
+				<IconButton
+					className="chat-button"
+					onClick={toggleChat}
+					sx={{ bgcolor: 'primary.main', color: '#fff', '&:hover': { bgcolor: 'primary.dark' } }}
+				>
 					{open ? <CloseFullscreenIcon /> : <MarkChatUnreadIcon />}
-				</button>
-			) : null}
+				</IconButton>
+			)}
+
 			<Stack className={`chat-frame ${open ? 'open' : ''}`}>
-				<Box className={'chat-top'} component={'div'}>
-					<div style={{ fontFamily: 'Nunito' }}>Online Chat</div>
-					<RippleBadge style={{ margin: '18px 0 21px' }} badgeContent={onlineUsers} />
+				<Box className={'chat-top'}>
+					<Typography variant="h6" sx={{ color: '#fff', fontWeight: 700 }}>
+						Live Chat
+					</Typography>
+					<RippleBadge badgeContent={onlineUsers} color="secondary" />
 				</Box>
-				<Box className={'chat-content'} id="chat-content" ref={chatContentRef} component={'div'}>
-					<ScrollableFeed>
-						<Stack className={'chat-main'}>
-							<Box flexDirection={'row'} style={{ display: 'flex' }} sx={{ m: '10px 0px' }} component={'div'}>
-								<div className={'welcome'}>Welcome to Live chat!</div>
-							</Box>
-							{messagesList.map((ele: MessagePayload, index: number) => {
-								const { text, memberData } = ele;
-								const memberImage = memberData?.memberImage
-									? `${NEXT_PUBLIC_API_URL}/${memberData.memberImage}`
+
+				<Box className={'chat-content'}>
+					<Box sx={{ height: '100%', overflowY: 'auto' }}>
+						<Stack className={'chat-main'} spacing={2} sx={{ p: 2 }}>
+							<Typography className="welcome-msg" align="center" sx={{ fontSize: '12px', opacity: 0.7 }}>
+								Welcome to Live chat!
+							</Typography>
+
+							{messagesList.map((msg, index) => {
+								const isMine = msg.memberData?._id === user?._id;
+								const imgPath = msg.memberData?.memberImage
+									? `${NEXT_PUBLIC_API_URL}/${msg.memberData.memberImage}`
 									: '/img/profile/user.svg';
-								return memberData?._id === user?._id ? (
+
+								return (
 									<Box
-										component={'div'}
-										flexDirection={'row'}
-										style={{ display: 'flex' }}
-										alignItems={'flex-end'}
-										justifyContent={'flex-end'}
-										sx={{ m: '10px 0px' }}
+										key={index}
+										display="flex"
+										flexDirection={isMine ? 'row-reverse' : 'row'}
+										alignItems="flex-start"
+										gap={1}
 									>
-										<div className={'msg-right'}>{text}</div>
-									</Box>
-								) : (
-									<Box key={index} flexDirection={'row'} style={{ display: 'flex' }} sx={{ m: '10px 0px' }}>
-										<Avatar alt={'jonik'} src={memberImage} />
-										<div className={'msg-left'}>{text}</div>
+										{!isMine && <Avatar src={imgPath} sx={{ width: 32, height: 32 }} />}
+										<Box
+											className={isMine ? 'msg-right' : 'msg-left'}
+											sx={{
+												p: '8px 12px',
+												borderRadius: '12px',
+												maxWidth: '70%',
+												bgcolor: isMine ? '#1976d2' : '#f1f1f1',
+												color: isMine ? '#fff' : '#000',
+												boxShadow: 1,
+											}}
+										>
+											<Typography variant="body2">{msg.text}</Typography>
+										</Box>
 									</Box>
 								);
 							})}
-							<></>
 						</Stack>
-					</ScrollableFeed>
+					</Box>
 				</Box>
-				<Box className={'chat-bott'} component={'div'}>
+
+				<Box className={'chat-bott'} sx={{ display: 'flex', p: 1, borderTop: '1px solid #ddd' }}>
 					<input
-						type={'text'}
-						name={'message'}
+						type="text"
 						value={messageInput}
 						className={'msg-input'}
-						placeholder={'Type message'}
-						onChange={getInputMessageHandler}
-						onKeyDown={getKeyHandler}
+						placeholder={'Type message...'}
+						onChange={(e) => setMessageInput(e.target.value)}
+						onKeyDown={handleKeyDown}
+						style={{ flexGrow: 1, border: 'none', outline: 'none', padding: '10px' }}
 					/>
-					<button className={'send-msg-btn'} onClick={onClickHandler}>
-						<SendIcon style={{ color: '#fff' }} />
-					</button>
+					<IconButton onClick={handleSendMessage} disabled={!messageInput.trim()} color="primary">
+						<SendIcon />
+					</IconButton>
 				</Box>
 			</Stack>
 		</Stack>

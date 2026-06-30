@@ -18,7 +18,7 @@ import { Direction, Message } from '../../libs/enums/common.enum';
 import { Comment } from '@/libs/types/comment/comment';
 import { CommentInput, CommentsInquiry } from '@/libs/types/comment/comment.input';
 import { CommentGroup } from '@/libs/enums/comment.enum';
-import { toastError } from '@/libs/toast';
+import { toastError, toastSuccess } from '@/libs/toast';
 import { CircularProgress, Stack } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -30,8 +30,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 
-import 'swiper/css';
-import 'swiper/css/pagination';
 import BasketModal, { CartItem } from '@/libs/components/basket/BasketModal';
 import ShareModal from '@/libs/components/common/ShareModel';
 import { T } from '@/libs/types/common';
@@ -72,6 +70,7 @@ const ProductDetail: NextPage = () => {
 	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
 	const [propertyComments, setPropertyComments] = useState<Comment[]>([]);
 	const [commentTotal, setCommentTotal] = useState<number>(0);
+	const [rating, setRating] = useState(5);
 
 	const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
 		commentGroup: CommentGroup.PRODUCT,
@@ -203,9 +202,29 @@ const ProductDetail: NextPage = () => {
 				toastError('Please write a review');
 				return;
 			}
-			await createComment({ variables: { input: insertCommentData } });
-			setInsertCommentData({ ...insertCommentData, commentContent: '' });
-			await getCommentsRefetch({ input: commentInquiry });
+
+			const { data } = await createComment({
+				variables: { input: insertCommentData },
+			});
+
+			if (data?.createComment) {
+				// 1. Success message using Toast
+				toastSuccess('Thank you for your review!');
+
+				// 2. Clear the input
+				setInsertCommentData({ ...insertCommentData, commentContent: '' });
+
+				// 3. Update the UI list instantly without refreshing the page
+				// We fetch the fresh list and update the total counter
+				const { data: freshComments } = await getCommentsRefetch({
+					input: commentInquiry,
+				});
+
+				if (freshComments?.getComments) {
+					setPropertyComments(freshComments.getComments.list);
+					setCommentTotal(freshComments.getComments.metaCounter?.[0]?.total ?? 0);
+				}
+			}
 		} catch (err: any) {
 			toastError(err instanceof Error ? err.message : String(err));
 		}

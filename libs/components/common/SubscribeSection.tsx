@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { toast } from 'react-toastify';
-import { Box, Stack, Typography, TextField, Button } from '@mui/material';
+import { Box, Typography, TextField, Button } from '@mui/material';
 
 const API_URL = process.env.REACT_APP_API_GRAPHQL_URL;
 
@@ -21,7 +21,6 @@ export default function SubscribeSection() {
 		}
 
 		setLoading(true);
-		console.log('Sending request to:', API_URL);
 
 		try {
 			const res = await fetch(API_URL!, {
@@ -42,7 +41,6 @@ export default function SubscribeSection() {
 			});
 
 			const result = await res.json();
-			console.log('GraphQL response:', result);
 
 			if (result.errors && result.errors.length > 0) {
 				toast.error(result.errors[0].message);
@@ -63,11 +61,31 @@ export default function SubscribeSection() {
 
 	return (
 		<Box sx={{ py: 8, textAlign: 'center' }}>
-			<Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
+			{/* Heading — Cormorant Garamond (display font) */}
+			<Typography
+				variant="h5"
+				sx={{
+					fontFamily: "'Cormorant Garamond', Georgia, serif",
+					fontWeight: 500,
+					fontSize: '2rem',
+					letterSpacing: '0.02em',
+					color: '#1e1218',
+					mb: 1,
+				}}
+			>
 				Get 10% off your first order
 			</Typography>
 
-			<Typography sx={{ mb: 3, color: 'text.secondary' }}>
+			{/* Subtext — DM Sans (body font) */}
+			<Typography
+				sx={{
+					fontFamily: "'DM Sans', sans-serif",
+					fontWeight: 300,
+					fontSize: '0.95rem',
+					color: '#5c4556',
+					mb: 3,
+				}}
+			>
 				Join our email list for exclusive offers and the latest news.
 			</Typography>
 
@@ -90,6 +108,31 @@ export default function SubscribeSection() {
 					required
 					fullWidth
 					size="small"
+					sx={{
+						'& .MuiInputBase-input': {
+							fontFamily: "'DM Sans', sans-serif",
+							fontWeight: 300,
+							fontSize: '0.9rem',
+							color: '#1e1218',
+						},
+						'& .MuiInputBase-input::placeholder': {
+							fontFamily: "'DM Sans', sans-serif",
+							color: '#a08898',
+							opacity: 1,
+						},
+						'& .MuiOutlinedInput-root': {
+							borderRadius: '4px',
+							'& fieldset': {
+								borderColor: 'rgba(245, 100, 169, 0.14)',
+							},
+							'&:hover fieldset': {
+								borderColor: '#f0e0ea',
+							},
+							'&.Mui-focused fieldset': {
+								borderColor: '#f564a9',
+							},
+						},
+					}}
 				/>
 
 				<Button
@@ -98,8 +141,17 @@ export default function SubscribeSection() {
 					disabled={loading}
 					sx={{
 						whiteSpace: 'nowrap',
-						backgroundColor: '#000',
-						'&:hover': { backgroundColor: '#333' },
+						fontFamily: "'DM Sans', sans-serif",
+						fontWeight: 400,
+						fontSize: '0.85rem',
+						letterSpacing: '0.08em',
+						textTransform: 'uppercase',
+						backgroundColor: '#1e1218',
+						color: '#fff',
+						borderRadius: '4px',
+						px: 3,
+						'&:hover': { backgroundColor: '#2a2520' },
+						'&:disabled': { opacity: 0.6 },
 					}}
 				>
 					{loading ? 'Submitting...' : 'Subscribe'}
